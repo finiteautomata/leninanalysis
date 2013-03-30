@@ -1,0 +1,1 @@
+scrapy crawl lenin -o lenin_work.json -t json 	
