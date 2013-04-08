@@ -45,10 +45,10 @@
 			{yid,
 			 wid,
 			 name,
-			 total_words,
+			 total_words,   #sin stopwords
 			 total_vocab,
 			 top_words,
-			 top_words_with_ocurrences
+			 top_words_with_ocurrences # [[w,c], [w,c]]
 			}
 		] 	
 3b)create_zipf_resume()
@@ -57,7 +57,7 @@
 		[
 			{
 				name,     #Es el año como string
-				total_words,
+				total_words, #sin stopwords
 				total_vocab,
 				top_words,
 				top_words_with_ocurrences
@@ -78,7 +78,7 @@
 		 best_window_size,
 		 top_words,
 		 top_words_with_iv,
-		 total_words,
+		 total_words, #con stopwords
 		 tried_windows
 		 ivs, #[{iv_per_word,window_size,scale,top_words,top_words_with_iv}],
 		}

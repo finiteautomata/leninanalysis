@@ -1,1 +1,5 @@
 *.pyc
+config.py
+log/*
+data/*
+lenin_work*

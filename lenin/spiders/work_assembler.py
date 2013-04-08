@@ -4,13 +4,10 @@ from work_builder import SimpleWorkBuilder, WorkBuilder
 from scrapy.selector import HtmlXPathSelector
 from scrapy.http import Request
 from copy import deepcopy
-
 from lenin.items import LeninWork
-from lenin.spiders.lenin_spider import *
 
 import nltk
 
-INDEX_REGEX = '.+/archive/lenin/.*index\.htm'
 
 class WorkAssembler(WorkBuilder):
   def __init__(self, response, parent=None):

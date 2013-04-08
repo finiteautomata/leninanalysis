@@ -1,0 +1,1 @@
+data_dir="/home/marat/Dropbox/Facu/incc/incc-2012/TP Lenin/data/"

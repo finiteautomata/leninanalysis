@@ -90,7 +90,7 @@ def reload_base_files():
 	print 'Creando archivo indexado...'
 	pre =Preprocessor('lenin_work.json', 'id_lenin_work.json')
 	pre.execute(pre.add_index, False)
-	print 'Creando archivos por año...'
+	print 'Creando archivos por aÃ±o...'
 	split_years('id_lenin_work.json')
 
 def create_zipf_for_year(year, total_words = 200):
@@ -99,11 +99,11 @@ def create_zipf_for_year(year, total_words = 200):
 
 def create_zipf_files( total_words = 200):
 	for year in range(1893, 1924):
-		print 'Creando zipf para año '+str(year)
+		print 'Creando zipf para aÃ±o '+str(year)
 		create_zipf_for_year(str(year), total_words)
 		
 def create_zipf_resume( total_words = 200):
-	 print 'Creando resumen de zipf por años....'
+	 print 'Creando resumen de zipf por aÃ±os....'
 	 zipfRunner = zf.ZipfRunner()
 	 res = zipfRunner.get_all_years(total_words)
 	 utils.to_file(res, 'years_zipf.json')			
@@ -115,14 +115,14 @@ def create_iv_for_year(year, total_words = 200):
 def create_iv_files(total_words = 200):
 	print 'Configure las escalas de ventanas en IV.get_scales()'
 	for year in range(1893, 1924):
-		print 'Creando IV para año '+str(year)
+		print 'Creando IV para aÃ±o '+str(year)
 		create_iv_for_year(str(year), total_words)
 
-
+# Llamar esto para hacer todo el proceso del readme.txt 
 def restart_database():
 	reload_base_files()
 	create_zipf_files()
 	create_zipf_resume()
-	create_iv_files()
-	#Estoy aca, tengo que correr wna.wn_write(1905, 1924)
-	wna.wn_write()
+	# create_iv_files()
+	# Estoy aca, tengo que correr wna.wn_write(1905, 1924)
+	# wna.wn_write()

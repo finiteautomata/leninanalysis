@@ -151,6 +151,7 @@ class InformationValue:
 
 
 	def get_scales(self):
+		return [2500]
 		if self.total_words < 2000:
 			scales = [0.05, 0.1, 0.25, 0.5]
 		else:
@@ -164,8 +165,12 @@ class InformationValue:
 		results['tried_windows'] = []
 		results['total_words']= self.total_words
 		ivs = {}
+		
 		for scale in self.get_scales():
-			window_size = int(self.total_words* scale)
+			#window_size = int(self.total_words* scale)
+			#Hay que cambiar esto y la linea 154
+			window_size= scale
+			print 'Evaluando escala '+str(scale)
 			if window_size >= 1:
 				aux = self.information_value(window_size)
 				ivs[window_size] = sum([c for (w,c) in aux]) / len(aux)

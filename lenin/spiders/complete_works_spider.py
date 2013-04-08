@@ -3,22 +3,24 @@ from scrapy.contrib.spiders import CrawlSpider, Rule
 from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
 from scrapy.selector import HtmlXPathSelector
 from lenin.items import LeninWork
-from work_assembler import WorkAssembler
-from work_builder import SimpleWorkBuilder
+from lenin.spiders.work_assembler import WorkAssembler
+from lenin.spiders.work_builder import SimpleWorkBuilder
 import nltk
 
-class LeninSpider(CrawlSpider):
-    name = "lenin"
+class CompleteWorksSpider(CrawlSpider):
+    name = "complete_works"
     allowed_domains = ["marxists.org"]
     start_urls = [
-    "http://www.marxists.org/archive/lenin/by-date.htm"
+    "https://www.marxists.org/archive/lenin/works/cw/"
     ]
 
-    INDEX_REGEX = '.+/archive/lenin/.*index\.htm'
-    CHAPTER_REGEX = '.+/archive/lenin/works/.+/(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec).+\.htm'
+    VOLUME_INDEX = r'.+volume\d\d\.htm?$'
+    INDEX_REGEX = r'.+/archive/lenin/.*index\.htm$'
+    CHAPTER_REGEX = r'.+/archive/lenin/works/.+/(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec).+\.htm'
     #Estas son las reglas que aplica a cada link que encuentra
     rules = (
       Rule(SgmlLinkExtractor(allow=".+devel.+"), callback='nada'),
+      Rule(SgmlLinkExtractor(allow=VOLUME_INDEX), callback='parse_volume'),
       # Idem si es un indice (de una obra)
       Rule(SgmlLinkExtractor(allow=(INDEX_REGEX)), callback='parse_indexed_work'),
       # Si no es ninguna de las anteriores, es una obra y hay que parsearla!
@@ -28,6 +30,9 @@ class LeninSpider(CrawlSpider):
     def nada(self, response):
       print "llame nada" + response.url
       pass
+
+    def parse_volume(self, response):
+      print "Parsing volume %s\n" % response.url
 
     def parse_indexed_work(self, response):
       """ This function parses a sample response. Some contracts are mingled
