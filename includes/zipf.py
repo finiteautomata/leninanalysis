@@ -78,9 +78,9 @@ class ZipfRunner:
 		return z.get_results(n)
 		
 	
-	def get_all_years(self, n = 20):
+	def get_all_years(self,min_year, max_year,  n = 20):
 		res = {}
-		for y in range(1893,1924):
+		for y in range(min_year, max_year):
 			print 'Calculando año '+str(y)
 			res[str(y)] =self.get_year(str(y), n)
 		return res	

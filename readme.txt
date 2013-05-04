@@ -63,7 +63,7 @@
 				top_words_with_ocurrences
 			}
 		]
-	#Deberia cambiar a {$year: {name,total_words,total_vocab,top_words,top_words_with_ocurrences}}
+	#ES ASI Deberia cambiar a {$year: {name,total_words,total_vocab,top_words,top_words_with_ocurrences}}
 4)create_iv_files()
 	espera by_year/YYYY_works.json
 	configurar scales en iv.get_scales()
@@ -80,7 +80,7 @@
 		 top_words_with_iv,
 		 total_words, #con stopwords
 		 tried_windows
-		 ivs, #[{iv_per_word,window_size,scale,top_words,top_words_with_iv}],
+		 ivs, #[{iv_per_word,window_size,scale,top_words,top_words_with_iv}], COMENTADO EN CODIGO
 		}
  ]
 5)wna.wn_write()

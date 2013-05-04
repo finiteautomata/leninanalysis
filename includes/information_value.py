@@ -7,6 +7,10 @@ import copy
 def get_count(ctuple):
 	return ctuple[1]
 
+class WindowSizeTooLarge(Exception):
+	pass
+
+
 class InformationValue:
 	
 	def __init__(self, text, words = False):
@@ -54,7 +58,7 @@ class InformationValue:
 		P = self.total_words / window_size
 		if P == 0 or P == 1:
 			print 'Ventana demasiado grande'
-			return False			
+			raise WindowSizeTooLarge("Ventana de tamaño %s para texto de tamaño %s" % (window_size, self.total_words))			
 		
 		f = {}
 		sum_f = {}
@@ -80,17 +84,11 @@ class InformationValue:
 		return p
 		
 	def entropy(self, window_size, random = False):
-		
-		
 		p = self.occurrence_probability(window_size, random)
-		
 		if not p:
 			return False
-		
 		S = {}
-		
 		P = self.total_words / window_size
-	
 		
 		for word in self.words:
 			S[word] = 0
@@ -138,7 +136,7 @@ class InformationValue:
 			frec = 1.0* tokenized_text.count(word) / N
 			if alternar:  #Invierto el valor para que de positivo todo
 				frec = -1.0*frec
-			information_value[word] =  (frec * (ordered_entropy[word] - random_mean[word]))
+			information_value[word] =  (frec * abs(ordered_entropy[word] - random_mean[word]))
 			
 		items = sorted(information_value.items(), key=get_count, reverse=alternar)
 	
@@ -149,16 +147,19 @@ class InformationValue:
 	    
 		return items
 
-
+  #window_size = scale*len(text)
 	def get_scales(self):
-		return [2500]
+		#return [2500]
 		if self.total_words < 2000:
 			scales = [0.05, 0.1, 0.25, 0.5]
 		else:
-			scales = [0.01, 0.025, 0.05, 0.1, 0.25, 0.33 ]
+			scales = [x*0.01 for x in range(1,21)]
 		return scales
+
+	def get_window_sizes(self):
+		return [200*i for i in range(1,20)]
 		
-	def get_results(self, n):
+	def get_results(self, n, work_index):
 		self.get_tokenized_text()
 		results = {}
 		results['ivs'] = [] 
@@ -166,34 +167,64 @@ class InformationValue:
 		results['total_words']= self.total_words
 		ivs = {}
 		
+		for window_size in self.get_window_sizes():
+			try:
+				print "Probando tamaño de ventana = %s" % window_size
+				if window_size >= 1:
+					aux = self.information_value(window_size)
+					
+	        #Criterio: promedio de todos los information values
+					ivs[window_size] = sum([c for (w,c) in aux]) / len(aux)
+					
+					res = {
+									'window_size' : window_size,
+									'iv_per_word': ivs[window_size],
+									'top_words': [w for (w,c) in aux[:n]],
+									'top_words_with_iv': [(w,c) for (w,c) in aux[:n]],
+									
+								}
+					results['ivs'].append(res)
+					results['tried_windows'].append(window_size)
+			except WindowSizeTooLarge as e:
+				# La ventana es demasiado grande => salir!
+				break
+
+    #Generar datos de IV para cada escala de ventana 
 		for scale in self.get_scales():
-			#window_size = int(self.total_words* scale)
-			#Hay que cambiar esto y la linea 154
-			window_size= scale
-			print 'Evaluando escala '+str(scale)
-			if window_size >= 1:
-				aux = self.information_value(window_size)
-				ivs[window_size] = sum([c for (w,c) in aux]) / len(aux)
-				res = {
-								'window_size' : window_size,
-								'scale': scale,
-								'iv_per_word': ivs[window_size],
-								'top_words': [w for (w,c) in aux[:n]],
-								'top_words_with_iv': [(w,c) for (w,c) in aux[:n]],
-								
-							}
-				results['ivs'].append(res)
-				results['tried_windows'].append(window_size) 
-		
+			try:
+				window_size = int(self.total_words* scale)
+				print str(work_index)+' evaluando escala '+str(scale)
+				if window_size >= 1:
+					aux = self.information_value(window_size)
+					
+	        #Criterio: promedio de todos los information values
+					ivs[window_size] = sum([c for (w,c) in aux]) / len(aux)
+					
+					res = {
+									'window_size' : window_size,
+									'scale': scale,
+									'iv_per_word': ivs[window_size],
+									'top_words': [w for (w,c) in aux[:n]],
+									'top_words_with_iv': [(w,c) for (w,c) in aux[:n]],
+									
+								}
+					results['ivs'].append(res)
+					results['tried_windows'].append(window_size) 
+			except WindowSizeTooLarge as e:
+				break
+    
+		#Criterio: maximo de promedio de IV sobre todas las palabras
 		results['best_window_size'] = max(ivs, key=ivs.get)
 		results['best_iv_per_word'] = ivs[results['best_window_size']]
 		for res in results['ivs']:
 			if res['window_size'] == results['best_window_size']:
 				results['top_words'] = res['top_words']
 				results['top_words_with_iv'] = res['top_words_with_iv']
-				results['best_scale'] = res['scale']
+				if 'scale' in res.keys():
+					results['best_scale'] = res['scale']
 				break
 		
+		results.pop("ivs", None)
 		return results
 			
 	def calculate_window_size(self):

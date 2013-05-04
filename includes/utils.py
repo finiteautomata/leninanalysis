@@ -53,3 +53,10 @@ def load_data(y1, y2):
 		data[year] = load_year_data(year, zipf_resume)
 	
 	return data		
+
+def load_ivs(initial_year, last_year):
+    works = []
+    for year in range(initial_year, last_year+1):
+        new_works = from_file("by_year/%s_iv.json" % year)
+        works.extend(new_works)
+    return works
