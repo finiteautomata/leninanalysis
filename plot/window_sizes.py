@@ -1,4 +1,3 @@
-#!/usr/bin/python
 # coding: utf-8
 import argparse
 import subprocess
@@ -32,30 +31,59 @@ def plot_scatter_total_words_vs_window_sizes(works):
 def get_max_ivs(works):
     return [work['top_words_with_iv'][0][1] for work in works]
 
-#Plots histogram of information values from the top words of the works
-def plot_information_values(works):
+
+def plot_histogram_of_max_ivs(works):
     ivs = get_max_ivs(works)
     
-    print ivs
     plt.hist(ivs)
     plt.title("Histogram of Maximum information value per work")
     plt.show()
 
     print "Average max iv of all works = %s" % average(ivs)
 
-    long_works = [work for work in works if work['total_words']>10000]
+def plot_histogram_of_max_ivs_of_long_works(works):
+    long_works = [work for work in works if work['total_words']>5000]
     long_ivs = get_max_ivs(long_works)
     
-    plt.hist(ivs)
-    plt.title("Histogram of Maximum Information Value")
+    plt.hist(long_ivs)
+    plt.title("Histogram of Maximum Information Value for Long Works")
+    plt.show()
+    print "Average max iv of long works = %s" % average(long_ivs)
+
+
+def plot_scatter_max_ivs_vs_total_words(works):
+    ivs = get_max_ivs(works)
+    total_words = [work['total_words'] for work in works]
+    
+    plt.scatter(total_words, ivs)
+    plt.title("Maximum IV per word vs Total Words")
+    plt.xlabel("Total words")
+    plt.ylabel("Maximum Information Value")
     plt.show()
 
-    print "Average max iv of long works = %s" % average(long_ivs)
+    print "Average max iv = %s" % average(ivs)
+
+def plot_scatter_max_ivs_vs_window_sizes(works):
+    window_sizes = [work['best_window_size']for work in works]
+    ivs = get_max_ivs(works)
+    
+    plt.scatter(window_sizes, ivs)
+    plt.title("Maximum IV per word vs Best Window Size")
+    plt.xlabel("Best Window Size")
+    plt.ylabel("Maximum Information Value per word")
+    plt.show()
+
+#Plots histogram of information values from the top words of the works
+def plot_information_value_things(works):
+    plot_histogram_of_max_ivs(works)
+    plot_histogram_of_max_ivs_of_long_works(works)
+    plot_scatter_max_ivs_vs_total_words(works)
+    plot_scatter_max_ivs_vs_window_sizes(works)
 
 def plot_iv_things():
     works = utils.load_ivs(MIN_YEAR, MAX_YEAR-1)
     plot_scatter_total_words_vs_window_sizes(works)
-    plot_information_values(works)
+    plot_information_value_things(works)
 
 
 def plot_xy(x_label, x,y_label, y):

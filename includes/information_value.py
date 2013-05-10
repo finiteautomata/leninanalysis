@@ -136,7 +136,7 @@ class InformationValue:
 			frec = 1.0* tokenized_text.count(word) / N
 			if alternar:  #Invierto el valor para que de positivo todo
 				frec = -1.0*frec
-			information_value[word] =  (frec * abs(ordered_entropy[word] - random_mean[word]))
+			information_value[word] =  (frec * (ordered_entropy[word] - random_mean[word]))
 			
 		items = sorted(information_value.items(), key=get_count, reverse=alternar)
 	
@@ -174,8 +174,7 @@ class InformationValue:
 					aux = self.information_value(window_size)
 					
 	        #Criterio: promedio de todos los information values
-					ivs[window_size] = sum([c for (w,c) in aux]) / len(aux)
-					
+					ivs[window_size] = max([c for (w,c) in aux])
 					res = {
 									'window_size' : window_size,
 									'iv_per_word': ivs[window_size],
@@ -198,7 +197,7 @@ class InformationValue:
 					aux = self.information_value(window_size)
 					
 	        #Criterio: promedio de todos los information values
-					ivs[window_size] = sum([c for (w,c) in aux]) / len(aux)
+					ivs[window_size] = max([c for (w,c) in aux])
 					
 					res = {
 									'window_size' : window_size,

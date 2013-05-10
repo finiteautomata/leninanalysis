@@ -47,7 +47,7 @@ def main():
     parser.add_argument('--iv', action='store_true', default= False, help='Needs by_year/YYYY_works.json, creates by_year/YYYY_iv.json')
     parser.add_argument('--wn', action='store_true', default= False, help='Needs by_year/YYYY_(works|iv|zipf).json and years_zipf.json, creates by_year/YYYY_wn.json')
     parser.add_argument('--restart-db', action='store_true', default= False, help='Executes split-years, zipf and zipf-resume')
-    parser.add_argument('--plot-window-sizes', action='store_true', default=False, help="Shows some plot about window sizes")    
+    parser.add_argument('--plot-iv-analysis', action='store_true', default=False, help="Shows some plot about Information Value Analysis")    
     # Parse args
     args = parser.parse_args()
 
@@ -67,7 +67,7 @@ def main():
         wna.create_wn_files(MIN_YEAR, MAX_YEAR+1)        
     if args.restart_db:
         pre.restart_database(MIN_YEAR, MAX_YEAR+1)
-    if args.plot_window_sizes:
+    if args.plot_iv_analysis:
         plot_iv_things()
 
 if __name__ == "__main__":
