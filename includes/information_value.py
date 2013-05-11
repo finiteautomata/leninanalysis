@@ -1,7 +1,6 @@
 # This Python file uses the following encoding: utf-8  
 import math       
 import random                
-import tokenizer
 import copy
 
 def get_count(ctuple):
@@ -11,40 +10,20 @@ class WindowSizeTooLarge(Exception):
 	pass
 
 
-class InformationValue:
+class InformationValueCalculator:
 	
-	def __init__(self, text, words = False):
-		#text es el texto como string
-		self.text = text
-		#words es un array de palabras sobre las que se van a realizar los calculos
-		self.words = words
+	def __init__(self, tokens):
 		#se carga la lista de tokens
-		self.tokenized_text = False
-		self.total_words = 0
-		self.rand_tokenized_text = False
-	
-	def get_tokenized_text(self):
-		
-		if not self.tokenized_text:
-			self.tokenize_text()
-		
-		return self.tokenized_text
+		self.tokens = tokens
+		self.total_words = len(tokens)
+		self.words = set(tokens)
+		self.rand_tokenized_text = None
 	
 	def get_rand_tokenized_text(self):
-		
 		if not self.rand_tokenized_text:
-			self.rand_tokenized_text = copy.deepcopy(self.get_tokenized_text())
+			self.rand_tokenized_text = copy.deepcopy(self.tokens)
 			random.shuffle(self.rand_tokenized_text)
-			
 		return self.rand_tokenized_text
-		
-	def tokenize_text(self, only_alpha = False, only_alphanum = True,  clean_stop_words = False, clean_punctuation = True): 
-		#print 'tokenize_text'
-		self.tokenized_text = tokenizer.tokenize(self.text, only_alpha, only_alphanum, clean_stop_words, clean_punctuation)
-		self.total_words = len(self.tokenized_text)
-		self.rand_tokenized_text = False
-		if not self.words:
-			self.words = set(self.tokenized_text)     
 		
 	
 	def occurrence_probability(self, window_size, random=False, ret_freq = False):
@@ -53,8 +32,7 @@ class InformationValue:
 			#print 'random'
 			tokenized_text = self.get_rand_tokenized_text()
 		else:
-			tokenized_text = self.get_tokenized_text()
-		
+			tokenized_text = self.tokens
 		P = self.total_words / window_size
 		if P == 0 or P == 1:
 			print 'Ventana demasiado grande'
@@ -159,8 +137,7 @@ class InformationValue:
 	def get_window_sizes(self):
 		return [200*i for i in range(1,20)]
 		
-	def get_results(self, n, work_index):
-		self.get_tokenized_text()
+	def get_results(self):
 		results = {}
 		results['ivs'] = [] 
 		results['tried_windows'] = []

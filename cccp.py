@@ -1,14 +1,15 @@
 #!/usr/bin/python
 # coding: utf-8
+import unittest
+import config
 import argparse
 import subprocess
+import matplotlib.pyplot as plt
 from includes import preprocessor as pre
 from includes import wn_analyzer as wna
 from includes import utils
 from plot.window_sizes import plot_iv_things
-
-import config
-import matplotlib.pyplot as plt
+from tests import information_value_tests
 reload(config)
 
 
@@ -32,7 +33,10 @@ def scrap_subset_of_works():
         print "Something terrible happened during extraction of lenin subset: %s" % e
 
 
-
+def run_tests():
+    test_loader = unittest.TestLoader()
+    test_suite = test_loader.discover(start_dir="tests", pattern="*_tests.py")
+    unittest.TextTestRunner(verbosity=2).run(test_suite)
 
 
 
@@ -48,6 +52,8 @@ def main():
     parser.add_argument('--wn', action='store_true', default= False, help='Needs by_year/YYYY_(works|iv|zipf).json and years_zipf.json, creates by_year/YYYY_wn.json')
     parser.add_argument('--restart-db', action='store_true', default= False, help='Executes split-years, zipf and zipf-resume')
     parser.add_argument('--plot-iv-analysis', action='store_true', default=False, help="Shows some plot about Information Value Analysis")    
+    parser.add_argument('--test', action='store_true', default=False, help="Run Tests")    
+
     # Parse args
     args = parser.parse_args()
 
@@ -69,6 +75,8 @@ def main():
         pre.restart_database(MIN_YEAR, MAX_YEAR+1)
     if args.plot_iv_analysis:
         plot_iv_things()
+    if args.test:
+        run_tests()
 
 if __name__ == "__main__":
     main()
