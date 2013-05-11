@@ -57,10 +57,10 @@ class InformationValueCalculator:
 			
 		p = {}		
 		for word in self.words:
-			p[word] = {}
+			p[word] = []
 			for i in range(0,P):
 				if sum_f[word] != 0:
-					p[word][i] = 1.0*freq[word][i] / sum_f[word]	
+					p[word].append(1.0*freq[word][i] / sum_f[word])
 					
 
 		return p
@@ -74,9 +74,9 @@ class InformationValueCalculator:
 		
 		for word in self.words:
 			S[word] = 0
-			for i in p[word]:
-				if p[word][i] != 0:
-					S[word] = S[word] + (p[word][i] * math.log(p[word][i]))
+			for prob in p[word]:
+				if prob:
+					S[word] = S[word] + (prob * math.log(prob))
 			
 			S[word] = S[word] * (-1.0 / math.log(P))
 			#print word+': '+ str(S[word])		
