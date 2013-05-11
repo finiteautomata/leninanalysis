@@ -16,7 +16,9 @@ class InformationValueCalculatorTest(TestCase):
         p_i = iv_calculator.occurrence_probability(window_size=1)
         print "The shit = %s" % p_i
         self.assertItemsEqual(p_i.keys(), ["foo"])
-        self.assertAlmostEqual(p_i["foo"], 1/3)
+
+        for i in range(3):
+            self.assertAlmostEqual(p_i["foo"][i], 1/3)
 
     def test_occurrence_probability_for_two_words_in_vocabulary(self):
         tokens = ["foo", "bar"] * 3
@@ -25,8 +27,9 @@ class InformationValueCalculatorTest(TestCase):
         p_i = iv_calculator.occurrence_probability(window_size=2)
 
         self.assertItemsEqual(p_i.keys(), ["foo", "bar"])
-        self.assertAlmostEqual(p_i["foo"], 1/3)
-        self.assertAlmostEqual(p_i["bar"], 1/3)
+        for i in range(3):
+            self.assertAlmostEqual(p_i["foo"][i], 1/3)
+            self.assertAlmostEqual(p_i["bar"][i], 1/3)
 
     def test_occurrence_probability_for_null_entropy(self):
         tokens = ["foo"] * 3 + ["bar"] * 3 + ["doe"] * 3
@@ -35,9 +38,10 @@ class InformationValueCalculatorTest(TestCase):
         p_i = iv_calculator.occurrence_probability(window_size=3)
 
         self.assertItemsEqual(p_i.keys(), ["foo", "bar", "doe"])
-        self.assertAlmostEqual(p_i["foo"], 0)
-        self.assertAlmostEqual(p_i["bar"], 0)
-        self.assertAlmostEqual(p_i["doe"], 0)
+        for i in range(3):
+            self.assertAlmostEqual(p_i["foo"][i], 0)
+            self.assertAlmostEqual(p_i["bar"][i], 0)
+            self.assertAlmostEqual(p_i["doe"][i], 0)
 
 
     def test_entropy_for_single_word_text(self):
@@ -45,7 +49,8 @@ class InformationValueCalculatorTest(TestCase):
         iv_calculator = InformationValueCalculator(tokens)
 
         entropy_dict = iv_calculator.entropy(window_size=1)
-        self.assertDictContainsSubset({"foo": 1.0}, entropy_dict)
+        self.assertItemsEqual(entropy_dict.keys(), ["foo"])
+        self.assertAlmostEqual(entropy_dict["foo"], 1.0)
 
 
 

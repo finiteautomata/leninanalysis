@@ -1,7 +1,9 @@
 # This Python file uses the following encoding: utf-8  
+from __future__ import division
 import math       
 import random                
 import copy
+
 
 def get_count(ctuple):
 	return ctuple[1]
@@ -33,30 +35,32 @@ class InformationValueCalculator:
 			tokenized_text = self.get_rand_tokenized_text()
 		else:
 			tokenized_text = self.tokens
-		P = self.total_words / window_size
+		P = int(math.ceil(self.total_words / window_size))
 		if P == 0 or P == 1:
 			print 'Ventana demasiado grande'
 			raise WindowSizeTooLarge("Ventana de tamaño %s para texto de tamaño %s" % (window_size, self.total_words))			
 		
-		f = {}
+		freq = {}
 		sum_f = {}
 		
 		for word in self.words:
 			sum_f[word] = 0
-			f[word] = {}
+			freq[word] = {}
 			for i in range(0,P):
-				f[word][i] = 1.0 * tokenized_text[(i*window_size):(((i+1)*window_size)-1)].count(word) / window_size 
-				sum_f[word] = sum_f[word] + f[word][i] 	 
+				window = get_window(tokenized_text, window_size=window_size, number_of_window=i)
+				freq[word][i] = window.count(word) / len(window) 
+				sum_f[word] = sum_f[word] + freq[word][i] 	 
 		
+		print "Frequencies = %s" % freq
 		if ret_freq:
-			return f
+			return freq
 			
 		p = {}		
 		for word in self.words:
 			p[word] = {}
 			for i in range(0,P):
 				if sum_f[word] != 0:
-					p[word][i] = 1.0*f[word][i] / sum_f[word]	
+					p[word][i] = 1.0*freq[word][i] / sum_f[word]	
 					
 
 		return p
@@ -241,4 +245,9 @@ class InformationValueCalculator:
 		max_window_size = max(ivs, key=ivs.get)
 		iv_per_word = ivs[max_window_size]
 		return max_window_size, iv_per_word		
-					
+
+
+def get_window(tokens, window_size, number_of_window):
+	lower_bound = number_of_window * window_size
+	upper_bound = (number_of_window+1) * window_size
+	return tokens[lower_bound:upper_bound]
