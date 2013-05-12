@@ -51,7 +51,6 @@ class InformationValueCalculator:
 				freq[word][i] = window.count(word) / len(window) 
 				sum_f[word] = sum_f[word] + freq[word][i] 	 
 		
-		print "Frequencies = %s" % freq
 		if ret_freq:
 			return freq
 			
@@ -77,10 +76,8 @@ class InformationValueCalculator:
 			for prob in p[word]:
 				if prob:
 					S[word] = S[word] + (prob * math.log(prob))
-			
 			S[word] = S[word] * (-1.0 / math.log(P))
 			#print word+': '+ str(S[word])		
-		
 		return S		
 		
 	#Calcular la "information value" de las palabras seleccionadas,
