@@ -109,7 +109,7 @@ class InformationValueCalculator:
 
 		information_value = {}
 		alternar = True
-		tokenized_text = self.get_tokenized_text()
+		tokenized_text = self.tokens
 		N = self.total_words
 		for word in self.words:
 			frec = 1.0* tokenized_text.count(word) / N
@@ -117,6 +117,7 @@ class InformationValueCalculator:
 				frec = -1.0*frec
 			information_value[word] =  (frec * (ordered_entropy[word] - random_mean[word]))
 			
+		print information_value
 		items = sorted(information_value.items(), key=get_count, reverse=alternar)
 	
 		#print 'Top 20 words (information values):'
@@ -124,7 +125,7 @@ class InformationValueCalculator:
 			#print item[0]
 	#		print item[0], item[1]	
 	    
-		return items
+		return information_value
 
   #window_size = scale*len(text)
 	def get_scales(self):

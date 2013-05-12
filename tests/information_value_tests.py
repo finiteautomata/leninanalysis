@@ -6,7 +6,10 @@ from includes.tokenizer import tokenize
 from includes.information_value import InformationValueCalculator
 
 class InformationValueCalculatorTest(TestCase):
-    # Ocurrence Probability Test
+    """
+    Ocurrence Probability Test
+    Remember p_i[word][i] stands for the probability of finding w in chapter i, assuming you've already chosen it.
+    """
     def test_occurrence_probability_for_single_word_in_vocabulary(self):
         tokens = ["foo", "foo", "foo"]
         iv_calculator = InformationValueCalculator(tokens)
@@ -48,6 +51,12 @@ class InformationValueCalculatorTest(TestCase):
         self.assertAlmostEqual(p_i["doe"][0], .0)
         self.assertAlmostEqual(p_i["doe"][1], .0)
         self.assertAlmostEqual(p_i["doe"][2], 1.0)
+
+    """
+    Entropy Tests
+    Entropy of a word equals 1 => word homogeneously distributed across the text 
+    Entropy of a word equals 0 => word concentred of a single division of text
+    """
         
 
     def test_entropy_for_single_word_text(self):
@@ -91,6 +100,38 @@ class InformationValueCalculatorTest(TestCase):
 
         self.assertNotAlmostEqual(entropy_dict["doe"], 1.0)
         self.assertNotAlmostEqual(entropy_dict["doe"], 0.0)
+
+    """
+    Information Value Tests
+
+    Given a text T, and a random shuffle of T, called R, iv of a word w is the difference of 
+
+    (S_T(w) - S_R(w)) * f(w)
+
+    where S_T(w) is the entropy in T of w, S_R the entropy of w in R, and f(w) the frequency of w in the whole text
+    
+    This tests are the most odd, as some of them, so they will be purely probabilistic.
+
+    In other cases I will try to do some mocking, so I can control more them.
+    """
+    def test_iv_for_single_word_text(self):
+        tokens = ["foo"] * 100
+        iv_calculator = InformationValueCalculator(tokens)
+
+        information_value = iv_calculator.information_value(window_size=10)
+
+        self.assertItemsEqual(information_value.keys(), ["foo"])
+        self.assertAlmostEqual(information_value["foo"], 0.0)
+
+    def test_iv_for_very_concentred_word(self):
+        tokens = ["foo", "bar", "doe"] * 10 + ["john", "bar"] * 5 + ["foo", "bar", "doe"] * 10
+        iv_calculator = InformationValueCalculator(tokens)
+
+        information_value = iv_calculator.information_value(window_size=10)
+
+        print "Iv = %s" % information_value
+        self.assertItemsEqual(information_value.keys(), ["foo", "john", "bar", "doe"])
+        self.assertNotAlmostEqual(information_value["john"], 0.0)
 
 def get_moby_dick_tokens():
     moby_dick = gutenberg.raw('melville-moby_dick.txt')
