@@ -1,5 +1,5 @@
 #Pipeline y estructuras de datos
-1) crawl.bat 
+1) crawl.bat  
     genera lenin_work.json
         [
             {
