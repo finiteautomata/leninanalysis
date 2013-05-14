@@ -1,8 +1,14 @@
 # This Python file uses the following encoding: utf-8  
 from __future__ import division
+import copy
 import math       
 import random                
-import copy
+import operator
+import nltk
+
+def print_probabilty(str, prob):
+	if random.random() < prob:
+		print str
 
 
 def get_count(ctuple):
@@ -19,6 +25,8 @@ class InformationValueCalculator:
 		self.tokens = tokens
 		self.total_words = len(tokens)
 		self.words = set(tokens)
+		self.word_fdist = nltk.FreqDist(self.words)
+
 		self.rand_tokenized_text = None
 	
 	def get_rand_tokenized_text(self):
@@ -42,10 +50,12 @@ class InformationValueCalculator:
 		
 		freq = {}
 		sum_f = {}
+
 		
-		for word in self.words:
+		for i, word in enumerate(self.words):
 			sum_f[word] = 0
 			freq[word] = {}
+			print_probabilty("Trying word = %s [%s / %s] " % (word, i, self.total_words), 0.001)
 			for i in range(0,P):
 				window = get_window(tokenized_text, window_size=window_size, number_of_window=i)
 				freq[word][i] = window.count(word) / len(window) 
@@ -87,7 +97,6 @@ class InformationValueCalculator:
 	# Information value, just as in binary computing, is measured in bits."
 	
 	def information_value(self, window_size):
-		#print 'information_value'
 		ordered_entropy = self.entropy(window_size)
 		if not ordered_entropy:
 			return False
@@ -96,7 +105,6 @@ class InformationValueCalculator:
 		random_mean = {}
 		cant_randoms = 1
 		for i in range(0,cant_randoms):
-			#print 'Calculando entropias de texto randomizado '+ str(i+1)
 			random_entropy[i] = self.entropy(window_size, random=True)
 		
 		
@@ -112,12 +120,11 @@ class InformationValueCalculator:
 		tokenized_text = self.tokens
 		N = self.total_words
 		for word in self.words:
-			frec = 1.0* tokenized_text.count(word) / N
+			frec = 1.0* self.word_fdist[word] / N
 			if alternar:  #Invierto el valor para que de positivo todo
 				frec = -1.0*frec
 			information_value[word] =  (frec * (ordered_entropy[word] - random_mean[word]))
 			
-		print information_value
 		items = sorted(information_value.items(), key=get_count, reverse=alternar)
 	
 		#print 'Top 20 words (information values):'
@@ -138,66 +145,45 @@ class InformationValueCalculator:
 
 	def get_window_sizes(self):
 		return [200*i for i in range(1,20)]
-		
-	def get_results(self):
+
+
+	def get_results(self, number_of_words=20):
 		results = {}
 		results['ivs'] = [] 
 		results['tried_windows'] = []
 		results['total_words']= self.total_words
 		ivs = {}
-		
-		for window_size in self.get_window_sizes():
+
+		window_sizes = self.get_window_sizes()
+
+		window_sizes.extend([int(self.total_words * scale) for scale in self.get_scales()])
+		window_sizes = set(window_sizes)
+
+		for window_size in window_sizes:
 			try:
 				print "Probando tamaño de ventana = %s" % window_size
 				if window_size >= 1:
-					aux = self.information_value(window_size)
-					
-	        #Criterio: promedio de todos los information values
-					ivs[window_size] = max([c for (w,c) in aux])
+					information_value = self.information_value(window_size)
+					sorted_words = sorted(information_value.iteritems(), key=operator.itemgetter(1), reverse=True)
+					print sorted_words[10]
+					ivs[window_size] = sorted_words[0][1]
+
 					res = {
-									'window_size' : window_size,
-									'iv_per_word': ivs[window_size],
-									'top_words': [w for (w,c) in aux[:n]],
-									'top_words_with_iv': [(w,c) for (w,c) in aux[:n]],
-									
-								}
+							'window_size' : window_size,
+							'iv_per_word': ivs[window_size],
+							'top_words': sorted_words[:number_of_words]
+					}
 					results['ivs'].append(res)
 					results['tried_windows'].append(window_size)
 			except WindowSizeTooLarge as e:
 				# La ventana es demasiado grande => salir!
 				break
-
-    #Generar datos de IV para cada escala de ventana 
-		for scale in self.get_scales():
-			try:
-				window_size = int(self.total_words* scale)
-				print str(work_index)+' evaluando escala '+str(scale)
-				if window_size >= 1:
-					aux = self.information_value(window_size)
-					
-	        #Criterio: promedio de todos los information values
-					ivs[window_size] = max([c for (w,c) in aux])
-					
-					res = {
-									'window_size' : window_size,
-									'scale': scale,
-									'iv_per_word': ivs[window_size],
-									'top_words': [w for (w,c) in aux[:n]],
-									'top_words_with_iv': [(w,c) for (w,c) in aux[:n]],
-									
-								}
-					results['ivs'].append(res)
-					results['tried_windows'].append(window_size) 
-			except WindowSizeTooLarge as e:
-				break
-    
 		#Criterio: maximo de promedio de IV sobre todas las palabras
 		results['best_window_size'] = max(ivs, key=ivs.get)
 		results['best_iv_per_word'] = ivs[results['best_window_size']]
 		for res in results['ivs']:
 			if res['window_size'] == results['best_window_size']:
 				results['top_words'] = res['top_words']
-				results['top_words_with_iv'] = res['top_words_with_iv']
 				if 'scale' in res.keys():
 					results['best_scale'] = res['scale']
 				break

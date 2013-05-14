@@ -4,12 +4,13 @@ import unittest
 import config
 import argparse
 import subprocess
-import matplotlib.pyplot as plt
 from includes import preprocessor as pre
 from includes import wn_analyzer as wna
 from includes import utils
 from plot.window_sizes import plot_iv_things
 from tests import information_value_tests
+
+
 reload(config)
 
 
