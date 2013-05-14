@@ -225,14 +225,15 @@ class InformationValueCalculatorTest(TestCase):
     XXX = 0.75
     @skip("Not used yet")
     def test_moby_dick_iv(self):
-        tokens = get_moby_dick_tokens()[:40000]
+        tokens = get_moby_dick_tokens()[:60000]
         iv_calculator = InformationValueCalculator(tokens)
-        res = iv_calculator.get_results()
+        res = iv_calculator.get_results(window_sizes=xrange(100, 7000, 100))
+        print res
 
 
 
 def get_moby_dick_tokens():
     moby_dick = gutenberg.raw('melville-moby_dick.txt')
     tokens = tokenize(moby_dick, only_alphanum=True, clean_punctuation=True)
-    return tokens
+    return [token.lower() for token in tokens]
 
