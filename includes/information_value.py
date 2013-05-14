@@ -35,6 +35,16 @@ class InformationValueCalculator:
 			random.shuffle(self.rand_tokenized_text)
 		return self.rand_tokenized_text
 		
+	def get_frequencies(self, tokenized_text, window_size):
+		freq = dict((word, []) for word in self.words)
+		P = int(math.ceil(self.total_words / window_size))
+		for i in range(0,P):
+			window = get_window(tokenized_text, window_size=window_size, number_of_window=i)
+			window_fdist = nltk.FreqDist(window)
+			for word in self.words:
+				freq[word].append(window_fdist[word] / len(window))
+
+		return freq
 	
 	def occurrence_probability(self, window_size, random=False, ret_freq = False):
 		#print 'occurrence_probability'
@@ -48,8 +58,8 @@ class InformationValueCalculator:
 			print 'Ventana demasiado grande'
 			raise WindowSizeTooLarge("Ventana de tamaño %s para texto de tamaño %s" % (window_size, self.total_words))			
 		
-		freq = dict((word, []) for word in self.words)
-		sum_f = dict((word, 0) for word in self.words)
+		freq = self.get_frequencies(tokenized_text, window_size)
+		sum_f = dict((word, sum(freq[word])) for word in self.words)
 
 
 		for i in range(0,P):
@@ -58,7 +68,6 @@ class InformationValueCalculator:
 
 			for word in self.words:
 				freq[word].append(window_fdist[word] / len(window))
-				sum_f[word] += freq[word][i] 	 
 		
 		if ret_freq:
 			return freq
@@ -156,6 +165,7 @@ class InformationValueCalculator:
 		window_sizes = self.get_window_sizes()
 
 		window_sizes.extend([int(self.total_words * scale) for scale in self.get_scales()])
+		window_sizes = filter(lambda x: x < 7000, window_sizes)
 		window_sizes = set(window_sizes)
 
 		for window_size in window_sizes:
@@ -163,9 +173,7 @@ class InformationValueCalculator:
 				print "Probando tamaño de ventana = %s" % window_size
 				if window_size >= 1:
 					information_value = self.information_value(window_size)
-					print information_value
 					sorted_words = sorted(information_value.iteritems(), key=operator.itemgetter(1), reverse=True)
-					print sorted_words[10]
 					ivs[window_size] = sorted_words[0][1]
 
 					res = {

@@ -1,11 +1,100 @@
 from __future__ import division
-from unittest import TestCase, skip
 import random
+import math
+from unittest import TestCase, skip
 from nltk.corpus import gutenberg
 from includes.tokenizer import tokenize
 from includes.information_value import InformationValueCalculator
 
 class InformationValueCalculatorTest(TestCase):
+    """ 
+    Frequency calculations
+    """
+    def test_frequency_for_single_word_single_windows(self):
+        tokens = ["foo", "foo", "foo"]
+        iv_calculator = InformationValueCalculator(tokens)
+
+        freq = iv_calculator.get_frequencies(tokens, window_size=3)
+
+        self.assertItemsEqual(freq.keys(), ["foo"])
+        self.assertEqual(len(freq["foo"]), 1)
+        self.assertAlmostEqual(freq["foo"][0], 1)
+
+
+    def test_frequency_for_single_word_many_windows(self):
+        tokens = ["foo", "foo", "foo"]
+        iv_calculator = InformationValueCalculator(tokens)
+
+        freq = iv_calculator.get_frequencies(tokens, 1)
+
+        self.assertItemsEqual(freq.keys(), ["foo"])
+        self.assertEqual(len(freq["foo"]), 3)
+        for i in range(3):
+            self.assertAlmostEqual(freq["foo"][i], 1)
+
+
+    def test_frequency_for_many_words_one_window(self):
+        tokens = ["one", "two", "three", "four", "five"]
+        window_size = 5
+        iv_calculator = InformationValueCalculator(tokens)
+
+        freq = iv_calculator.get_frequencies(tokens, window_size=window_size)
+        
+        self.assertItemsEqual(freq.keys(), tokens)
+        for token in tokens:
+            self.assertEqual(len(freq[token]), 1)
+            self.assertAlmostEqual(freq[token][0], 1/window_size)
+
+    def test_frequency_for_many_words_many_windows(self):
+        amount_of_windows = 10
+        window_size = 5
+        words = ["one", "two", "three", "four", "five"]
+        tokens = ["one", "two", "three", "four", "five"] * amount_of_windows
+        iv_calculator = InformationValueCalculator(tokens)
+        freq = iv_calculator.get_frequencies(tokens, window_size=window_size)
+        
+        self.assertItemsEqual(freq.keys(), words)
+        for token in words:
+            self.assertEqual(len(freq[token]), amount_of_windows)
+            for window_no in range(amount_of_windows):
+                self.assertAlmostEqual(freq[token][window_no], 1/window_size)
+
+    def test_frequency_non_homogeneous_distribution(self):
+        words = ["foo", "bar", "doe"]
+        window_size = 3
+        tokens = ["foo", "foo", "bar", "doe", "bar", "foo", "doe", "doe", "doe"]
+
+        iv_calculator = InformationValueCalculator(tokens)
+        freq = iv_calculator.get_frequencies(tokens, window_size=window_size)
+
+        self.assertAlmostEqual(freq["foo"][0], 2/3)
+        self.assertAlmostEqual(freq["bar"][0], 1/3)
+        self.assertAlmostEqual(freq["doe"][0], 0/3)
+
+        self.assertAlmostEqual(freq["foo"][1], 1/3)
+        self.assertAlmostEqual(freq["bar"][1], 1/3)
+        self.assertAlmostEqual(freq["doe"][1], 1/3)
+
+        self.assertAlmostEqual(freq["foo"][2], 0)
+        self.assertAlmostEqual(freq["bar"][2], 0)
+        self.assertAlmostEqual(freq["doe"][2], 1)
+
+    def test_all_frequencies_for_a_given_window_sum_1(self):
+        words = ["foo", "bar", "john", "doe", "random"]
+        tokens = words * 20
+        random.shuffle(tokens)
+        window_size = 7
+        number_of_windows = int(math.ceil(len(tokens)/window_size))
+
+        iv_calculator = InformationValueCalculator(tokens)
+        freq = iv_calculator.get_frequencies(tokens, window_size=7)
+
+        
+        for window_no in range(number_of_windows):
+            sum_for_window = sum([freq[word][window_no] for word in words])
+            self.assertAlmostEqual(sum_for_window, 1.0)
+
+
     """
     Ocurrence Probability Test
     Remember p_i[word][i] stands for the probability of finding w in chapter i, assuming you've already chosen it.
@@ -134,7 +223,7 @@ class InformationValueCalculatorTest(TestCase):
         self.assertNotAlmostEqual(information_value["john"], 0.0)
 
     XXX = 0.75
-    @skip("Not used")
+    @skip("Not used yet")
     def test_moby_dick_iv(self):
         tokens = get_moby_dick_tokens()[:40000]
         iv_calculator = InformationValueCalculator(tokens)
