@@ -48,18 +48,17 @@ class InformationValueCalculator:
 			print 'Ventana demasiado grande'
 			raise WindowSizeTooLarge("Ventana de tamaño %s para texto de tamaño %s" % (window_size, self.total_words))			
 		
-		freq = {}
-		sum_f = {}
+		freq = dict((word, []) for word in self.words)
+		sum_f = dict((word, 0) for word in self.words)
 
-		
-		for i, word in enumerate(self.words):
-			sum_f[word] = 0
-			freq[word] = {}
-			print_probabilty("Trying word = %s [%s / %s] " % (word, i, self.total_words), 0.001)
-			for i in range(0,P):
-				window = get_window(tokenized_text, window_size=window_size, number_of_window=i)
-				freq[word][i] = window.count(word) / len(window) 
-				sum_f[word] = sum_f[word] + freq[word][i] 	 
+
+		for i in range(0,P):
+			window = get_window(tokenized_text, window_size=window_size, number_of_window=i)
+			window_fdist = nltk.FreqDist(window)
+
+			for word in self.words:
+				freq[word].append(window_fdist[word] / len(window))
+				sum_f[word] += freq[word][i] 	 
 		
 		if ret_freq:
 			return freq
@@ -164,6 +163,7 @@ class InformationValueCalculator:
 				print "Probando tamaño de ventana = %s" % window_size
 				if window_size >= 1:
 					information_value = self.information_value(window_size)
+					print information_value
 					sorted_words = sorted(information_value.iteritems(), key=operator.itemgetter(1), reverse=True)
 					print sorted_words[10]
 					ivs[window_size] = sorted_words[0][1]

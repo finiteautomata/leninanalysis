@@ -1,5 +1,5 @@
 from __future__ import division
-from unittest import TestCase
+from unittest import TestCase, skip
 import random
 from nltk.corpus import gutenberg
 from includes.tokenizer import tokenize
@@ -134,10 +134,10 @@ class InformationValueCalculatorTest(TestCase):
         self.assertNotAlmostEqual(information_value["john"], 0.0)
 
     XXX = 0.75
+    @skip("Not used")
     def test_moby_dick_iv(self):
         tokens = get_moby_dick_tokens()[:40000]
         iv_calculator = InformationValueCalculator(tokens)
-
         res = iv_calculator.get_results()
 
 
