@@ -223,11 +223,13 @@ class InformationValueCalculatorTest(TestCase):
         self.assertNotAlmostEqual(information_value["john"], 0.0)
 
     XXX = 0.75
-    @skip("Not used yet")
+    #@skip("Not used yet")
     def test_moby_dick_iv(self):
         tokens = get_moby_dick_tokens()[:60000]
         iv_calculator = InformationValueCalculator(tokens)
-        res = iv_calculator.get_results(window_sizes=xrange(100, 7000, 100))
+        res = iv_calculator.information_value(window_size=1000)
+
+        list(res)
         print res
 
 

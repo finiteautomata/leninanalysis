@@ -118,45 +118,6 @@ class InformationValueCalculator:
 		return information_value
 
 
-	def get_results(self, window_sizes, number_of_words=20):
-		results = {}
-		results['ivs'] = [] 
-		results['tried_windows'] = []
-		results['total_words']= self.total_words
-		ivs = {}
-
-		window_sizes = set(window_sizes)
-
-		for window_size in window_sizes:
-			try:
-				print "Probando tamaño de ventana = %s" % window_size
-				if window_size >= 1:
-					information_value = self.information_value(window_size)
-					sorted_words = sorted(information_value.iteritems(), key=operator.itemgetter(1), reverse=True)
-					ivs[window_size] = sorted_words[0][1]
-
-					res = {
-							'window_size' : window_size,
-							'iv_per_word': ivs[window_size],
-							'top_words': sorted_words[:number_of_words]
-					}
-					results['ivs'].append(res)
-					results['tried_windows'].append(window_size)
-			except WindowSizeTooLarge as e:
-				# La ventana es demasiado grande => salir!
-				break
-		#Criterio: maximo de promedio de IV sobre todas las palabras
-		results['best_window_size'] = max(ivs, key=ivs.get)
-		results['best_iv_per_word'] = ivs[results['best_window_size']]
-		for res in results['ivs']:
-			if res['window_size'] == results['best_window_size']:
-				results['top_words'] = res['top_words']
-				if 'scale' in res.keys():
-					results['best_scale'] = res['scale']
-				break
-		
-		results.pop("ivs", None)
-		return results
 
 
 def get_window(tokens, window_size, number_of_window):
