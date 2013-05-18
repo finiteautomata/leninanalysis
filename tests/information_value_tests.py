@@ -96,7 +96,7 @@ class InformationValueCalculatorTest(TestCase):
             sum_for_window = sum([freq[word][window_no] for word in words])
             self.assertAlmostEqual(sum_for_window, 1.0)
 
-
+    @skip("FEFE")
     def test_frequencies_against_oracle(self):
         tokens = get_moby_dick_tokens()
         words = list(set(tokens))
@@ -158,6 +158,7 @@ class InformationValueCalculatorTest(TestCase):
         self.assertAlmostEqual(p_i["doe"][1], .0)
         self.assertAlmostEqual(p_i["doe"][2], 1.0)
 
+    @skip("FEFE")
     def test_occurrence_probability_against_oracle(self):
         tokens = get_moby_dick_tokens()
         words = list(set(tokens))
@@ -270,22 +271,22 @@ class InformationValueCalculatorTest(TestCase):
         self.assertItemsEqual(information_value.keys(), ["foo", "john", "bar", "doe"])
         self.assertNotAlmostEqual(information_value["john"], 0.0)
 
-    XXX = 0.75
-    @skip("Not used yet")
-    def test_moby_dick_iv(self):
-        tokens = get_moby_dick_tokens()[:60000]
-        
 
+    def test_iv_against_oracle(self):        
+        tokens = get_moby_dick_tokens()
         iv_calculator = InformationValueCalculator(tokens)
 
         res = iv_calculator.information_value(window_size=1000)
-        expected = get_iv(tokens, 1000)
+        expected = oracle.get_iv(tokens, 1000)
         
+        test_words = ["whale", "you", "ahab", "is", "ye", "queequeg", 
+        "thou", "me", "of", "he", "captain", "boat", "the", "stubb", "his", "jonah", "was", "whales", "my"]
         print "Imprimiendo diferencias entre iv's"
-        for word in iv_calculator.words:
-            diff = round(res[word]-expected[word], 5)
-            if diff > .0:
-                print "%s has difference %s got = %s expected = %s" % (word, diff, res[word], expected[word])
+        for word in test_words:
+            abs_err = abs(res[word]-expected[word]) 
+            rel_err = abs_err / res[word]
+            print "%s has difference %s got = %s expected = %s" % (word, rel_err, res[word], expected[word])
+            self.assertLessEqual(rel_err, 0.25, "%s has difference %s got = %s expected = %s" % (word, rel_err, res[word], expected[word]))
 
 
 

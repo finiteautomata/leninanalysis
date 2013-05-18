@@ -27,7 +27,7 @@ class InformationValueCalculator:
 		self.tokens = tokens
 		self.total_words = len(tokens)
 		self.words = set(tokens)
-		self.word_fdist = nltk.FreqDist(self.words)
+		self.word_fdist = nltk.FreqDist(self.tokens)
 		self.rand_tokenized_text = None
 	
 
@@ -101,7 +101,6 @@ class InformationValueCalculator:
 		random_entropy = self.entropy(randomized_text, window_size)
 		
 		information_value = {}
-		tokenized_text = self.tokens
 		for word in self.words:
 			freq = self.word_fdist.freq(word)
 			information_value[word] =  freq * abs(ordered_entropy[word] - random_entropy[word])

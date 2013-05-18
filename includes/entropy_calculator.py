@@ -128,6 +128,7 @@ def get_iv(tokens, window_size):
     information_values[word] = fdist.freq(word)*abs(entropies_of_normal_text[word] - entropies_of_shuffled_text[word])
   return information_values
 
+
 def get_top_words(tokens, window_size, number_of_words):
   information_values = get_iv(tokens, window_size)
   return sorted(information_values.iteritems(), key=operator.itemgetter(1), reverse=True)[:number_of_words]
