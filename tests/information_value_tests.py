@@ -103,7 +103,7 @@ class InformationValueCalculatorTest(TestCase):
         tokens = ["foo", "foo", "foo"]
         iv_calculator = InformationValueCalculator(tokens)
 
-        p_i = iv_calculator.occurrence_probability(window_size=1)
+        p_i = iv_calculator.occurrence_probability(window_size=1, tokenized_text=tokens)
         self.assertItemsEqual(p_i.keys(), ["foo"])
 
         for i in range(3):
@@ -113,7 +113,7 @@ class InformationValueCalculatorTest(TestCase):
         tokens = ["foo", "bar"] * 3
         iv_calculator = InformationValueCalculator(tokens)
 
-        p_i = iv_calculator.occurrence_probability(window_size=2)
+        p_i = iv_calculator.occurrence_probability(window_size=2, tokenized_text=tokens)
 
         self.assertItemsEqual(p_i.keys(), ["foo", "bar"])
         for i in range(3):
@@ -124,7 +124,7 @@ class InformationValueCalculatorTest(TestCase):
         tokens = ["foo"] * 3 + ["bar"] * 3 + ["doe"] * 3
         iv_calculator = InformationValueCalculator(tokens)
 
-        p_i = iv_calculator.occurrence_probability(window_size=3)
+        p_i = iv_calculator.occurrence_probability(window_size=3, tokenized_text=tokens)
 
         self.assertItemsEqual(p_i.keys(), ["foo", "bar", "doe"])
         
@@ -152,7 +152,7 @@ class InformationValueCalculatorTest(TestCase):
         tokens = ["foo", "foo", "foo"]
         iv_calculator = InformationValueCalculator(tokens)
 
-        entropy_dict = iv_calculator.entropy(window_size=1)
+        entropy_dict = iv_calculator.entropy(window_size=1, tokenized_text=tokens)
         self.assertItemsEqual(entropy_dict.keys(), ["foo"])
         self.assertAlmostEqual(entropy_dict["foo"], 1.0)
 
@@ -160,7 +160,7 @@ class InformationValueCalculatorTest(TestCase):
         tokens = ["foo"] * 2 + ["bar"] * 6
         iv_calculator = InformationValueCalculator(tokens)
 
-        entropy_dict = iv_calculator.entropy(window_size=2)
+        entropy_dict = iv_calculator.entropy(window_size=2, tokenized_text=tokens)
         self.assertItemsEqual(entropy_dict.keys(), ["foo", "bar"])
         self.assertAlmostEqual(entropy_dict["foo"], 0.0)
 
@@ -168,7 +168,7 @@ class InformationValueCalculatorTest(TestCase):
         tokens = ["foo"] * 2 + ["bar"] * 6
         iv_calculator = InformationValueCalculator(tokens)
 
-        entropy_dict = iv_calculator.entropy(window_size=2)
+        entropy_dict = iv_calculator.entropy(window_size=2, tokenized_text=tokens)
         self.assertAlmostEqual(entropy_dict["foo"], 0.0)
 
     def test_entropy_calculation_is_stable(self):
@@ -176,7 +176,7 @@ class InformationValueCalculatorTest(TestCase):
         tokens = ["foo"] * 10000
         iv_calculator = InformationValueCalculator(tokens)
         #Stimulus
-        entropy_dict = iv_calculator.entropy(window_size=10)
+        entropy_dict = iv_calculator.entropy(window_size=10, tokenized_text=tokens)
         #Check
         self.assertAlmostEqual(entropy_dict["foo"], 1.0)
 
@@ -185,7 +185,7 @@ class InformationValueCalculatorTest(TestCase):
         random.shuffle(tokens)
 
         iv_calculator = InformationValueCalculator(tokens)
-        entropy_dict = iv_calculator.entropy(window_size=10)
+        entropy_dict = iv_calculator.entropy(window_size=10, tokenized_text=tokens)
 
         self.assertNotAlmostEqual(entropy_dict["doe"], 1.0)
         self.assertNotAlmostEqual(entropy_dict["doe"], 0.0)
@@ -231,6 +231,7 @@ class InformationValueCalculatorTest(TestCase):
 
         list(res)
         print res
+
 
 
 

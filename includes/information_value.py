@@ -1,6 +1,8 @@
 # This Python file uses the following encoding: utf-8  
 from __future__ import division
 import copy
+from copy import deepcopy
+from random import shuffle
 import math       
 import random                
 import operator
@@ -47,13 +49,8 @@ class InformationValueCalculator:
 
 		return freq
 	
-	def occurrence_probability(self, window_size, random=False):
+	def occurrence_probability(self, window_size, tokenized_text):
 		#print 'occurrence_probability'
-		if random:
-			#print 'random'
-			tokenized_text = self.get_rand_tokenized_text()
-		else:
-			tokenized_text = self.tokens
 		P = int(math.ceil(self.total_words / window_size))
 		if P == 0 or P == 1:
 			print 'Ventana demasiado grande'
@@ -72,8 +69,8 @@ class InformationValueCalculator:
 
 		return p
 		
-	def entropy(self, window_size, random = False):
-		p = self.occurrence_probability(window_size, random)
+	def entropy(self, window_size, tokenized_text):
+		p = self.occurrence_probability(window_size, tokenized_text)
 		if not p:
 			return False
 		S = {}
@@ -84,7 +81,7 @@ class InformationValueCalculator:
 			for prob in p[word]:
 				if prob:
 					S[word] = S[word] + (prob * math.log(prob))
-			S[word] = S[word] * (-1.0 / math.log(P))
+			S[word] = (-1)* S[word] / math.log(P)
 			#print word+': '+ str(S[word])		
 		return S		
 		
@@ -95,15 +92,18 @@ class InformationValueCalculator:
 	# Information value, just as in binary computing, is measured in bits."
 	
 	def information_value(self, window_size):
-		ordered_entropy = self.entropy(window_size)
+		ordered_entropy = self.entropy(window_size, self.tokens)
 		if not ordered_entropy:
 			return False
 		
 		random_entropy = {}
 		random_mean = {}
 		cant_randoms = 1
+
+		randomized_text = deepcopy(self.tokens)
+		shuffle(randomized_text)
 		
-		random_entropy = self.entropy(window_size, random=True)
+		random_entropy = self.entropy(window_size, randomized_text)
 		
 		information_value = {}
 		alternar = True
@@ -113,7 +113,7 @@ class InformationValueCalculator:
 			frec = self.word_fdist[word] / N
 			if alternar:  #Invierto el valor para que de positivo todo
 				frec = -1.0*frec
-			information_value[word] =  (frec * (ordered_entropy[word] - random_entropy[word]))
+			information_value[word] =  (frec * abs(ordered_entropy[word] - random_entropy[word]))
 				    
 		return information_value
 
