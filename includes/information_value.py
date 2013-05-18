@@ -40,7 +40,6 @@ class InformationValueCalculator:
 	def get_frequencies(self, tokenized_text, window_size):
 		freq = dict((word, []) for word in self.words)
 		P = int(math.ceil(self.total_words / window_size))
-		print "Number of windows = %s" % P
 		for i in range(0,P):
 			window = get_window(tokenized_text, window_size=window_size, number_of_window=i)
 			window_fdist = nltk.FreqDist(window)
@@ -51,10 +50,8 @@ class InformationValueCalculator:
 		return freq
 	
 	def occurrence_probability(self, window_size, tokenized_text):
-		#print 'occurrence_probability'
 		P = int(math.ceil(self.total_words / window_size))
 		if P == 0 or P == 1:
-			print 'Ventana demasiado grande'
 			raise WindowSizeTooLarge("Ventana de tamaño %s para texto de tamaño %s" % (window_size, self.total_words))			
 		
 		freq = self.get_frequencies(tokenized_text, window_size)

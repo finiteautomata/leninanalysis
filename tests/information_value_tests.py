@@ -5,8 +5,7 @@ from unittest import TestCase, skip
 from nltk.corpus import gutenberg
 from includes.tokenizer import tokenize
 from includes.information_value import InformationValueCalculator
-from includes import entropy_calculator as oracle
-from includes.entropy_calculator import get_iv, get_entropy, EntropyCalculator, get_frequencies
+from tests import iv_oracle
 
 class InformationValueCalculatorTest(TestCase):
     """ 
@@ -103,7 +102,7 @@ class InformationValueCalculatorTest(TestCase):
         iv_calculator = InformationValueCalculator(tokens)
         
         freq = iv_calculator.get_frequencies(tokens, window_size=1000)
-        freq_oracle = oracle.get_frequencies(tokens, words, window_size=1000)
+        freq_oracle = iv_oracle.get_frequencies(tokens, words, window_size=1000)
         for word in words:
             self.assertEqual(len(freq[word]), len(freq_oracle[word]))
             for i in xrange(len(freq[word])):
@@ -165,7 +164,7 @@ class InformationValueCalculatorTest(TestCase):
         iv_calculator = InformationValueCalculator(tokens)
         
         occ_prob = iv_calculator.occurrence_probability(window_size=1000, tokenized_text=tokens)
-        occ_prob_oracle = oracle.get_occurrence_probability(tokens, words, window_size=1000)
+        occ_prob_oracle = iv_oracle.get_occurrence_probability(tokens, words, window_size=1000)
         for word in words:
             ours = occ_prob[word]
             theirs= occ_prob_oracle[word]
@@ -222,14 +221,13 @@ class InformationValueCalculatorTest(TestCase):
         self.assertNotAlmostEqual(entropy_dict["doe"], 1.0)
         self.assertNotAlmostEqual(entropy_dict["doe"], 0.0)
 
-    @skip("Not used")
     def test_entropy_against_oracle(self):
         tokens = get_moby_dick_tokens()[:60000]
         words = list(set(tokens))
         iv_calculator = InformationValueCalculator(tokens)
 
         res = iv_calculator.entropy(window_size=1000, tokenized_text=tokens)
-        expected = get_entropy(tokens, words, 1000)
+        expected = iv_oracle.get_entropy(tokens, words, 1000)
         
         print "Imprimiendo diferencias entre entropias"
         for word in iv_calculator.words:
@@ -277,7 +275,7 @@ class InformationValueCalculatorTest(TestCase):
         iv_calculator = InformationValueCalculator(tokens)
 
         res = iv_calculator.information_value(window_size=1000)
-        expected = oracle.get_iv(tokens, 1000)
+        expected = iv_oracle.get_iv(tokens, 1000)
         
         test_words = ["whale", "you", "ahab", "is", "ye", "queequeg", 
         "thou", "me", "of", "he", "captain", "boat", "the", "stubb", "his", "jonah", "was", "whales", "my"]
