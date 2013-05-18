@@ -5,6 +5,8 @@ from unittest import TestCase, skip
 from nltk.corpus import gutenberg
 from includes.tokenizer import tokenize
 from includes.information_value import InformationValueCalculator
+from includes import entropy_calculator as oracle
+from includes.entropy_calculator import get_iv, get_entropy, EntropyCalculator, get_frequencies
 
 class InformationValueCalculatorTest(TestCase):
     """ 
@@ -93,6 +95,21 @@ class InformationValueCalculatorTest(TestCase):
         for window_no in range(number_of_windows):
             sum_for_window = sum([freq[word][window_no] for word in words])
             self.assertAlmostEqual(sum_for_window, 1.0)
+
+
+    def test_frequencies_against_oracle(self):
+        tokens = get_moby_dick_tokens()
+        words = list(set(tokens))
+        iv_calculator = InformationValueCalculator(tokens)
+        
+        freq = iv_calculator.get_frequencies(tokens, window_size=1000)
+        freq_oracle = oracle.get_frequencies(tokens, words, window_size=1000)
+        for word in words:
+            self.assertEqual(len(freq[word]), len(freq_oracle[word]))
+            for i in xrange(len(freq[word])):
+                if round(freq[word][i]-freq_oracle[word][i], 5) >.0:
+                    self.fail("Frequency differs for %s = %s oracle = %s" % (word, freq[word], freq_oracle[word]))
+
 
 
     """
@@ -190,6 +207,23 @@ class InformationValueCalculatorTest(TestCase):
         self.assertNotAlmostEqual(entropy_dict["doe"], 1.0)
         self.assertNotAlmostEqual(entropy_dict["doe"], 0.0)
 
+    @skip("Not used")
+    def test_entropy_against_oracle(self):
+        tokens = get_moby_dick_tokens()[:60000]
+        words = list(set(tokens))
+        iv_calculator = InformationValueCalculator(tokens)
+
+        res = iv_calculator.entropy(window_size=1000, tokenized_text=tokens)
+        expected = get_entropy(tokens, words, 1000)
+        
+        print "Imprimiendo diferencias entre entropias"
+        for word in iv_calculator.words:
+            abs_err = res[word]-expected[word]
+            if res[word] > .0:
+                rel_err = abs_err / res[word]
+            if abs_err > .0:
+                print "%s has rel_err %s got = %s expected = %s" % (word, rel_err, res[word], expected[word])
+
     """
     Information Value Tests
 
@@ -223,14 +257,21 @@ class InformationValueCalculatorTest(TestCase):
         self.assertNotAlmostEqual(information_value["john"], 0.0)
 
     XXX = 0.75
-    #@skip("Not used yet")
+    @skip("Not used yet")
     def test_moby_dick_iv(self):
         tokens = get_moby_dick_tokens()[:60000]
-        iv_calculator = InformationValueCalculator(tokens)
-        res = iv_calculator.information_value(window_size=1000)
+        
 
-        list(res)
-        print res
+        iv_calculator = InformationValueCalculator(tokens)
+
+        res = iv_calculator.information_value(window_size=1000)
+        expected = get_iv(tokens, 1000)
+        
+        print "Imprimiendo diferencias entre iv's"
+        for word in iv_calculator.words:
+            diff = round(res[word]-expected[word], 5)
+            if diff > .0:
+                print "%s has difference %s got = %s expected = %s" % (word, diff, res[word], expected[word])
 
 
 

@@ -28,9 +28,9 @@ class InformationValueCalculator:
 		self.total_words = len(tokens)
 		self.words = set(tokens)
 		self.word_fdist = nltk.FreqDist(self.words)
-
 		self.rand_tokenized_text = None
 	
+
 	def get_rand_tokenized_text(self):
 		if not self.rand_tokenized_text:
 			self.rand_tokenized_text = copy.deepcopy(self.tokens)
@@ -40,6 +40,7 @@ class InformationValueCalculator:
 	def get_frequencies(self, tokenized_text, window_size):
 		freq = dict((word, []) for word in self.words)
 		P = int(math.ceil(self.total_words / window_size))
+		print "Number of windows = %s" % P
 		for i in range(0,P):
 			window = get_window(tokenized_text, window_size=window_size, number_of_window=i)
 			window_fdist = nltk.FreqDist(window)
@@ -69,7 +70,7 @@ class InformationValueCalculator:
 
 		return p
 		
-	def entropy(self, window_size, tokenized_text):
+	def entropy(self, tokenized_text, window_size):
 		p = self.occurrence_probability(window_size, tokenized_text)
 		if not p:
 			return False
@@ -84,7 +85,7 @@ class InformationValueCalculator:
 			S[word] = (-1)* S[word] / math.log(P)
 			#print word+': '+ str(S[word])		
 		return S		
-		
+
 	#Calcular la "information value" de las palabras seleccionadas,
 	#Definicion de IV:
 	# "The difference between the two entropies multiplied by the frequency of the word gives 
@@ -92,28 +93,18 @@ class InformationValueCalculator:
 	# Information value, just as in binary computing, is measured in bits."
 	
 	def information_value(self, window_size):
-		ordered_entropy = self.entropy(window_size, self.tokens)
-		if not ordered_entropy:
-			return False
-		
-		random_entropy = {}
-		random_mean = {}
-		cant_randoms = 1
+		ordered_entropy = self.entropy(self.tokens, window_size)
 
 		randomized_text = deepcopy(self.tokens)
 		shuffle(randomized_text)
 		
-		random_entropy = self.entropy(window_size, randomized_text)
+		random_entropy = self.entropy(randomized_text, window_size)
 		
 		information_value = {}
-		alternar = True
 		tokenized_text = self.tokens
-		N = self.total_words
 		for word in self.words:
-			frec = self.word_fdist[word] / N
-			if alternar:  #Invierto el valor para que de positivo todo
-				frec = -1.0*frec
-			information_value[word] =  (frec * abs(ordered_entropy[word] - random_entropy[word]))
+			freq = self.word_fdist.freq(word)
+			information_value[word] =  freq * abs(ordered_entropy[word] - random_entropy[word])
 				    
 		return information_value
 
@@ -124,3 +115,8 @@ def get_window(tokens, window_size, number_of_window):
 	lower_bound = number_of_window * window_size
 	upper_bound = (number_of_window+1) * window_size
 	return tokens[lower_bound:upper_bound]
+
+def get_top_words(tokens, window_size, number_of_words):
+	ivc = InformationValueCalculator(tokens)
+	res = ivc.information_value(window_size)
+	return sorted(res.iteritems(), key=operator.itemgetter(1), reverse=True)[:number_of_words]
