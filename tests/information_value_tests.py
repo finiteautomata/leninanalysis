@@ -107,7 +107,7 @@ class InformationValueCalculatorTest(TestCase):
         for word in words:
             self.assertEqual(len(freq[word]), len(freq_oracle[word]))
             for i in xrange(len(freq[word])):
-                if round(freq[word][i]-freq_oracle[word][i], 5) >.0:
+                if round(freq[word][i]-freq_oracle[word][i], 6) >.0:
                     self.fail("Frequency differs for %s = %s oracle = %s" % (word, freq[word], freq_oracle[word]))
 
 
@@ -158,6 +158,20 @@ class InformationValueCalculatorTest(TestCase):
         self.assertAlmostEqual(p_i["doe"][1], .0)
         self.assertAlmostEqual(p_i["doe"][2], 1.0)
 
+    def test_occurrence_probability_against_oracle(self):
+        tokens = get_moby_dick_tokens()
+        words = list(set(tokens))
+        iv_calculator = InformationValueCalculator(tokens)
+        
+        occ_prob = iv_calculator.occurrence_probability(window_size=1000, tokenized_text=tokens)
+        occ_prob_oracle = oracle.get_occurrence_probability(tokens, words, window_size=1000)
+        for word in words:
+            ours = occ_prob[word]
+            theirs= occ_prob_oracle[word]
+            self.assertEqual(len(ours), len(theirs))
+            for i in xrange(len(ours)):
+                if round(ours[i]-theirs[i], 6) >.0:
+                    self.fail("occurrence_probability differs for %s = %s oracle = %s" % (word, ours, theirs))
     """
     Entropy Tests
     Entropy of a word equals 1 => word homogeneously distributed across the text 

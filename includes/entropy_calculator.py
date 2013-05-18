@@ -106,6 +106,14 @@ def get_frequencies(tokens, words, window_size):
     ret[word] = calculator.get_frequencies_for(word)
   return ret
   
+def get_occurrence_probability(tokens, words, window_size):
+  chapters = split_into_chapters(tokens, window_size)
+  ret = {}
+  calculator = EntropyCalculator(chapters)
+  for word in words:
+    ret[word] = calculator.get_chapter_probabilities_for(word)
+  return ret
+
 
 def get_iv(tokens, window_size):
   words = list(set(tokens))
