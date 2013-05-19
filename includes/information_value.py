@@ -107,6 +107,7 @@ class InformationValueCalculator:
 
 
 
+
 def get_window(tokens, window_size, number_of_window):
 	lower_bound = number_of_window * window_size
 	upper_bound = (number_of_window+1) * window_size
@@ -115,4 +116,40 @@ def get_window(tokens, window_size, number_of_window):
 def get_top_words(tokens, window_size, number_of_words):
 	ivc = InformationValueCalculator(tokens)
 	res = ivc.information_value(window_size)
+
 	return sorted(res.iteritems(), key=operator.itemgetter(1), reverse=True)[:number_of_words]
+
+
+def get_optimal_window_size(tokens, window_sizes, number_of_words=20):
+	results_per_window_size = {}
+
+	max_iv_per_window_size = {}
+	for window_size in window_sizes:
+		try:
+			print "Probando tamaño de ventana = %s" % window_size
+			top_words = get_top_words(tokens, window_size, number_of_words)
+			max_iv = top_words[0][1]
+			max_iv_per_window_size[window_size] = max_iv
+			if window_size >= 1:
+				results_per_window_size[window_size] = {
+					'words': top_words,
+					'max_iv': max_iv
+				}
+		except WindowSizeTooLarge as e:
+		# La ventana es demasiado grande => salir!
+			break
+#Criterio: maximo de promedio de IV sobre todas las palabras
+	best_result = max(results_per_window_size.iteritems(),
+		key= lambda res: res[1]['max_iv']
+		)
+	best_window_size = best_result[0]
+	top_words = best_result[1]
+
+	results = {
+		'best_window_size' : best_window_size,
+		'top_words' : top_words,
+		'max_iv_per_window_size' : max_iv_per_window_size
+	}
+
+	return results
+

@@ -6,6 +6,7 @@ from nltk.corpus import gutenberg
 from includes.tokenizer import tokenize
 from includes.information_value import InformationValueCalculator
 from tests import iv_oracle
+from includes import information_value
 
 class InformationValueCalculatorTest(TestCase):
     """ 
@@ -95,7 +96,7 @@ class InformationValueCalculatorTest(TestCase):
             sum_for_window = sum([freq[word][window_no] for word in words])
             self.assertAlmostEqual(sum_for_window, 1.0)
 
-    @skip("FEFE")
+    @skip("Not used")
     def test_frequencies_against_oracle(self):
         tokens = get_moby_dick_tokens()
         words = list(set(tokens))
@@ -156,8 +157,8 @@ class InformationValueCalculatorTest(TestCase):
         self.assertAlmostEqual(p_i["doe"][0], .0)
         self.assertAlmostEqual(p_i["doe"][1], .0)
         self.assertAlmostEqual(p_i["doe"][2], 1.0)
-
-    @skip("FEFE")
+    
+    @skip("Not used")
     def test_occurrence_probability_against_oracle(self):
         tokens = get_moby_dick_tokens()
         words = list(set(tokens))
@@ -220,7 +221,8 @@ class InformationValueCalculatorTest(TestCase):
 
         self.assertNotAlmostEqual(entropy_dict["doe"], 1.0)
         self.assertNotAlmostEqual(entropy_dict["doe"], 0.0)
-
+    
+    @skip("Not used")
     def test_entropy_against_oracle(self):
         tokens = get_moby_dick_tokens()[:60000]
         words = list(set(tokens))
@@ -269,7 +271,7 @@ class InformationValueCalculatorTest(TestCase):
         self.assertItemsEqual(information_value.keys(), ["foo", "john", "bar", "doe"])
         self.assertNotAlmostEqual(information_value["john"], 0.0)
 
-
+    @skip("Not used")
     def test_iv_against_oracle(self):        
         tokens = get_moby_dick_tokens()
         iv_calculator = InformationValueCalculator(tokens)
@@ -279,14 +281,17 @@ class InformationValueCalculatorTest(TestCase):
         
         test_words = ["whale", "you", "ahab", "is", "ye", "queequeg", 
         "thou", "me", "of", "he", "captain", "boat", "the", "stubb", "his", "jonah", "was", "whales", "my"]
-        print "Imprimiendo diferencias entre iv's"
         for word in test_words:
             abs_err = abs(res[word]-expected[word]) 
             rel_err = abs_err / res[word]
-            print "%s has difference %s got = %s expected = %s" % (word, rel_err, res[word], expected[word])
             self.assertLessEqual(rel_err, 0.25, "%s has difference %s got = %s expected = %s" % (word, rel_err, res[word], expected[word]))
 
 
+    def test_top_words(self):
+        tokens = get_moby_dick_tokens()
+        window_sizes =  range(200, 1600, 200)
+
+        print information_value.get_optimal_window_size(tokens, window_sizes, 20)
 
 
 def get_moby_dick_tokens():
