@@ -25,7 +25,6 @@ class InformationValueCalculator:
 	def __init__(self, tokens):
 		#se carga la lista de tokens
 		self.tokens = tokens
-		self.total_words = len(tokens)
 		self.words = set(tokens)
 		self.word_fdist = nltk.FreqDist(self.tokens)
 		self.rand_tokenized_text = None
@@ -36,10 +35,13 @@ class InformationValueCalculator:
 			self.rand_tokenized_text = copy.deepcopy(self.tokens)
 			random.shuffle(self.rand_tokenized_text)
 		return self.rand_tokenized_text
+
+	def number_of_windows(self, window_size):
+		return int(math.ceil(len(self.tokens) / window_size))
 		
 	def get_frequencies(self, tokenized_text, window_size):
 		freq = dict((word, []) for word in self.words)
-		P = int(math.ceil(self.total_words / window_size))
+		P = self.number_of_windows(window_size)
 		for i in range(0,P):
 			window = get_window(tokenized_text, window_size=window_size, number_of_window=i)
 			window_fdist = nltk.FreqDist(window)
@@ -50,9 +52,9 @@ class InformationValueCalculator:
 		return freq
 	
 	def occurrence_probability(self, window_size, tokenized_text):
-		P = int(math.ceil(self.total_words / window_size))
+		P = self.number_of_windows(window_size)
 		if P == 0 or P == 1:
-			raise WindowSizeTooLarge("Ventana de tamaño %s para texto de tamaño %s" % (window_size, self.total_words))			
+			raise WindowSizeTooLarge("Ventana de tamaño %s para texto de tamaño %s" % (window_size, len(tokens)))			
 		
 		freq = self.get_frequencies(tokenized_text, window_size)
 		sum_f = dict((word, sum(freq[word])) for word in self.words)
@@ -72,7 +74,7 @@ class InformationValueCalculator:
 		if not p:
 			return False
 		S = {}
-		P = self.total_words / window_size
+		P = self.number_of_windows(window_size)
 		
 		for word in self.words:
 			S[word] = 0
@@ -104,6 +106,22 @@ class InformationValueCalculator:
 				    
 		return information_value
 
+	def get_window_size_analysis(self, window_size, number_of_words=20):
+		information_value = self.information_value(window_size)
+		# sort the words according to their information value
+		sorted_words = sorted(information_value.iteritems(), key=operator.itemgetter(1), reverse=True)
+		max_iv = sorted_words[0][1]
+		# Sum the reverse of sorted_words to improve numerical stability
+		iv_sum = reduce(lambda x,y: x+y[1], reversed(sorted_words), 0)
+		iv_average = iv_sum / len(self.tokens)
+
+		return {
+			'window_size' : window_size,
+			'words' : sorted_words[:number_of_words],
+			'average_iv' : iv_average,
+			'iv_sum' : iv_sum,
+			'max_iv' : max_iv
+		}
 
 
 
@@ -124,32 +142,20 @@ def get_optimal_window_size(tokens, window_sizes, number_of_words=20):
 	results_per_window_size = {}
 
 	max_iv_per_window_size = {}
+	ivc = InformationValueCalculator(tokens)
+
 	for window_size in window_sizes:
 		try:
 			print "Probando tamaño de ventana = %s" % window_size
-			top_words = get_top_words(tokens, window_size, number_of_words)
-			max_iv = top_words[0][1]
-			max_iv_per_window_size[window_size] = max_iv
-			if window_size >= 1:
-				results_per_window_size[window_size] = {
-					'words': top_words,
-					'max_iv': max_iv
-				}
+			analysis = ivc.get_window_size_analysis(window_size, number_of_words)
+			results_per_window_size[window_size] = analysis
 		except WindowSizeTooLarge as e:
 		# La ventana es demasiado grande => salir!
 			break
 #Criterio: maximo de promedio de IV sobre todas las palabras
 	best_result = max(results_per_window_size.iteritems(),
-		key= lambda res: res[1]['max_iv']
+		key= lambda res: res[1]['iv_sum']
 		)
-	best_window_size = best_result[0]
-	top_words = best_result[1]
-
-	results = {
-		'best_window_size' : best_window_size,
-		'top_words' : top_words,
-		'max_iv_per_window_size' : max_iv_per_window_size
-	}
-
-	return results
+	
+	return best_result
 
