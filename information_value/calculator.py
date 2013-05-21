@@ -1,6 +1,5 @@
 # This Python file uses the following encoding: utf-8  
 from __future__ import division
-import copy
 from copy import deepcopy
 from random import shuffle
 import math       

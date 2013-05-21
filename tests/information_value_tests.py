@@ -4,9 +4,9 @@ import math
 from unittest import TestCase, skip
 from nltk.corpus import gutenberg
 from includes.tokenizer import tokenize
-from includes.information_value import InformationValueCalculator
+from information_value.calculator import InformationValueCalculator
+import information_value.calculator as information_value
 from tests import iv_oracle
-from includes import information_value
 
 class InformationValueCalculatorTest(TestCase):
     """ 
@@ -85,11 +85,11 @@ class InformationValueCalculatorTest(TestCase):
         words = ["foo", "bar", "john", "doe", "random"]
         tokens = words * 20
         random.shuffle(tokens)
-        window_size = 7
+        window_size = 5
         number_of_windows = int(math.ceil(len(tokens)/window_size))
 
         iv_calculator = InformationValueCalculator(tokens)
-        freq = iv_calculator.get_frequencies(tokens, window_size=7)
+        freq = iv_calculator.get_frequencies(tokens, window_size=window_size)
 
         
         for window_no in range(number_of_windows):
