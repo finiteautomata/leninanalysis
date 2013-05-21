@@ -4,6 +4,7 @@ import copy
 from copy import deepcopy
 from random import shuffle
 import math       
+import multiprocessing
 import random                
 import operator
 import nltk
@@ -123,7 +124,11 @@ class InformationValueCalculator:
 def get_window(tokens, window_size, number_of_window):
 	lower_bound = number_of_window * window_size
 	upper_bound = (number_of_window+1) * window_size
-	return tokens[lower_bound:upper_bound]
+	window = tokens[lower_bound:upper_bound]
+
+	if len(window) < window_size:
+		window += ['#'] * (window_size-len(window))
+	return window
 
 def get_top_words(tokens, window_size, number_of_words):
 	ivc = InformationValueCalculator(tokens)
@@ -133,6 +138,13 @@ def get_top_words(tokens, window_size, number_of_words):
 
 information_value_calculator = None
 
+def get_window_size_analysis(window_size):
+	try:
+		print "Probando window_size = %s" % window_size
+		return (window_size, information_value_calculator.get_window_size_analysis(window_size, 20))
+	except WindowSizeTooLarge as e:
+		return (window_size, None)
+
 def get_optimal_window_size(tokens, window_sizes, number_of_words=20):
 	global information_value_calculator
 	results_per_window_size = {}
@@ -140,17 +152,12 @@ def get_optimal_window_size(tokens, window_sizes, number_of_words=20):
 	information_value_calculator = InformationValueCalculator(tokens)
 
 
-	for window_size in window_sizes:
-		try:
-			print "Probando tamaño de ventana = %s" % window_size
-			analysis = information_value_calculator.get_window_size_analysis(window_size, number_of_words)
-			results_per_window_size[window_size] = analysis
-		except WindowSizeTooLarge as e:
-		# La ventana es demasiado grande => salir!
-			break
-#Criterio: maximo de promedio de IV sobre todas las palabras
+	pool = multiprocessing.Pool(processes=5)
+	results_per_window_size = dict(pool.map(get_window_size_analysis, window_sizes))
+	
+	#Criterio: maximo de promedio de IV sobre todas las palabras
 	best_result = max(results_per_window_size.iteritems(),
-		key= lambda res: res[1]['iv_sum']
+		key= lambda res: res[1]['max_iv']
 		)
 	
 	return best_result
