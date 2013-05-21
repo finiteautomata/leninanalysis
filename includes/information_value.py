@@ -27,14 +27,6 @@ class InformationValueCalculator:
 		self.tokens = tokens
 		self.words = set(tokens)
 		self.word_fdist = nltk.FreqDist(self.tokens)
-		self.rand_tokenized_text = None
-	
-
-	def get_rand_tokenized_text(self):
-		if not self.rand_tokenized_text:
-			self.rand_tokenized_text = copy.deepcopy(self.tokens)
-			random.shuffle(self.rand_tokenized_text)
-		return self.rand_tokenized_text
 
 	def number_of_windows(self, window_size):
 		return int(math.ceil(len(self.tokens) / window_size))
@@ -65,6 +57,8 @@ class InformationValueCalculator:
 			for i in range(0,P):
 				if sum_f[word] != 0:
 					p[word].append(freq[word][i] / sum_f[word])
+				else:
+					p[word].append(.0)
 					
 
 		return p
@@ -137,17 +131,19 @@ def get_top_words(tokens, window_size, number_of_words):
 
 	return sorted(res.iteritems(), key=operator.itemgetter(1), reverse=True)[:number_of_words]
 
+information_value_calculator = None
 
 def get_optimal_window_size(tokens, window_sizes, number_of_words=20):
+	global information_value_calculator
 	results_per_window_size = {}
 
-	max_iv_per_window_size = {}
-	ivc = InformationValueCalculator(tokens)
+	information_value_calculator = InformationValueCalculator(tokens)
+
 
 	for window_size in window_sizes:
 		try:
 			print "Probando tamaño de ventana = %s" % window_size
-			analysis = ivc.get_window_size_analysis(window_size, number_of_words)
+			analysis = information_value_calculator.get_window_size_analysis(window_size, number_of_words)
 			results_per_window_size[window_size] = analysis
 		except WindowSizeTooLarge as e:
 		# La ventana es demasiado grande => salir!

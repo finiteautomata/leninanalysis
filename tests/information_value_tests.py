@@ -286,18 +286,24 @@ class InformationValueCalculatorTest(TestCase):
             rel_err = abs_err / res[word]
             self.assertLessEqual(rel_err, 0.25, "%s has difference %s got = %s expected = %s" % (word, rel_err, res[word], expected[word]))
 
-    @skip("Not used")
-    def test_top_words(self):
+    window_sizes = range(200, 3000, 100)
+    def test_top_words_for_moby_dick(self):
         tokens = get_moby_dick_tokens()
-        window_sizes =  range(200, 1600, 200)
 
-        print information_value.get_optimal_window_size(tokens, window_sizes, 20)
-
+        print information_value.get_optimal_window_size(tokens, self.window_sizes, 20)
+    
+    @skip("Not used")
     def test_top_words_for_origin(self):
         tokens = get_origin_of_species_tokens()
-        window_sizes = range(100, 1000, 100)
 
-        print information_value.get_optimal_window_size(tokens, window_sizes, 20)
+        print information_value.get_optimal_window_size(tokens, self.window_sizes, 20)
+
+    @skip("Not used")
+    def test_top_words_for_analysis_of_the_mind(self):
+        tokens = get_analysis_of_the_mind_tokens()
+
+        print information_value.get_optimal_window_size(tokens, self.window_sizes, 20)
+
 
 def get_moby_dick_tokens():
     moby_dick = gutenberg.raw('melville-moby_dick.txt')
@@ -306,6 +312,12 @@ def get_moby_dick_tokens():
 
 def get_origin_of_species_tokens():
     with file("tests/origin.txt") as f:
+        raw_text = f.read()
+        tokens = tokenize(raw_text, only_alphanum=True, clean_punctuation=True)
+        return [token.lower() for token in tokens]
+
+def get_analysis_of_the_mind_tokens():
+    with file("tests/analysis_of_the_mind.txt") as f:
         raw_text = f.read()
         tokens = tokenize(raw_text, only_alphanum=True, clean_punctuation=True)
         return [token.lower() for token in tokens]
