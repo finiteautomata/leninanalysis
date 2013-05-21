@@ -5,6 +5,7 @@ from unittest import TestCase, skip
 from nltk.corpus import gutenberg
 from includes.tokenizer import tokenize
 from information_value.calculator import InformationValueCalculator
+from information_value import analysis
 import information_value.calculator as information_value
 from tests import iv_oracle
 
@@ -290,19 +291,19 @@ class InformationValueCalculatorTest(TestCase):
     def test_top_words_for_moby_dick(self):
         tokens = get_moby_dick_tokens()
 
-        print information_value.get_optimal_window_size(tokens, self.window_sizes, 20)
+        print analysis.get_optimal_window_size(tokens, self.window_sizes, 20)
     
     @skip("Not used")
     def test_top_words_for_origin(self):
         tokens = get_origin_of_species_tokens()
 
-        print information_value.get_optimal_window_size(tokens, self.window_sizes, 20)
+        print analysis.get_optimal_window_size(tokens, self.window_sizes, 20)
 
     @skip("Not used")
     def test_top_words_for_analysis_of_the_mind(self):
         tokens = get_analysis_of_the_mind_tokens()
 
-        print information_value.get_optimal_window_size(tokens, self.window_sizes, 20)
+        print analysis.get_optimal_window_size(tokens, self.window_sizes, 20)
 
 
 def get_moby_dick_tokens():

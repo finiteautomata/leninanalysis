@@ -129,35 +129,4 @@ def get_window(tokens, window_size, number_of_window):
 		window += ['#'] * (window_size-len(window))
 	return window
 
-def get_top_words(tokens, window_size, number_of_words):
-	ivc = InformationValueCalculator(tokens)
-	res = ivc.information_value(window_size)
-
-	return sorted(res.iteritems(), key=operator.itemgetter(1), reverse=True)[:number_of_words]
-
-information_value_calculator = None
-
-def get_window_size_analysis(window_size):
-	try:
-		print "Probando window_size = %s" % window_size
-		return (window_size, information_value_calculator.get_window_size_analysis(window_size, 20))
-	except WindowSizeTooLarge as e:
-		return (window_size, None)
-
-def get_optimal_window_size(tokens, window_sizes, number_of_words=20):
-	global information_value_calculator
-	results_per_window_size = {}
-
-	information_value_calculator = InformationValueCalculator(tokens)
-
-
-	pool = multiprocessing.Pool(processes=5)
-	results_per_window_size = dict(pool.map(get_window_size_analysis, window_sizes))
-	
-	#Criterio: maximo de promedio de IV sobre todas las palabras
-	best_result = max(results_per_window_size.iteritems(),
-		key= lambda res: res[1]['max_iv']
-		)
-	
-	return best_result
 
