@@ -3,3 +3,6 @@ config.py
 log/*
 data/*
 lenin_work*
+lenin_data.json
+.coverage
+htmlcov/*
