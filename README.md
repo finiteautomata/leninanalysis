@@ -1,16 +1,39 @@
+# Lenin Analysis
+
+## Setup
+
+1. Clone the project
+2. Install requirements
+
+```
+:~/leninanalysis$ pip install requirements.txt
+```
+3. Edit config.py. Change `data_dir` to point to the absolute path of your data directory. This is where all the scrapped JSONs will be saved in.
+
+Also, you can set MIN_YEAR and MAX_YEAR to scrap smaller subsets of Lenin Full Works. 
+
+For instance:
+
+```
+data_dir="/home/marat/Dropbox/Facu/incc/incc-2012/TP Lenin/data/"
+MIN_YEAR = 1900
+MAX_YEAR = 1905
+WNA_VERBOSE = 1
+``` 
+4. Scrap lenin works.
+
+```
+$ python cccp.py --scrap
+``` 
+This command creates a file named lenin_work.json at the root directory of the project.
+
+You can also scrap a smaller subset with:
+```
+$ python cccp.py --scrap
+``` 
+
+
 #Pipeline y estructuras de datos
-1) crawl.bat   
-    genera lenin_work.json  
-        [ 
-            { 
-                name, 
-                url,  
-                text, 
-                year, 
-                month 
-            } 
-        ] 
-    copiar a data_dir 
 2)reload_base_files() 
     espera lenin_work.json  
     crea id_lenin_work.json, crea by_year/YYYY_works.json para cada año 
