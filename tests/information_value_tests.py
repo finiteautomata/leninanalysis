@@ -287,7 +287,7 @@ class InformationValueCalculatorTest(TestCase):
             rel_err = abs_err / res[word]
             self.assertLessEqual(rel_err, 0.25, "%s has difference %s got = %s expected = %s" % (word, rel_err, res[word], expected[word]))
 
-    window_sizes = range(200, 1500, 100)
+    window_sizes = range(2, 1500, 100)
     def test_top_words_for_moby_dick(self):
         tokens = get_moby_dick_tokens()
 

@@ -1,32 +1,29 @@
 import multiprocessing
 import operator
-from calculator import InformationValueCalculator
+from calculator import InformationValueCalculator, WindowSizeTooLarge
 
 class WindowAnalysis(object):
-    def __init__(self, window_size, iv_words):
+    def __init__(self, window_size, iv_words, number_of_words):
         self.window_size = window_size
         sorted_words = sorted(iv_words.iteritems(), key=operator.itemgetter(1), reverse=True)
         self.max_iv = sorted_words[0][1]
         # Sum the reverse of sorted_words to improve numerical stability
         self.iv_sum = reduce(lambda x,y: x+y[1], reversed(sorted_words), 0)
-        self.iv_average = iv_sum / len(self.tokens)
-        self.top_words = sorted_words[:number_of_words],
+        self.iv_average = self.iv_sum / len(sorted_words)
+        self.top_words = sorted_words[:20],
 
 
 
 # This global variable is shared across the threads
 information_value_calculator = None
+number_of_words = 20
 
-
-def get_window_size_analysis(self, window_size, number_of_words=20):
-    iv_words = information_value_calculator.information_value(window_size)
-    # sort the words according to their information value
-    return WindowAnalysis(iv_words)
 
 def get_window_size_analysis(window_size):
     try:
         print "Probando window_size = %s" % window_size
-        return (window_size, information_value_calculator.get_window_size_analysis(window_size, 20))
+        iv_words = information_value_calculator.information_value(window_size)
+        return (window_size, WindowAnalysis(window_size, iv_words, number_of_words))
     except WindowSizeTooLarge as e:
         return (window_size, None)
 
