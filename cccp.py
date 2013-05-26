@@ -4,6 +4,7 @@ import unittest
 import config
 import argparse
 import subprocess
+from commands.database import populate_database
 from includes import preprocessor as pre
 from includes import wn_analyzer as wna
 from includes import utils
@@ -45,11 +46,13 @@ def main():
     parser = argparse.ArgumentParser(description='Central de Control de Comandos y Procesos para el TP de Analisis de Lenin.')
     # Parameter to scrap all the works before or not
     parser.add_argument('--scrap', action='store_true', default=False, help='Scraps all the Lenin Works')
+    parser.add_argument('--populate-database', action='store_true', default=False, help="From the scrapped works creates database called \"lenin\" (it assumes you're running MongoDB at localhost)")
     parser.add_argument('--scrap-subset', action='store_true', default=False, help='Scraps a little subset of the works of Lenin for test purposes')
     parser.add_argument('--split-years', action='store_true', default= False, help='Needs lenin_works.json, creates id_lenin_work.json and by_year/YYYY_works.json')
     parser.add_argument('--zipf', action='store_true', default= False, help='Needs by_year/YYYY_works.json, creates by_year/YYYY_zipf.json')
     parser.add_argument('--zipf-resume', action='store_true', default= False, help='Needs lenin_works.json, creates years_zipf.json')
     parser.add_argument('--iv', action='store_true', default= False, help='Needs by_year/YYYY_works.json, creates by_year/YYYY_iv.json')
+
     parser.add_argument('--wn', action='store_true', default= False, help='Needs by_year/YYYY_(works|iv|zipf).json and years_zipf.json, creates by_year/YYYY_wn.json')
     parser.add_argument('--restart-db', action='store_true', default= False, help='Executes split-years, zipf and zipf-resume')
     parser.add_argument('--plot-iv-analysis', action='store_true', default=False, help="Shows some plot about Information Value Analysis")    
@@ -60,6 +63,8 @@ def main():
 
     if args.scrap:
         scrap_all_works()
+    if args.populate_database:
+        populate_database()
     if args.scrap_subset:
         scrap_subset_of_works()
     if args.split_years:
