@@ -9,6 +9,9 @@ from information_value import analysis
 import information_value.calculator as information_value
 from tests import iv_oracle
 
+
+
+
 class InformationValueCalculatorTest(TestCase):
     """ 
     Frequency calculations
@@ -287,12 +290,9 @@ class InformationValueCalculatorTest(TestCase):
             rel_err = abs_err / res[word]
             self.assertLessEqual(rel_err, 0.25, "%s has difference %s got = %s expected = %s" % (word, rel_err, res[word], expected[word]))
 
-    window_sizes = range(2, 1500, 100)
-    def test_top_words_for_moby_dick(self):
-        tokens = get_moby_dick_tokens()
+    window_sizes = range(100, 10000, 50)
 
-        print analysis.get_optimal_window_size(tokens, self.window_sizes, 20)
-    
+
     @skip("Not used")
     def test_top_words_for_origin(self):
         tokens = get_origin_of_species_tokens()
@@ -303,13 +303,9 @@ class InformationValueCalculatorTest(TestCase):
     def test_top_words_for_analysis_of_the_mind(self):
         tokens = get_analysis_of_the_mind_tokens()
 
+        
         print analysis.get_optimal_window_size(tokens, self.window_sizes, 20)
 
-
-def get_moby_dick_tokens():
-    moby_dick = gutenberg.raw('melville-moby_dick.txt')
-    tokens = tokenize(moby_dick, only_alphanum=True, clean_punctuation=True)
-    return [token.lower() for token in tokens]
 
 def get_origin_of_species_tokens():
     with file("tests/origin.txt") as f:
