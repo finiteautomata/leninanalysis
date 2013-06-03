@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/env python
 # coding: utf-8
 import unittest
 import config
@@ -7,9 +7,7 @@ import subprocess
 from commands.database import populate_database
 from includes import preprocessor as pre
 from includes import wn_analyzer as wna
-from includes import utils
 from plot.window_sizes import plot_iv_things
-from tests import information_value_tests
 
 
 reload(config)
@@ -30,7 +28,7 @@ def scrap_subset_of_works():
         min_year = MIN_YEAR
         max_year = MAX_YEAR
         ret = subprocess.call("scrapy crawl lenin_subset -o lenin_work_%s_%s.json -t json -a min_year=%d -a max_year=%d > log/subset.out" %(min_year, max_year, min_year, max_year), shell=True)
-        print "Scrapy has returned %s" % ret 
+        print "Scrapy has returned %s" % ret
     except Exception as e:
         print "Something terrible happened during extraction of lenin subset: %s" % e
 
@@ -55,8 +53,8 @@ def main():
 
     parser.add_argument('--wn', action='store_true', default= False, help='Needs by_year/YYYY_(works|iv|zipf).json and years_zipf.json, creates by_year/YYYY_wn.json')
     parser.add_argument('--restart-db', action='store_true', default= False, help='Executes split-years, zipf and zipf-resume')
-    parser.add_argument('--plot-iv-analysis', action='store_true', default=False, help="Shows some plot about Information Value Analysis")    
-    parser.add_argument('--test', action='store_true', default=False, help="Run Tests")    
+    parser.add_argument('--plot-iv-analysis', action='store_true', default=False, help="Shows some plot about Information Value Analysis")
+    parser.add_argument('--test', action='store_true', default=False, help="Run Tests")
 
     # Parse args
     args = parser.parse_args()
@@ -74,9 +72,9 @@ def main():
     if args.zipf_resume:
         pre.create_zipf_resume(MIN_YEAR, MAX_YEAR+1)
     if args.iv:
-        pre.create_iv_files(MIN_YEAR, MAX_YEAR+1)        
+        pre.create_iv_files(MIN_YEAR, MAX_YEAR+1)
     if args.wn:
-        wna.create_wn_files(MIN_YEAR, MAX_YEAR+1)        
+        wna.create_wn_files(MIN_YEAR, MAX_YEAR+1)
     if args.restart_db:
         pre.restart_database(MIN_YEAR, MAX_YEAR+1)
     if args.plot_iv_analysis:
