@@ -7,7 +7,7 @@ git clone git://github.com/geekazoid/leninanalysis
 2. Install requirements
 
 ```
-:~/leninanalysis$ [sudo] pip install -rrequirements.txt
+:~/leninanalysis$ [sudo] pip install -r requirements.txt
 
 (Install pip installation: [sudo] apt-get install python-pip)
 ```
