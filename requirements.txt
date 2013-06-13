@@ -1,13 +1,21 @@
+#Uso [sudo] pip install -r requirements
+# Para instalar pip: [sudo] apt-get install python-pip
 BeautifulSoup==3.2.1
-Cairoplot==1.2
-PyUblas==2013.1
+#Cairoplot==1.2
+#PyUblas==2013.1
 PyYAML==3.10
 argparse==1.2.1
 coverage==3.6
-ipython==0.13.2
-matplotlib==1.2.1
-nltk==2.0.4
-numpy==1.7.1
+#ipython==0.13.2
+ipython
+#matplotlib==1.2.1
+matplotlib
+#nltk==2.0.4
+nltk
+#numpy==1.7.1
+numpy
 pymongo==2.5.1
 pytest==2.3.5
-scipy==0.12.0
+#scipy==0.12.0
+scipy
+Scrapy

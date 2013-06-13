@@ -3,10 +3,13 @@
 ## Setup
 
 1. Clone the project
+git clone git://github.com/geekazoid/leninanalysis
 2. Install requirements
 
 ```
-:~/leninanalysis$ pip install requirements.txt
+:~/leninanalysis$ [sudo] pip install -rrequirements.txt
+
+(Install pip installation: [sudo] apt-get install python-pip)
 ```
 3. Edit config.py. Change `data_dir` to point to the absolute path of your data directory. This is where all the scrapped JSONs will be saved in.
 
