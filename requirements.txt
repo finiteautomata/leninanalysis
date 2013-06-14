@@ -11,3 +11,4 @@ numpy==1.7.1
 pymongo==2.5.1
 pytest==2.3.5
 scipy==0.12.0
+Ming==0.3.6
