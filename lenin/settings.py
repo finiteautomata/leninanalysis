@@ -9,7 +9,7 @@
 BOT_NAME = 'lenin'
 
 SPIDER_MODULES = ['lenin.spiders']
-NEWSPIDER_MODULE = 'lenin.spiders'        
+NEWSPIDER_MODULE = 'lenin.spiders'
 LOG_LEVEL = 'INFO' #'DEBUG'
 
 # Crawl responsibly by identifying yourself (and your website) on the user-agent

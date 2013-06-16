@@ -1,11 +1,10 @@
 # coding: utf-8
+from scrapy import log
 from scrapy.contrib.spiders import CrawlSpider, Rule
 from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
-from scrapy.selector import HtmlXPathSelector
-from lenin.items import LeninWork
 from work_assembler import WorkAssembler
 from work_builder import SimpleWorkBuilder
-import nltk
+
 
 class LeninSpider(CrawlSpider):
     name = "lenin"
@@ -24,27 +23,27 @@ class LeninSpider(CrawlSpider):
       # Si no es ninguna de las anteriores, es una obra y hay que parsearla!
       Rule(SgmlLinkExtractor(allow=(CHAPTER_REGEX)), callback='parse_unindexed_work')
     )
-    
+
     def nada(self, response):
-      print "llame nada" + response.url
-      pass
+        log.msg("llame nada" + response.url, level=log.WARNING)
+        pass
 
     def parse_indexed_work(self, response):
-      """ This function parses a sample response. Some contracts are mingled
-      with this docstring.
+        """ This function parses a sample response. Some contracts are mingled
+        with this docstring.
 
-      @url http://www.marxists.org/archive/lenin/works/1917/staterev/index.htm
-      @returns items 0 0
-      @returns requests 8 8
-      """
-      print "\n*************************************************"
-      print "Entrando a indice....:"+response.url
-      assembler = WorkAssembler(response)
-      return assembler.get_requests()
+        @url http://www.marxists.org/archive/lenin/works/1917/staterev/index.htm
+        @returns items 0 0
+        @returns requests 8 8
+        """
+        log.msg("*************************************************", level=log.INFO)
+        log.msg("Entrando a indice....:"+response.url, level=log.INFO)
+        assembler = WorkAssembler(response)
+        return assembler.get_requests()
 
     def parse_unindexed_work(self, response):
-      print "\nParseando obra : %s" % response.url
+      log.msg("Parseando obra : %s" % response.url, level=log.INFO)
       work = SimpleWorkBuilder(response).get_work()
-      print("Titulo : %s" % work['name'].encode('ascii', 'ignore'))
+      log.msg("Titulo : %s" % work['name'].encode('ascii', 'ignore'), level=log.INFO)
       return work
-     
+

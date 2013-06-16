@@ -1,10 +1,10 @@
 # This Python file uses the following encoding: utf-8
+from scrapy import log
 from scrapy.selector import HtmlXPathSelector
 from lenin.items import LeninWork
 from BeautifulSoup import BeautifulStoneSoup
-import re
 import nltk
-        
+
 class WorkBuilder:
   def __init__(self, response):
     self.response = response
@@ -14,12 +14,12 @@ class WorkBuilder:
     return self.hxs.select('//title/text()').extract()[0]
 
   def clean_html(self, raw_text):
-    clean_text = nltk.clean_html(raw_text)  
+    clean_text = nltk.clean_html(raw_text)
     contents = BeautifulStoneSoup(clean_text, convertEntities=BeautifulStoneSoup.XML_SPECIAL_CHARS_TO_ENTITIES).contents
     if not contents or len(contents) == 0:
-      print "ALERTA!!!!!!!!!!!"
-      print "%s me da contents nulos " % self.get_title().encode('ascii', 'ignore') 
-      print self.response.url
+      log.msg( "ALERTA!!!!!!!!!!!", level=log.WARNING)
+      log.msg( "%s me da contents nulos " % self.get_title().encode('ascii', 'ignore'), level=log.WARNING)
+      log.msg(self.response.url, level=WARNING)
     clean_text = contents[0]
     clean_text = clean_text.lower()
     clean_text = clean_text.replace('&#x000a;','\n')
@@ -27,7 +27,7 @@ class WorkBuilder:
 		#clean_text = re.sub(r'&#.+;', r'', clean_text)
     #clean_text = re.sub(r'\\u....', r' ', clean_text)
     return clean_text
- 
+
   def get_year(self):
     url = self.response.url
     for y in range(1893,1924):
@@ -65,5 +65,5 @@ class SimpleWorkBuilder(WorkBuilder):
     work['name'] = self.get_title()
     work['url'] = self.response.url
     work['text'] = self.get_text()
-    
+
     return work

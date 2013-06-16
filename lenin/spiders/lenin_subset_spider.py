@@ -1,11 +1,10 @@
 # coding: utf-8
+from scrapy import log
 from scrapy.contrib.spiders import CrawlSpider, Rule
 from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
-from scrapy.selector import HtmlXPathSelector
-from lenin.items import LeninWork
 from work_assembler import WorkAssembler
 from work_builder import SimpleWorkBuilder
-import nltk
+
 
 class LeninSubsetSpider(CrawlSpider):
     name = "lenin_subset"
@@ -20,7 +19,7 @@ class LeninSubsetSpider(CrawlSpider):
     #Estas son las reglas que aplica a cada link que encuentra
     """
     rules = (Rule(SgmlLinkExtractor(allow=".+devel.+"), follow=False),)
-    
+
     rules += (
         Rule(SgmlLinkExtractor(allow=(INDEX_REGEX)), callback='parse_indexed_work'),
         # Si no es ninguna de las anteriores, es una obra y hay que parsearla!
@@ -34,19 +33,19 @@ class LeninSubsetSpider(CrawlSpider):
 
 
       self.lower_regex = r'/archive/lenin/works/(%s).+$' % lower_banned_years
-      print self.lower_regex
+      log.msg(self.lower_regex, level=log.INFO)
       self.upper_regex = r'/archive/lenin/works/(%s).+$' % upper_banned_years
-      print self.upper_regex
+      log.msg(self.upper_regex, level=log.INFO)
 
     def __init__(self, name=None, **kwargs):
-      print kwargs
+      log.msg(kwargs, level=log.INFO)
 
       self.min_year = kwargs['min_year'] or 1893
       self.max_year = kwargs['max_year'] or 1924
 
-      print self.min_year
-      print self.max_year
-      
+      log.msg( self.min_year, level=log.INFO)
+      log.msg(self.max_year, level=log.INFO)
+
       self.set_banned_years()
       self.rules += (
         Rule(SgmlLinkExtractor(allow=".+devel.+"), follow=False),
@@ -56,11 +55,11 @@ class LeninSubsetSpider(CrawlSpider):
         # Si no es ninguna de las anteriores, es una obra y hay que parsearla!
         Rule(SgmlLinkExtractor(allow=(self.CHAPTER_REGEX)), callback='parse_unindexed_work')
       )
-      print self.rules
+      log.msg(self.rules, level=log.INFO)
       # Esto va aca abajo PORQUE SCRAPY ASI LO QUIERE (https://groups.google.com/forum/?fromgroups=#!topic/scrapy-users/Z7PjHuBzmA8)
       CrawlSpider.__init__(self, name)
-      
-  
+
+
     def parse_indexed_work(self, response):
       """ This function parses a sample response. Some contracts are mingled
       with this docstring.
@@ -69,14 +68,14 @@ class LeninSubsetSpider(CrawlSpider):
       @returns items 0 0
       @returns requests 8 8
       """
-      print "\n*************************************************"
-      print "Entrando a indice....:"+response.url
+      log.msg("\n*************************************************", level=log.INFO)
+      log.msg("Entrando a indice....:"+response.url, level=log.INFO)
       assembler = WorkAssembler(response)
       return assembler.get_requests()
 
     def parse_unindexed_work(self, response):
-      print "\nParseando obra : %s" % response.url
+      log.msg("\nParseando obra : %s" % response.url, level=log.INFO)
       work = SimpleWorkBuilder(response).get_work()
-      print("Titulo : %s" % work['name'].encode('ascii', 'ignore'))
+      log.msg(("Titulo : %s" % work['name'].encode('ascii', 'ignore')), level=log.INFO)
       return work
-     
+
