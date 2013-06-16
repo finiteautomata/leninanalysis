@@ -21,7 +21,7 @@ class WindowAnalysis(object):
         return {
             "window_size": self.window_size,
             "top_words": self.top_words,
-            "iv_sum": self.iv_sum,
+            "sum_iv": self.iv_sum,
             "max_iv" : self.max_iv,
         }
 
@@ -38,21 +38,20 @@ def get_window_size_analysis(window_size):
         print "Probando window_size = %s" % window_size
         iv_words = information_value_calculator.information_value(window_size)
         return (window_size, WindowAnalysis(window_size, iv_words, number_of_words))
-    except WindowSizeTooLarge as e:
+    except WindowSizeTooLarge:
         return (window_size, None)
 
 def get_all_analysis(tokens, window_sizes, number_of_words=20):
     global information_value_calculator
     information_value_calculator = InformationValueCalculator(tokens)
-    pool = multiprocessing.Pool(processes=3)
+    pool = multiprocessing.Pool(processes=config.NUMBER_OF_THREADS)
     return dict(pool.map(get_window_size_analysis, window_sizes))
 
 def get_optimal_window_size(tokens, window_sizes, number_of_words=20, sum_threshold=config.SUM_THRESHOLD):
     results_per_window_size = get_all_analysis(tokens, window_sizes, number_of_words)
-    SUM_THRESHOLD = sum_threshold
     #Criterio: maximo de promedio de IV sobre todas las palabras
     best_result = max(results_per_window_size.iteritems(),
         key= lambda res: res[1].iv_sum
         )
-    
+
     return best_result
