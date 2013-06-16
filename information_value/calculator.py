@@ -24,6 +24,8 @@ class InformationValueCalculator:
 	def __init__(self, tokens):
 		#se carga la lista de tokens
 		self.tokens = tokens
+		self.randomized_text = deepcopy(self.tokens)
+		shuffle(self.randomized_text)
 		self.word_fdist = nltk.FreqDist(self.tokens)
 
 	def number_of_windows(self, window_size):
@@ -86,10 +88,7 @@ class InformationValueCalculator:
 	def information_value(self, window_size):
 		ordered_entropy = self.entropy(self.tokens, window_size)
 
-		randomized_text = deepcopy(self.tokens)
-		shuffle(randomized_text)
-
-		random_entropy = self.entropy(randomized_text, window_size)
+		random_entropy = self.entropy(self.randomized_text, window_size)
 
 		information_value = {}
 		for word in self.word_fdist.samples():
