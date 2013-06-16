@@ -1,0 +1,20 @@
+language: python
+python:
+#  - "2.6"
+  - "2.7"
+#aenv:
+#  - DJANGO=1.3.4
+#  - DJANGO=1.5
+#  - DJANGO=https://github.com/django/django/zipball/master
+install:
+#  - pip install -q Django==$DJANGO --use-mirrors
+  - pip install -e . --use-mirrors
+  - pip install -r requirements.txt --use-mirrors
+
+script: nosetests
+#script:
+#  - python setup.py develop
+#  - python schedule/manage.py syncdb --noinput
+#  - python schedule/manage.py loaddata schedule
+#  - python schedule/manage.py test
+
