@@ -27,7 +27,7 @@ class InformationValueCalculator:
 		self.word_fdist = nltk.FreqDist(self.tokens)
 
 	def number_of_windows(self, window_size):
-		return int(math.ceil(len(self.tokens) / window_size))
+		return int(math.ceil(self.word_fdist.N() / window_size))
 
 	def get_frequencies(self, tokenized_text, window_size):
 		freq = dict((word, []) for word in self.word_fdist.samples())
@@ -44,7 +44,7 @@ class InformationValueCalculator:
 	def occurrence_probability(self, window_size, tokenized_text):
 		P = self.number_of_windows(window_size)
 		if P == 0 or P == 1:
-			raise WindowSizeTooLarge("Ventana de tamaño %s para texto de tamaño %s" % (window_size, len(self.tokens)))
+			raise WindowSizeTooLarge("Ventana de tamaño %s para texto de tamaño %s" % (window_size, self.word_fdist.N()))
 
 		freq = self.get_frequencies(tokenized_text, window_size)
 		sum_f = dict((word, sum(freq[word])) for word in self.word_fdist.samples())
@@ -105,7 +105,7 @@ class InformationValueCalculator:
 		max_iv = sorted_words[0][1]
 		# Sum the reverse of sorted_words to improve numerical stability
 		iv_sum = reduce(lambda x,y: x+y[1], reversed(sorted_words), 0)
-		iv_average = iv_sum / len(self.tokens)
+		iv_average = iv_sum / self.word_fdist.N()
 
 		return {
 			'window_size' : window_size,
