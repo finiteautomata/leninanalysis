@@ -115,14 +115,14 @@ class InformationValueCalculator:
 		}
 
 
-
 def get_window(tokens, window_size, number_of_window):
-	lower_bound = number_of_window * window_size
-	upper_bound = (number_of_window+1) * window_size
-	window = tokens[lower_bound:upper_bound]
-
-	if len(window) < window_size:
-		window += ['#'] * (window_size-len(window))
-	return window
+    from information_value.window import Window
+    return Window(tokens, window_size, number_of_window)
+#    lower_bound = number_of_window * window_size
+#    upper_bound = (number_of_window+1) * window_size
+#    window = tokens[lower_bound:upper_bound]
+#    if len(window) < window_size:
+#        window += ['#'] * (window_size-len(window))
+#	return window
 
 
