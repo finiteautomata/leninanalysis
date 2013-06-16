@@ -2,18 +2,14 @@ from __future__ import division
 import random
 import math
 from unittest import TestCase, skip
-from nltk.corpus import gutenberg
 from includes.tokenizer import tokenize
 from information_value.calculator import InformationValueCalculator
 from information_value import analysis
-import information_value.calculator as information_value
 from tests import iv_oracle
 
 
-
-
 class InformationValueCalculatorTest(TestCase):
-    """ 
+    """
     Frequency calculations
     """
     def test_frequency_for_single_word_single_windows(self):
@@ -45,7 +41,7 @@ class InformationValueCalculatorTest(TestCase):
         iv_calculator = InformationValueCalculator(tokens)
 
         freq = iv_calculator.get_frequencies(tokens, window_size=window_size)
-        
+
         self.assertItemsEqual(freq.keys(), tokens)
         for token in tokens:
             self.assertEqual(len(freq[token]), 1)
@@ -58,7 +54,7 @@ class InformationValueCalculatorTest(TestCase):
         tokens = ["one", "two", "three", "four", "five"] * amount_of_windows
         iv_calculator = InformationValueCalculator(tokens)
         freq = iv_calculator.get_frequencies(tokens, window_size=window_size)
-        
+
         self.assertItemsEqual(freq.keys(), words)
         for token in words:
             self.assertEqual(len(freq[token]), amount_of_windows)
@@ -95,7 +91,7 @@ class InformationValueCalculatorTest(TestCase):
         iv_calculator = InformationValueCalculator(tokens)
         freq = iv_calculator.get_frequencies(tokens, window_size=window_size)
 
-        
+
         for window_no in range(number_of_windows):
             sum_for_window = sum([freq[word][window_no] for word in words])
             self.assertAlmostEqual(sum_for_window, 1.0)
@@ -105,7 +101,7 @@ class InformationValueCalculatorTest(TestCase):
         tokens = get_moby_dick_tokens()
         words = list(set(tokens))
         iv_calculator = InformationValueCalculator(tokens)
-        
+
         freq = iv_calculator.get_frequencies(tokens, window_size=1000)
         freq_oracle = iv_oracle.get_frequencies(tokens, words, window_size=1000)
         for word in words:
@@ -148,7 +144,7 @@ class InformationValueCalculatorTest(TestCase):
         p_i = iv_calculator.occurrence_probability(window_size=3, tokenized_text=tokens)
 
         self.assertItemsEqual(p_i.keys(), ["foo", "bar", "doe"])
-        
+
         # P_i should be 1 only for first chapter
         self.assertAlmostEqual(p_i["foo"][0], 1.0)
         self.assertAlmostEqual(p_i["foo"][1], .0)
@@ -161,13 +157,13 @@ class InformationValueCalculatorTest(TestCase):
         self.assertAlmostEqual(p_i["doe"][0], .0)
         self.assertAlmostEqual(p_i["doe"][1], .0)
         self.assertAlmostEqual(p_i["doe"][2], 1.0)
-    
+
     @skip("Not used")
     def test_occurrence_probability_against_oracle(self):
         tokens = get_moby_dick_tokens()
         words = list(set(tokens))
         iv_calculator = InformationValueCalculator(tokens)
-        
+
         occ_prob = iv_calculator.occurrence_probability(window_size=1000, tokenized_text=tokens)
         occ_prob_oracle = iv_oracle.get_occurrence_probability(tokens, words, window_size=1000)
         for word in words:
@@ -179,10 +175,10 @@ class InformationValueCalculatorTest(TestCase):
                     self.fail("occurrence_probability differs for %s = %s oracle = %s" % (word, ours, theirs))
     """
     Entropy Tests
-    Entropy of a word equals 1 => word homogeneously distributed across the text 
+    Entropy of a word equals 1 => word homogeneously distributed across the text
     Entropy of a word equals 0 => word concentred of a single division of text
     """
-        
+
 
     def test_entropy_for_single_word_text(self):
         tokens = ["foo", "foo", "foo"]
@@ -225,7 +221,7 @@ class InformationValueCalculatorTest(TestCase):
 
         self.assertNotAlmostEqual(entropy_dict["doe"], 1.0)
         self.assertNotAlmostEqual(entropy_dict["doe"], 0.0)
-    
+
     @skip("Not used")
     def test_entropy_against_oracle(self):
         tokens = get_moby_dick_tokens()[:60000]
@@ -234,7 +230,7 @@ class InformationValueCalculatorTest(TestCase):
 
         res = iv_calculator.entropy(window_size=1000, tokenized_text=tokens)
         expected = iv_oracle.get_entropy(tokens, words, 1000)
-        
+
         print "Imprimiendo diferencias entre entropias"
         for word in iv_calculator.words:
             abs_err = res[word]-expected[word]
@@ -246,12 +242,12 @@ class InformationValueCalculatorTest(TestCase):
     """
     Information Value Tests
 
-    Given a text T, and a random shuffle of T, called R, iv of a word w is the difference of 
+    Given a text T, and a random shuffle of T, called R, iv of a word w is the difference of
 
     (S_T(w) - S_R(w)) * f(w)
 
     where S_T(w) is the entropy in T of w, S_R the entropy of w in R, and f(w) the frequency of w in the whole text
-    
+
     This tests are the most odd, as some of them, so they will be purely probabilistic.
 
     In other cases I will try to do some mocking, so I can control more them.
@@ -276,17 +272,17 @@ class InformationValueCalculatorTest(TestCase):
         self.assertNotAlmostEqual(information_value["john"], 0.0)
 
     @skip("Not used")
-    def test_iv_against_oracle(self):        
+    def test_iv_against_oracle(self):
         tokens = get_moby_dick_tokens()
         iv_calculator = InformationValueCalculator(tokens)
 
         res = iv_calculator.information_value(window_size=1000)
         expected = iv_oracle.get_iv(tokens, 1000)
-        
-        test_words = ["whale", "you", "ahab", "is", "ye", "queequeg", 
+
+        test_words = ["whale", "you", "ahab", "is", "ye", "queequeg",
         "thou", "me", "of", "he", "captain", "boat", "the", "stubb", "his", "jonah", "was", "whales", "my"]
         for word in test_words:
-            abs_err = abs(res[word]-expected[word]) 
+            abs_err = abs(res[word]-expected[word])
             rel_err = abs_err / res[word]
             self.assertLessEqual(rel_err, 0.25, "%s has difference %s got = %s expected = %s" % (word, rel_err, res[word], expected[word]))
 
@@ -302,9 +298,24 @@ class InformationValueCalculatorTest(TestCase):
     @skip("Not used")
     def test_top_words_for_analysis_of_the_mind(self):
         tokens = get_analysis_of_the_mind_tokens()
-
-        
         print analysis.get_optimal_window_size(tokens, self.window_sizes, 20)
+
+    def test_occurrence_probability_with_large_window(self):
+        tokens = ["sarasa", "lalal", "pepe", "pepe2"]
+        calculator = InformationValueCalculator(tokens)
+        from information_value.calculator import WindowSizeTooLarge
+        with self.assertRaises(WindowSizeTooLarge):
+            calculator.occurrence_probability(4, "sarasa")
+
+    def test_occurrence_probability_with_no_occurence_in_one_window(self):
+        # this test the else branch where the word is not on the window sum_f[word] == 0
+        tokens = ["sarasa", "sarasa", "lalala", "lalala"]
+        calculator = InformationValueCalculator(tokens)
+        res = calculator.occurrence_probability(2, tokens)
+        expected = {'lalala': [0.0, 1.0], 'sarasa': [1.0, 0.0]}
+        self.assertEquals(res, expected)
+
+
 
 
 def get_origin_of_species_tokens():

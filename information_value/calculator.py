@@ -1,10 +1,9 @@
-# This Python file uses the following encoding: utf-8  
+# This Python file uses the following encoding: utf-8
 from __future__ import division
 from copy import deepcopy
 from random import shuffle
-import math       
-import multiprocessing
-import random                
+import math
+import random
 import operator
 import nltk
 
@@ -21,7 +20,7 @@ class WindowSizeTooLarge(Exception):
 
 
 class InformationValueCalculator:
-	
+
 	def __init__(self, tokens):
 		#se carga la lista de tokens
 		self.tokens = tokens
@@ -30,7 +29,7 @@ class InformationValueCalculator:
 
 	def number_of_windows(self, window_size):
 		return int(math.ceil(len(self.tokens) / window_size))
-		
+
 	def get_frequencies(self, tokenized_text, window_size):
 		freq = dict((word, []) for word in self.words)
 		P = self.number_of_windows(window_size)
@@ -42,16 +41,16 @@ class InformationValueCalculator:
 				freq[word].append(window_fdist.freq(word))
 
 		return freq
-	
+
 	def occurrence_probability(self, window_size, tokenized_text):
 		P = self.number_of_windows(window_size)
 		if P == 0 or P == 1:
-			raise WindowSizeTooLarge("Ventana de tamaño %s para texto de tamaño %s" % (window_size, len(tokens)))			
-		
+			raise WindowSizeTooLarge("Ventana de tamaño %s para texto de tamaño %s" % (window_size, len(self.tokens)))
+
 		freq = self.get_frequencies(tokenized_text, window_size)
 		sum_f = dict((word, sum(freq[word])) for word in self.words)
-			
-		p = {}		
+
+		p = {}
 		for word in self.words:
 			p[word] = []
 			for i in range(0,P):
@@ -59,45 +58,45 @@ class InformationValueCalculator:
 					p[word].append(freq[word][i] / sum_f[word])
 				else:
 					p[word].append(.0)
-					
+
 
 		return p
-		
+
 	def entropy(self, tokenized_text, window_size):
 		p = self.occurrence_probability(window_size, tokenized_text)
 		if not p:
 			return False
 		S = {}
 		P = self.number_of_windows(window_size)
-		
+
 		for word in self.words:
 			S[word] = 0
 			for prob in p[word]:
 				if prob:
 					S[word] = S[word] + (prob * math.log(prob))
 			S[word] = (-1)* S[word] / math.log(P)
-			#print word+': '+ str(S[word])		
-		return S		
+			#print word+': '+ str(S[word])
+		return S
 
 	#Calcular la "information value" de las palabras seleccionadas,
 	#Definicion de IV:
-	# "The difference between the two entropies multiplied by the frequency of the word gives 
-	# the word’s 'information value' in the text. 
+	# "The difference between the two entropies multiplied by the frequency of the word gives
+	# the word’s 'information value' in the text.
 	# Information value, just as in binary computing, is measured in bits."
-	
+
 	def information_value(self, window_size):
 		ordered_entropy = self.entropy(self.tokens, window_size)
 
 		randomized_text = deepcopy(self.tokens)
 		shuffle(randomized_text)
-		
+
 		random_entropy = self.entropy(randomized_text, window_size)
-		
+
 		information_value = {}
 		for word in self.words:
 			freq = self.word_fdist.freq(word)
 			information_value[word] =  freq * abs(ordered_entropy[word] - random_entropy[word])
-				    
+
 		return information_value
 
 	def get_window_size_analysis(self, window_size, number_of_words=20):
@@ -116,7 +115,6 @@ class InformationValueCalculator:
 			'iv_sum' : iv_sum,
 			'max_iv' : max_iv
 		}
-
 
 
 
