@@ -1,9 +1,15 @@
-import multiprocessing
+import logging
 import operator
+from multiprocessing import Process, Queue
+
+import multiprocessing
+
 from calculator import InformationValueCalculator, WindowSizeTooLarge
 import config
 
 # The amount of words that will be counted on the total sum
+
+log= logging.getLogger('lenin')
 
 SUM_THRESHOLD = config.SUM_THRESHOLD
 
@@ -35,17 +41,26 @@ number_of_words = 20
 
 def get_window_size_analysis(window_size):
     try:
-        print "Probando window_size = %s" % window_size
+        log.info("Checking window_size = %s" % window_size)
         iv_words = information_value_calculator.information_value(window_size)
         return (window_size, WindowAnalysis(window_size, iv_words, number_of_words))
     except WindowSizeTooLarge:
         return (window_size, None)
+
 
 def get_all_analysis(tokens, window_sizes, number_of_words=20):
     global information_value_calculator
     information_value_calculator = InformationValueCalculator(tokens)
     pool = multiprocessing.Pool(processes=config.NUMBER_OF_THREADS)
     return dict(pool.map(get_window_size_analysis, window_sizes))
+    #
+    #res = {}
+    #for window in window_sizes:
+    #    analysis = get_window_size_analysis(window)
+    #    res[analysis[0]] = analysis[1]
+    #
+    #return res
+
 
 def get_optimal_window_size(tokens, window_sizes, number_of_words=20, sum_threshold=config.SUM_THRESHOLD):
     results_per_window_size = get_all_analysis(tokens, window_sizes, number_of_words)
