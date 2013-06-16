@@ -24,20 +24,19 @@ class InformationValueCalculator:
 	def __init__(self, tokens):
 		#se carga la lista de tokens
 		self.tokens = tokens
-		self.words = set(tokens)
 		self.word_fdist = nltk.FreqDist(self.tokens)
 
 	def number_of_windows(self, window_size):
 		return int(math.ceil(len(self.tokens) / window_size))
 
 	def get_frequencies(self, tokenized_text, window_size):
-		freq = dict((word, []) for word in self.words)
+		freq = dict((word, []) for word in self.word_fdist.samples())
 		P = self.number_of_windows(window_size)
 		for i in range(0,P):
 			window = get_window(tokenized_text, window_size=window_size, number_of_window=i)
 			window_fdist = nltk.FreqDist(window)
 
-			for word in self.words:
+			for word in self.word_fdist.samples():
 				freq[word].append(window_fdist.freq(word))
 
 		return freq
@@ -48,10 +47,10 @@ class InformationValueCalculator:
 			raise WindowSizeTooLarge("Ventana de tamaño %s para texto de tamaño %s" % (window_size, len(self.tokens)))
 
 		freq = self.get_frequencies(tokenized_text, window_size)
-		sum_f = dict((word, sum(freq[word])) for word in self.words)
+		sum_f = dict((word, sum(freq[word])) for word in self.word_fdist.samples())
 
 		p = {}
-		for word in self.words:
+		for word in self.word_fdist.samples():
 			p[word] = []
 			for i in range(0,P):
 				if sum_f[word] != 0:
@@ -69,7 +68,7 @@ class InformationValueCalculator:
 		S = {}
 		P = self.number_of_windows(window_size)
 
-		for word in self.words:
+		for word in self.word_fdist.samples():
 			S[word] = 0
 			for prob in p[word]:
 				if prob:
@@ -93,7 +92,7 @@ class InformationValueCalculator:
 		random_entropy = self.entropy(randomized_text, window_size)
 
 		information_value = {}
-		for word in self.words:
+		for word in self.word_fdist.samples():
 			freq = self.word_fdist.freq(word)
 			information_value[word] =  freq * abs(ordered_entropy[word] - random_entropy[word])
 
