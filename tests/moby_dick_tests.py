@@ -1,34 +1,35 @@
 from __future__ import division
-from unittest import TestCase, skip
+import logging
+from nose.plugins.attrib import attr
+from unittest import TestCase
 from nltk.corpus import gutenberg
-from pymongo import MongoClient
 from includes.tokenizer import tokenize
 from information_value.analysis import get_optimal_window_size
 
-client = MongoClient()
-db = client.moby_dick_database
-
-
-
+log= logging.getLogger('lenin')
 
 class MobyDickTests(TestCase):
-    window_sizes = xrange(100, 6000, 100)
-    sum_thresholds = [0.0005, 0.001, 0.002, 0.003, 0.005, 0.01, 0.05 ]
+    window_sizes = xrange(100, 3000, 100)
+    sum_threshold = 0.01
 
-    @skip('eats all memory')
+    @attr('slow')
     def test_top_words_for_moby_dick(self):
-        db.drop_collection('analysis')
         tokens = get_moby_dick_tokens()
-        analysis_collection = db.analysis
-        for sum_threshold in self.sum_thresholds:
-            print "Trying analysis for threshold = %s" % sum_threshold
-            window_size, analysis = get_optimal_window_size(tokens, self.window_sizes, 20, sum_threshold=sum_threshold)
-            print analysis
-            analysis_collection.insert({
-                'sum_threshold': sum_threshold,
-                'analysis': analysis.encode()
-                })
+        # This are the words that Zanette show up as the result of analysis
+        zanette_top_words = ["i", "whale", "you", "ahab", "is",
+                     "ye", "queequeg", "thou", "me", "of",
+                     "he", "captain", "boat", "the", "stubb",
+                     "his", "jonah", "was", "whales", "my"]
 
+        window_size, analysis = get_optimal_window_size(tokens, self.window_sizes, 20, sum_threshold=self.sum_threshold)
+        top_words = [word for (word, iv_value) in analysis.top_words]
+        
+        log.info("Window size = %s" % window_size)
+        log.info("top words = %s" % top_words)
+        log.info("zanette words = %s" % zanette_top_words)
+
+        amount_of_matching_words = len([word for word in zanette_top_words if word in top_words])
+        self.assertGreaterEqual(amount_of_matching_words, 15)
 
 
 def get_moby_dick_tokens():

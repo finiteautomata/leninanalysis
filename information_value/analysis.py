@@ -21,7 +21,7 @@ class WindowAnalysis(object):
         self.max_iv = sorted_words[0][1]
         # Sum the reverse of sorted_words to improve numerical stability
         self.iv_sum = reduce(lambda x,y: x+y[1], reversed(sorted_words), 0)
-        self.top_words = sorted_words[:20]
+        self.top_words = sorted_words[:number_of_words]
 
     def encode(self):
         return {
@@ -35,31 +35,26 @@ class WindowAnalysis(object):
 
 
 # This global variable is shared across the threads
-information_value_calculator = None
-number_of_words = 20
+__information_value_calculator = None
+__number_of_words = 20
 
 
 def get_window_size_analysis(window_size):
     try:
         log.info("Checking window_size = %s" % window_size)
-        iv_words = information_value_calculator.information_value(window_size)
-        return (window_size, WindowAnalysis(window_size, iv_words, number_of_words))
+        iv_words = __information_value_calculator.information_value(window_size)
+        return (window_size, WindowAnalysis(window_size, iv_words, number_of_words=__number_of_words))
     except WindowSizeTooLarge:
         return (window_size, None)
 
 
 def get_all_analysis(tokens, window_sizes, number_of_words=20):
-    global information_value_calculator
-    information_value_calculator = InformationValueCalculator(tokens)
+    global __information_value_calculator
+    global __number_of_words
+    __number_of_words = number_of_words
+    __information_value_calculator = InformationValueCalculator(tokens)
     pool = multiprocessing.Pool(processes=config.NUMBER_OF_THREADS)
     return dict(pool.map(get_window_size_analysis, window_sizes))
-    #
-    #res = {}
-    #for window in window_sizes:
-    #    analysis = get_window_size_analysis(window)
-    #    res[analysis[0]] = analysis[1]
-    #
-    #return res
 
 
 def get_optimal_window_size(tokens, window_sizes, number_of_words=20, sum_threshold=config.SUM_THRESHOLD):
