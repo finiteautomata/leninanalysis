@@ -22,8 +22,8 @@ class Document(MappedClass):
         name = 'document'
 
     _id = FieldProperty(schema.ObjectId)
-    url = FieldProperty(str)
-    name = FieldProperty(str, unique=True)
+    url = FieldProperty(str, unique=True)
+    name = FieldProperty(str)
     text = FieldProperty(str)
     month = FieldProperty(str)
     year = FieldProperty(int)
