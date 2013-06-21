@@ -7,6 +7,13 @@ from information_value.models import InformationValueResult
 
 class TestModels(TestCase):
 
+    def setUp(self):
+        from pymongo import MongoClient
+        client = MongoClient()
+        db = client.lenin
+        db.drop_collection('document')
+        db.drop_collection('information_value_result')
+
     def test_simple_document_pesistence(self):
         simple_doc = Document(
                 url="http://www.sarasa.com.ar",
