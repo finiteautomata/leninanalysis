@@ -41,6 +41,6 @@ class InformationValueResult(MappedClass):
     threshold = FieldProperty(int)
     max_iv = FieldProperty(int)
     sum_iv = FieldProperty(int)
-    iv_words = FieldProperty((str, int))
+    iv_words = FieldProperty((str, long))
     document_id = ForeignIdProperty(Document)
     document = RelationProperty(Document)
