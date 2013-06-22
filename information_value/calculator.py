@@ -38,39 +38,43 @@ class InformationValueCalculator:
 		return word_positions 
 
 	def get_frequencies(self, tokenized_text, window_size):
+		"""
+			Return the frequency of a word within a window
+		"""
 		left_index = 0
-		P = self.number_of_windows(window_size)
+		P = self.number_of_windows(window_size) 
 		positions = self.get_words_positions(tokenized_text)
 		freq = dict((word, []) for word in self.word_fdist.samples())
-				
+
 		for window in range(left_index, P):
+
 			right_index = left_index + window_size -1
 			for word in self.word_fdist.samples():
-				_len = len(filter(lambda x: x >= left_index and x <= right_index, positions[word]))				
+				_len = len(filter(lambda x: x >= left_index and x <= right_index, positions[word]))
 				freq[word].append(_len / window_size)
-			 
+
 			left_index = right_index + 1 
 		return freq
-
+	
 	def occurrence_probability(self, window_size, tokenized_text):
+		"""
+			The quantity pi stands for the probability of finding the word in part i, given that
+			it is present in the corpus. 
+		"""
 		P = self.number_of_windows(window_size)
 		if P == 0 or P == 1:
-			raise WindowSizeTooLarge("Ventana de tamaño %s para texto de tamaño %s" % (window_size, self.word_fdist.N()))
-
-		freq = self.get_frequencies(tokenized_text, window_size)
-		sum_f = dict((word, sum(freq[word])) for word in self.word_fdist.samples())
-
+			raise WindowSizeTooLarge("Windows size %s for text size %s" % (window_size, self.word_fdist.N()))
 		p = {}
-		for word in self.word_fdist.samples():
+		for word, frequencies_list in self.get_frequencies(tokenized_text, window_size).iteritems():
 			p[word] = []
 			for i in range(0,P):
-				if sum_f[word] != 0:
-					p[word].append(freq[word][i] / sum_f[word])
+				sum_f_word = sum(frequencies_list)
+				if sum_f_word != 0:
+					p[word].append(frequencies_list[i] / sum_f_word)#sum_f[word])
 				else:
 					p[word].append(.0)
-
-
 		return p
+
 
 	def entropy(self, tokenized_text, window_size):
 		p = self.occurrence_probability(window_size, tokenized_text)
