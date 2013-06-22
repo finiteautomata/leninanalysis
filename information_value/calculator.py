@@ -30,17 +30,26 @@ class InformationValueCalculator:
 
 	def number_of_windows(self, window_size):
 		return int(math.ceil(self.word_fdist.N() / window_size))
+	
+	def get_words_positions(self, tokenized_text):
+		word_positions = dict((word, []) for word in self.word_fdist.samples())
+		for position, word in enumerate(tokenized_text):
+			word_positions[word].append(position)
+		return word_positions 
 
 	def get_frequencies(self, tokenized_text, window_size):
-		freq = dict((word, []) for word in self.word_fdist.samples())
+		left_index = 0
 		P = self.number_of_windows(window_size)
-		for i in range(0,P):
-			window = get_window(tokenized_text, window_size=window_size, number_of_window=i)
-			window_fdist = nltk.FreqDist(window)
-
+		positions = self.get_words_positions(tokenized_text)
+		freq = dict((word, []) for word in self.word_fdist.samples())
+				
+		for window in range(left_index, P):
+			right_index = left_index + window_size -1
 			for word in self.word_fdist.samples():
-				freq[word].append(window_fdist.freq(word))
-
+				_len = len(filter(lambda x: x >= left_index and x <= right_index, positions[word]))				
+				freq[word].append(_len / window_size)
+			 
+			left_index = right_index + 1 
 		return freq
 
 	def occurrence_probability(self, window_size, tokenized_text):
