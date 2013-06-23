@@ -1,10 +1,12 @@
+import random
 import logging
 import operator
+from copy import deepcopy
 from multiprocessing import Process, Queue
 
 import multiprocessing
 
-from calculator import InformationValueCalculator, WindowSizeTooLarge
+from calculator import InformationValueCalculator, WindowSizeTooLarge, Document
 import config
 
 # The amount of words that will be counted on the total sum
@@ -52,7 +54,9 @@ def get_all_analysis(tokens, window_sizes, number_of_words=20):
     global __information_value_calculator
     global __number_of_words
     __number_of_words = number_of_words
-    __information_value_calculator = InformationValueCalculator(tokens)
+    random_tokens = deepcopy(tokens)
+    random.shuffle(random_tokens)
+    __information_value_calculator = InformationValueCalculator(Document(tokens), Document(random_tokens))
     pool = multiprocessing.Pool(processes=config.NUMBER_OF_THREADS)
     return dict(pool.map(get_window_size_analysis, window_sizes))
 

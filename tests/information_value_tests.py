@@ -1,9 +1,11 @@
 from __future__ import division
 import random
 import math
+from copy import deepcopy
 from unittest import TestCase, skip
 from includes.tokenizer import tokenize
 from information_value.calculator import InformationValueCalculator
+from information_value.calculator import Document
 from information_value import analysis
 from tests import iv_oracle
 
@@ -14,7 +16,9 @@ class InformationValueCalculatorTest(TestCase):
     """
     def test_frequency_for_single_word_single_windows(self):
         tokens = ["foo", "foo", "foo"]
-        iv_calculator = InformationValueCalculator(tokens)
+        randomized_text = deepcopy(tokens)
+	random.shuffle(randomized_text)	
+        iv_calculator = InformationValueCalculator(Document(tokens), Document(randomized_text))
 
         freq = iv_calculator.get_frequencies(tokens, window_size=3)
 
@@ -25,7 +29,9 @@ class InformationValueCalculatorTest(TestCase):
 
     def test_frequency_for_single_word_many_windows(self):
         tokens = ["foo", "foo", "foo"]
-        iv_calculator = InformationValueCalculator(tokens)
+        randomized_text = deepcopy(tokens)
+	random.shuffle(randomized_text)		
+        iv_calculator = InformationValueCalculator(Document(tokens), Document(randomized_text))
 
         freq = iv_calculator.get_frequencies(tokens, 1)
 
@@ -38,7 +44,9 @@ class InformationValueCalculatorTest(TestCase):
     def test_frequency_for_many_words_one_window(self):
         tokens = ["one", "two", "three", "four", "five"]
         window_size = 5
-        iv_calculator = InformationValueCalculator(tokens)
+        randomized_text = deepcopy(tokens)
+	random.shuffle(randomized_text)		
+        iv_calculator = InformationValueCalculator(Document(tokens), Document(randomized_text))
 
         freq = iv_calculator.get_frequencies(tokens, window_size=window_size)
 
@@ -52,7 +60,9 @@ class InformationValueCalculatorTest(TestCase):
         window_size = 5
         words = ["one", "two", "three", "four", "five"]
         tokens = ["one", "two", "three", "four", "five"] * amount_of_windows
-        iv_calculator = InformationValueCalculator(tokens)
+        randomized_text = deepcopy(tokens)
+	random.shuffle(randomized_text)	
+        iv_calculator = InformationValueCalculator(Document(tokens), Document(randomized_text))
         freq = iv_calculator.get_frequencies(tokens, window_size=window_size)
 
         self.assertItemsEqual(freq.keys(), words)
@@ -66,7 +76,9 @@ class InformationValueCalculatorTest(TestCase):
         window_size = 3
         tokens = ["foo", "foo", "bar", "doe", "bar", "foo", "doe", "doe", "doe"]
 
-        iv_calculator = InformationValueCalculator(tokens)
+        randomized_text = deepcopy(tokens)
+	random.shuffle(randomized_text)
+        iv_calculator = InformationValueCalculator(Document(tokens), Document(randomized_text))
         freq = iv_calculator.get_frequencies(tokens, window_size=window_size)
 
         self.assertAlmostEqual(freq["foo"][0], 2/3)
@@ -88,7 +100,9 @@ class InformationValueCalculatorTest(TestCase):
         window_size = 5
         number_of_windows = int(math.ceil(len(tokens)/window_size))
 
-        iv_calculator = InformationValueCalculator(tokens)
+        randomized_text = deepcopy(tokens)
+	random.shuffle(randomized_text)	
+        iv_calculator = InformationValueCalculator(Document(tokens), Document(randomized_text))
         freq = iv_calculator.get_frequencies(tokens, window_size=window_size)
 
 
@@ -100,7 +114,9 @@ class InformationValueCalculatorTest(TestCase):
     def test_frequencies_against_oracle(self):
         tokens = get_moby_dick_tokens()
         words = list(set(tokens))
-        iv_calculator = InformationValueCalculator(tokens)
+        randomized_text = deepcopy(tokens)
+	random.shuffle(randomized_text)	
+        iv_calculator = InformationValueCalculator(Document(tokens), Document(randomized_text))
 
         freq = iv_calculator.get_frequencies(tokens, window_size=1000)
         freq_oracle = iv_oracle.get_frequencies(tokens, words, window_size=1000)
@@ -118,7 +134,9 @@ class InformationValueCalculatorTest(TestCase):
     """
     def test_occurrence_probability_for_single_word_in_vocabulary(self):
         tokens = ["foo", "foo", "foo"]
-        iv_calculator = InformationValueCalculator(tokens)
+        randomized_text = deepcopy(tokens)
+	random.shuffle(randomized_text)
+        iv_calculator = InformationValueCalculator(Document(tokens), Document(randomized_text))
 
         p_i = iv_calculator.occurrence_probability(window_size=1, tokenized_text=tokens)
         self.assertItemsEqual(p_i.keys(), ["foo"])
@@ -128,7 +146,9 @@ class InformationValueCalculatorTest(TestCase):
 
     def test_occurrence_probability_for_two_words_in_vocabulary(self):
         tokens = ["foo", "bar"] * 3
-        iv_calculator = InformationValueCalculator(tokens)
+        randomized_text = deepcopy(tokens)
+	random.shuffle(randomized_text)	
+        iv_calculator = InformationValueCalculator(Document(tokens), Document(randomized_text))
 
         p_i = iv_calculator.occurrence_probability(window_size=2, tokenized_text=tokens)
 
@@ -139,7 +159,9 @@ class InformationValueCalculatorTest(TestCase):
 
     def test_occurrence_probability_for_separated_text(self):
         tokens = ["foo"] * 3 + ["bar"] * 3 + ["doe"] * 3
-        iv_calculator = InformationValueCalculator(tokens)
+        randomized_text = deepcopy(tokens)
+	random.shuffle(randomized_text)	
+        iv_calculator = InformationValueCalculator(Document(tokens), Document(randomized_text))
 
         p_i = iv_calculator.occurrence_probability(window_size=3, tokenized_text=tokens)
 
@@ -162,7 +184,9 @@ class InformationValueCalculatorTest(TestCase):
     def test_occurrence_probability_against_oracle(self):
         tokens = get_moby_dick_tokens()
         words = list(set(tokens))
-        iv_calculator = InformationValueCalculator(tokens)
+        randomized_text = deepcopy(tokens)
+	random.shuffle(randomized_text)	
+        iv_calculator = InformationValueCalculator(Document(tokens), Document(randomized_text))
 
         occ_prob = iv_calculator.occurrence_probability(window_size=1000, tokenized_text=tokens)
         occ_prob_oracle = iv_oracle.get_occurrence_probability(tokens, words, window_size=1000)
@@ -182,7 +206,9 @@ class InformationValueCalculatorTest(TestCase):
 
     def test_entropy_for_single_word_text(self):
         tokens = ["foo", "foo", "foo"]
-        iv_calculator = InformationValueCalculator(tokens)
+        randomized_text = deepcopy(tokens)
+	random.shuffle(randomized_text)	
+        iv_calculator = InformationValueCalculator(Document(tokens), Document(randomized_text))
 
         entropy_dict = iv_calculator.entropy(window_size=1, tokenized_text=tokens)
         self.assertItemsEqual(entropy_dict.keys(), ["foo"])
@@ -190,7 +216,9 @@ class InformationValueCalculatorTest(TestCase):
 
     def test_entropy_for_localized_word(self):
         tokens = ["foo"] * 2 + ["bar"] * 6
-        iv_calculator = InformationValueCalculator(tokens)
+        randomized_text = deepcopy(tokens)
+	random.shuffle(randomized_text)	
+        iv_calculator = InformationValueCalculator(Document(tokens), Document(randomized_text))
 
         entropy_dict = iv_calculator.entropy(window_size=2, tokenized_text=tokens)
         self.assertItemsEqual(entropy_dict.keys(), ["foo", "bar"])
@@ -198,7 +226,9 @@ class InformationValueCalculatorTest(TestCase):
 
     def test_entropy_for_localized_word(self):
         tokens = ["foo"] * 2 + ["bar"] * 6
-        iv_calculator = InformationValueCalculator(tokens)
+        randomized_text = deepcopy(tokens)
+	random.shuffle(randomized_text)	
+        iv_calculator = InformationValueCalculator(Document(tokens), Document(randomized_text))
 
         entropy_dict = iv_calculator.entropy(window_size=2, tokenized_text=tokens)
         self.assertAlmostEqual(entropy_dict["foo"], 0.0)
@@ -206,7 +236,9 @@ class InformationValueCalculatorTest(TestCase):
     def test_entropy_calculation_is_stable(self):
         #Fixture
         tokens = ["foo"] * 10000
-        iv_calculator = InformationValueCalculator(tokens)
+        randomized_text = deepcopy(tokens)
+	random.shuffle(randomized_text)	
+        iv_calculator = InformationValueCalculator(Document(tokens), Document(randomized_text))
         #Stimulus
         entropy_dict = iv_calculator.entropy(window_size=10, tokenized_text=tokens)
         #Check
@@ -214,9 +246,9 @@ class InformationValueCalculatorTest(TestCase):
 
     def test_entropy_for_non_localized_nor_homogeneous_word(self):
         tokens = ["foo", "bar"] * 100 + ["doe"] * 50
-        random.shuffle(tokens)
-
-        iv_calculator = InformationValueCalculator(tokens)
+        randomized_text = deepcopy(tokens)
+	random.shuffle(randomized_text)	
+        iv_calculator = InformationValueCalculator(Document(tokens), Document(randomized_text))
         entropy_dict = iv_calculator.entropy(window_size=10, tokenized_text=tokens)
 
         self.assertNotAlmostEqual(entropy_dict["doe"], 1.0)
@@ -226,7 +258,9 @@ class InformationValueCalculatorTest(TestCase):
     def test_entropy_against_oracle(self):
         tokens = get_moby_dick_tokens()[:60000]
         words = list(set(tokens))
-        iv_calculator = InformationValueCalculator(tokens)
+        randomized_text = deepcopy(tokens)
+	random.shuffle(randomized_text)	
+        iv_calculator = InformationValueCalculator(Document(tokens), Document(randomized_text))
 
         res = iv_calculator.entropy(window_size=1000, tokenized_text=tokens)
         expected = iv_oracle.get_entropy(tokens, words, 1000)
@@ -254,7 +288,10 @@ class InformationValueCalculatorTest(TestCase):
     """
     def test_iv_for_single_word_text(self):
         tokens = ["foo"] * 100
-        iv_calculator = InformationValueCalculator(tokens)
+
+	randomized_text = deepcopy(tokens)
+	random.shuffle(randomized_text)
+        iv_calculator = InformationValueCalculator(Document(tokens), Document(randomized_text))
 
         information_value = iv_calculator.information_value(window_size=10)
 
@@ -263,7 +300,10 @@ class InformationValueCalculatorTest(TestCase):
 
     def test_iv_for_very_concentred_word(self):
         tokens = ["foo", "bar", "doe"] * 10 + ["john", "bar"] * 5 + ["foo", "bar", "doe"] * 10
-        iv_calculator = InformationValueCalculator(tokens)
+
+        randomized_text = deepcopy(tokens)
+	random.shuffle(randomized_text)
+        iv_calculator = InformationValueCalculator(Document(tokens), Document(randomized_text))
 
         information_value = iv_calculator.information_value(window_size=10)
 
@@ -274,7 +314,9 @@ class InformationValueCalculatorTest(TestCase):
     @skip("Not used")
     def test_iv_against_oracle(self):
         tokens = get_moby_dick_tokens()
-        iv_calculator = InformationValueCalculator(tokens)
+        randomized_text = deepcopy(tokens)
+	random.shuffle(randomized_text)	
+        iv_calculator = InformationValueCalculator(Document(tokens), Document(randomized_text))
 
         res = iv_calculator.information_value(window_size=1000)
         expected = iv_oracle.get_iv(tokens, 1000)
@@ -302,7 +344,10 @@ class InformationValueCalculatorTest(TestCase):
 
     def test_occurrence_probability_with_large_window(self):
         tokens = ["sarasa", "lalal", "pepe", "pepe2"]
-        calculator = InformationValueCalculator(tokens)
+        
+	randomized_text = deepcopy(tokens)
+	random.shuffle(randomized_text)	
+        calculator = InformationValueCalculator(Document(tokens), Document(randomized_text))
         from information_value.calculator import WindowSizeTooLarge
         with self.assertRaises(WindowSizeTooLarge):
             calculator.occurrence_probability(4, "sarasa")
@@ -310,7 +355,10 @@ class InformationValueCalculatorTest(TestCase):
     def test_occurrence_probability_with_no_occurence_in_one_window(self):
         # this test the else branch where the word is not on the window sum_f[word] == 0
         tokens = ["sarasa", "sarasa", "lalala", "lalala"]
-        calculator = InformationValueCalculator(tokens)
+	randomized_text = deepcopy(tokens)
+	random.shuffle(randomized_text)	
+        calculator = InformationValueCalculator(Document(tokens), Document(randomized_text))
+        
         res = calculator.occurrence_probability(2, tokens)
         expected = {'lalala': [0.0, 1.0], 'sarasa': [1.0, 0.0]}
         self.assertEquals(res, expected)
