@@ -1,7 +1,5 @@
 import logging
 import operator
-from multiprocessing import Process, Queue
-
 import multiprocessing
 
 from calculator import InformationValueCalculator, WindowSizeTooLarge

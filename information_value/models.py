@@ -1,18 +1,23 @@
+# coding: utf-8
+import logging
 from ming import Session, create_datastore
 from ming import schema
 
 from ming.odm.declarative import MappedClass
 from ming.odm import ODMSession
 
-
+import config
 #from ming.odm import RelationProperty, ForeignIdProperty
 from ming.odm.property import ForeignIdProperty
 from ming.odm.property import FieldProperty, RelationProperty
 
 
-bind = create_datastore('lenin')
+log = logging.getLogger('lenin')
+
+bind = create_datastore(config.DATABASE_NAME)
 session = Session(bind)
 odm_session = ODMSession(doc_session=session)
+
 
 
 class Document(MappedClass):
