@@ -6,6 +6,7 @@ import unittest
 import argparse
 import subprocess
 from commands.database import populate_database
+from commands.database import calculate_results
 from includes import preprocessor as pre
 from includes import wn_analyzer as wna
 from plot.window_sizes import plot_iv_things
@@ -40,7 +41,6 @@ def run_tests():
     unittest.TextTestRunner(verbosity=2).run(test_suite)
 
 
-
 def main():
     parser = argparse.ArgumentParser(description='Central de Control de Comandos y Procesos para el TP de Analisis de Lenin.')
     # Parameter to scrap all the works before or not
@@ -56,6 +56,7 @@ def main():
     parser.add_argument('--restart-db', action='store_true', default= False, help='Executes split-years, zipf and zipf-resume')
     parser.add_argument('--plot-iv-analysis', action='store_true', default=False, help="Shows some plot about Information Value Analysis")
     parser.add_argument('--test', action='store_true', default=False, help="Run Tests")
+    parser.add_argument('--calculate_results', action='store_true', default=False, help="Calculate Information Value Results for Documents")
 
     # Parse args
     args = parser.parse_args()
@@ -82,6 +83,8 @@ def main():
         plot_iv_things()
     if args.test:
         run_tests()
+    if args.calculate_results:
+        calculate_results()
 
 def init_logging():
     logger = logging.getLogger('lenin')
