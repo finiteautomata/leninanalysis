@@ -5,6 +5,9 @@ from pymongo.errors import DuplicateKeyError
 
 from information_value.models import odm_session
 from information_value.models import Document
+from includes.tokenizer import tokenize
+from information_value.analysis import get_all_analysis
+from information_value.models import InformationValueResult
 
 
 log= logging.getLogger('lenin')
@@ -28,3 +31,22 @@ def populate_database():
             except DuplicateKeyError:
                 log.info("Duplicate found skipping...")
         log.info("Done")
+
+def calculate_results():
+    log.info("Calculating information values...")
+    for document in Document.query.find().all():
+        tokens = tokenize(document.text)
+        window_sizes = xrange(100, 3000, 100)
+        results = get_all_analysis(tokens, window_sizes, number_of_words=5000)
+        for result in results.iteritems():
+            print result
+            log.info("Storing results for document %s..." % document.name)
+            analisys = result[1]
+            if analisys:
+                print analisys.top_words
+                InformationValueResult(
+                    window_size=result[0],
+                    iv_words = analisys.top_words,
+                    document= document,
+                    )
+            odm_session.flush()

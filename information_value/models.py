@@ -22,11 +22,11 @@ class Document(MappedClass):
         name = 'document'
 
     _id = FieldProperty(schema.ObjectId)
-    url = FieldProperty(str, unique=True)
-    name = FieldProperty(str)
-    text = FieldProperty(str)
-    month = FieldProperty(str)
-    year = FieldProperty(int)
+    url = FieldProperty(schema.String, unique=True)
+    name = FieldProperty(schema.String)
+    text = FieldProperty(schema.String)
+    month = FieldProperty(schema.String)
+    year = FieldProperty(schema.String)
     results = RelationProperty('InformationValueResult')
 
 
@@ -37,10 +37,7 @@ class InformationValueResult(MappedClass):
         name = 'information_value_result'
 
     _id = FieldProperty(schema.ObjectId)
-    window_size = FieldProperty(int)
-    threshold = FieldProperty(int)
-    max_iv = FieldProperty(int)
-    sum_iv = FieldProperty(int)
-    iv_words = FieldProperty((str, int))
+    window_size = FieldProperty(schema.Int)
+    iv_words = FieldProperty(schema.Anything)
     document_id = ForeignIdProperty(Document)
     document = RelationProperty(Document)
