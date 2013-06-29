@@ -7,18 +7,19 @@ import config
 
 # The amount of words that will be counted on the total sum
 
-log= logging.getLogger('lenin')
+log = logging.getLogger('lenin')
 
 SUM_THRESHOLD = config.SUM_THRESHOLD
+
 
 class WindowAnalysis(object):
     def __init__(self, window_size, iv_words, number_of_words):
         self.window_size = window_size
-        amount_to_be_taken = int(len(iv_words) * SUM_THRESHOLD)
+        amount_to_be_taken = int(len(iv_words) * SUM_THRESHOLD) or 10
         sorted_words = sorted(iv_words.iteritems(), key=operator.itemgetter(1), reverse=True)[:amount_to_be_taken]
         self.max_iv = sorted_words[0][1]
         # Sum the reverse of sorted_words to improve numerical stability
-        self.iv_sum = reduce(lambda x,y: x+y[1], reversed(sorted_words), 0)
+        self.iv_sum = reduce(lambda x, y: x + y[1], reversed(sorted_words), 0)
         self.top_words = sorted_words[:number_of_words]
 
     def encode(self):
@@ -26,7 +27,7 @@ class WindowAnalysis(object):
             "window_size": self.window_size,
             "top_words": self.top_words,
             "sum_iv": self.iv_sum,
-            "max_iv" : self.max_iv,
+            "max_iv": self.max_iv,
         }
 
 
