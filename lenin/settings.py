@@ -12,5 +12,8 @@ SPIDER_MODULES = ['lenin.spiders']
 NEWSPIDER_MODULE = 'lenin.spiders'
 LOG_LEVEL = 'INFO' #'DEBUG'
 
+ITEM_PIPELINES = [
+            'lenin.pipelines.LeninPipeline',
+]
 # Crawl responsibly by identifying yourself (and your website) on the user-agent
 #USER_AGENT = 'lenin (+http://www.yourdomain.com)'
