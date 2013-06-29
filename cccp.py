@@ -56,7 +56,7 @@ def main():
     parser.add_argument('--restart-db', action='store_true', default= False, help='Executes split-years, zipf and zipf-resume')
     parser.add_argument('--plot-iv-analysis', action='store_true', default=False, help="Shows some plot about Information Value Analysis")
     parser.add_argument('--test', action='store_true', default=False, help="Run Tests")
-    parser.add_argument('--calculate_results', action='store_true', default=False, help="Calculate Information Value Results for Documents")
+    parser.add_argument('--calculate-results', action='store_true', default=False, help="Calculate Information Value Results for Documents")
 
     # Parse args
     args = parser.parse_args()
