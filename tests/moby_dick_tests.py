@@ -5,6 +5,8 @@ from unittest import TestCase
 from nltk.corpus import gutenberg
 from includes.tokenizer import tokenize
 from information_value.analysis import get_optimal_window_size
+from information_value.models import Document
+from information_value.models import odm_session
 
 log= logging.getLogger('lenin')
 
@@ -32,7 +34,19 @@ class MobyDickTests(TestCase):
         self.assertGreaterEqual(amount_of_matching_words, 15)
 
 
-def get_moby_dick_tokens():
+def get_moby_dick_document():
     moby_dick = gutenberg.raw('melville-moby_dick.txt')
-    tokens = tokenize(moby_dick, only_alphanum=True, clean_punctuation=True)
-    return [token.lower() for token in tokens]
+    document = Document(
+        url = 'melville-moby_dick.tx',
+        name = 'Moby dick',
+        text = moby_dick,
+        month = 'Oct',
+        year = '1851'
+    )
+    # document uses tokenizer func for create tokens, since we need to enforce
+    # only_alphanum and clean_punct we need a wrapper
+    def tokenizer_wrapper(raw_text):
+        return map(str.lower, tokenize(raw_text, only_alphanum=True, clean_punctuation=True))
+    document.tokenizer = tokenizer_wrapper
+    odm_session.flush()
+    return document

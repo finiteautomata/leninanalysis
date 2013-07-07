@@ -4,6 +4,8 @@ import math
 from unittest import TestCase, skip
 from includes.tokenizer import tokenize
 from information_value.calculator import InformationValueCalculator
+from information_value.models import odm_session
+from information_value.models import Document
 from information_value import analysis
 from tests import iv_oracle
 
@@ -22,7 +24,6 @@ class InformationValueCalculatorTest(TestCase):
         self.assertEqual(len(freq["foo"]), 1)
         self.assertAlmostEqual(freq["foo"][0], 1)
 
-
     def test_frequency_for_single_word_many_windows(self):
         tokens = ["foo", "foo", "foo"]
         iv_calculator = InformationValueCalculator(tokens)
@@ -33,7 +34,6 @@ class InformationValueCalculatorTest(TestCase):
         self.assertEqual(len(freq["foo"]), 3)
         for i in range(3):
             self.assertAlmostEqual(freq["foo"][i], 1)
-
 
     def test_frequency_for_many_words_one_window(self):
         tokens = ["one", "two", "three", "four", "five"]
@@ -291,14 +291,13 @@ class InformationValueCalculatorTest(TestCase):
 
     @skip("Not used")
     def test_top_words_for_origin(self):
-        tokens = get_origin_of_species_tokens()
-
-        print analysis.get_optimal_window_size(tokens, self.window_sizes, 20)
+        document = get_origin_of_species_document()
+        print analysis.get_optimal_window_size(document, self.window_sizes, 20)
 
     @skip("Not used")
     def test_top_words_for_analysis_of_the_mind(self):
-        tokens = get_analysis_of_the_mind_tokens()
-        print analysis.get_optimal_window_size(tokens, self.window_sizes, 20)
+        document = get_analysis_of_the_mind_document()
+        print analysis.get_optimal_window_size(document, self.window_sizes, 20)
 
     def test_occurrence_probability_with_large_window(self):
         tokens = ["sarasa", "lalal", "pepe", "pepe2"]
@@ -316,16 +315,34 @@ class InformationValueCalculatorTest(TestCase):
         self.assertEquals(res, expected)
 
 
-
-
-def get_origin_of_species_tokens():
+def get_origin_of_species_document():
     with file("tests/origin.txt") as f:
+        document = Document(
+            url = 'tests/origin.txt',
+            name = 'Origin of species',
+            text = f.read(),
+            month = 'Nov',
+            year = '1859'
+        )
         raw_text = f.read()
-        tokens = tokenize(raw_text, only_alphanum=True, clean_punctuation=True)
-        return [token.lower() for token in tokens]
+        def tokenizer_wrapper(raw_text):
+            return map(str.lower, tokenize(raw_text, only_alphanum=True, clean_punctuation=True))
+        document.tokenizer = tokenizer_wrapper
+        odm_session.flush()
+        return document
 
-def get_analysis_of_the_mind_tokens():
+def get_analysis_of_the_mind_document():
     with file("tests/analysis_of_the_mind.txt") as f:
+        document = Document(
+            url = 'tests/analysis_of_the_mind.txt',
+            name = 'Analysis of the mind',
+            text = f.read(),
+            month = 'Dec',
+            year = '1921'
+        )
         raw_text = f.read()
-        tokens = tokenize(raw_text, only_alphanum=True, clean_punctuation=True)
-        return [token.lower() for token in tokens]
+        def tokenizer_wrapper(raw_text):
+            return map(str.lower, tokenize(raw_text, only_alphanum=True, clean_punctuation=True))
+        document.tokenizer = tokenizer_wrapper
+        odm_session.flush()
+        return document

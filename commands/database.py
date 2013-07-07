@@ -6,11 +6,11 @@ from pymongo.errors import DuplicateKeyError
 from information_value.models import odm_session
 from information_value.models import Document
 from includes.tokenizer import tokenize
+from includes.segmentator import Segmentator
 from information_value.analysis import get_all_analysis
-from information_value.models import InformationValueResult
 
 
-log= logging.getLogger('lenin')
+log = logging.getLogger('lenin')
 
 
 def populate_database():
@@ -32,21 +32,11 @@ def populate_database():
                 log.info("Duplicate found skipping...")
         log.info("Done")
 
+
 def calculate_results():
-    log.info("Calculating information values...")
     for document in Document.query.find().all():
-        tokens = tokenize(document.text)
-        window_sizes = xrange(100, 3000, 100)
-        results = get_all_analysis(tokens, window_sizes, number_of_words=5000)
-        for result in results.iteritems():
-            print result
-            log.info("Storing results for document %s..." % document.name)
-            analisys = result[1]
-            if analisys:
-                print analisys.top_words
-                InformationValueResult(
-                    window_size=result[0],
-                    iv_words = analisys.top_words,
-                    document= document,
-                    )
-            odm_session.flush()
+        log.info("Calculating information values for document %s" % document.name)
+        document.tokenizer = tokenize
+        segmentator = Segmentator(document)
+        window_sizes = segmentator.window_size()
+        results = get_all_analysis(document, window_sizes, number_of_words=5000)
