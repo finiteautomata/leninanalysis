@@ -7,6 +7,7 @@ import argparse
 import subprocess
 from commands.database import populate_database
 from commands.database import calculate_results
+from commands.database import cleandb
 from includes import preprocessor as pre
 from includes import wn_analyzer as wna
 from plot.window_sizes import plot_iv_things
@@ -57,6 +58,7 @@ def main():
     parser.add_argument('--plot-iv-analysis', action='store_true', default=False, help="Shows some plot about Information Value Analysis")
     parser.add_argument('--test', action='store_true', default=False, help="Run Tests")
     parser.add_argument('--calculate-results', action='store_true', default=False, help="Calculate Information Value Results for Documents")
+    parser.add_argument('--cleandb', action='store_true', default=False, help="Cleans Database")
 
     # Parse args
     args = parser.parse_args()
@@ -85,6 +87,8 @@ def main():
         run_tests()
     if args.calculate_results:
         calculate_results()
+    if args.cleandb:
+        cleandb()
 
 def init_logging():
     logger = logging.getLogger('lenin')

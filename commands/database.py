@@ -40,3 +40,11 @@ def calculate_results():
         segmentator = Segmentator(document)
         window_sizes = segmentator.window_size()
         results = get_all_analysis(document, window_sizes, number_of_words=5000)
+
+
+def cleandb():
+    from pymongo import MongoClient
+    client = MongoClient()
+    db = client.lenin
+    db.drop_collection('document')
+    db.drop_collection('information_value_result')
