@@ -43,6 +43,10 @@ class Document(MappedClass):
     year = FieldProperty(schema.String)
     results = RelationProperty('InformationValueResult')
 
+    @property
+    def tokens(self):
+        return self.tokenizer(self.text)
+
 
 class InformationValueResult(MappedClass):
 
