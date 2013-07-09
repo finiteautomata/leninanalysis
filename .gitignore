@@ -1,4 +1,5 @@
 *.pyc
+*~
 lenin.log
 config.py
 log/*
