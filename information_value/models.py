@@ -2,6 +2,8 @@
 import logging
 import hashlib
 
+from pymongo.errors import DuplicateKeyError
+
 from ming import Session, create_datastore
 from ming import schema
 
@@ -25,8 +27,11 @@ class DocumentWindowSizeDuplicateHash(MapperExtension):
     """
         Used as unique key for Document - WindowSize
     """
-    def before_insert(self, obj, st, sess):
-        obj.doc_window_hash = hashlib.sha1(str(obj.document_id) + str(obj.window_size)).hexdigest()
+    def before_insert(self, instance, state, session):
+        doc_window_hash = hashlib.sha1(str(instance.document_id) + str(instance.window_size)).hexdigest()
+        if instance.__class__.query.find({'doc_window_hash': doc_window_hash}).count() > 0:
+            raise DuplicateKeyError('Duplicate hash found ', doc_window_hash)
+        instance.doc_window_hash = doc_window_hash
 
 
 class Document(MappedClass):

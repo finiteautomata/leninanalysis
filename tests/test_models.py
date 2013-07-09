@@ -1,4 +1,5 @@
 from unittest import TestCase
+from pymongo.errors import DuplicateKeyError
 
 from information_value.models import odm_session
 from information_value.models import Document
@@ -50,7 +51,7 @@ class TestModels(TestCase):
         self.assertEquals(from_db.document, simple_doc)
         self.assertEquals(from_db.results, [])
 
-    def test_simple_iv_result_persistence(self):
+    def test_duplicate_result_raises_exception(self):
         simple_doc = Document(
                 url="http://www.sarasa.com.ar",
                 text="sarasa sarasa sarasa sarasa sarasa!",
@@ -65,12 +66,12 @@ class TestModels(TestCase):
                 )
 
         odm_session.flush()
-        InformationValueResult(
+        with self.assertRaises(DuplicateKeyError):
+            InformationValueResult(
                 window_size=500,
                 document=simple_doc,
                 results=[]
                 )
-
-        odm_session.flush()
+            odm_session.flush()
         count = InformationValueResult.query.find({"document_id":simple_doc._id}).count()
         self.assertEquals(count, 1)
