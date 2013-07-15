@@ -6,17 +6,14 @@ from pymongo.errors import DuplicateKeyError
 
 from ming import Session, create_datastore
 from ming import schema
-
-from ming.odm.declarative import MappedClass
 from ming.odm import ODMSession
 from ming.odm.mapper import MapperExtension
-
-import config
-from includes import tokenizer
-
-#from ming.odm import RelationProperty, ForeignIdProperty
 from ming.odm.property import ForeignIdProperty
 from ming.odm.property import FieldProperty, RelationProperty
+from ming.odm.declarative import MappedClass
+
+import config
+from includes.tokenizer import tokenize
 
 
 log = logging.getLogger('lenin')
@@ -49,15 +46,15 @@ class Document(MappedClass):
     text = FieldProperty(schema.String)
     month = FieldProperty(schema.String)
     year = FieldProperty(schema.String)
-    #results = RelationProperty('InformationValueResult')
+    results = RelationProperty('InformationValueResult')
 
     def get_information_value_result(self, threshold):
-        all_ivs = InformationValueResult.query.find({"document_id":self._id})
+        #all_ivs = InformationValueResult.query.find({"document_id":self._id})
         best_iv = 0.0
-        total_words = len(tokenizer.tokenize(self.text))
+        total_words = len(self.tokens)
         take_words = int(threshold * total_words)
 
-        for one_iv in all_ivs:
+        for one_iv in self.results:
             sum_iv = sum(map(lambda (w, iv): iv ,one_iv.iv_words[:take_words]))
             if best_iv <= sum_iv:
                 best_iv = sum_iv
@@ -66,7 +63,8 @@ class Document(MappedClass):
 
     @property
     def tokens(self):
-        return self.tokenizer(self.text)
+        tokenizer_func = getattr(self, 'tokenizer', tokenize)
+        return tokenizer_func(self.text)
 
 
 class InformationValueResult(MappedClass):
@@ -75,7 +73,7 @@ class InformationValueResult(MappedClass):
         session = odm_session
         name = 'information_value_result'
         unique_indexes = [('doc_window_hash', ), ]
-        extensions = [ DocumentWindowSizeDuplicateHash ]
+        extensions = [DocumentWindowSizeDuplicateHash]
 
     _id = FieldProperty(schema.ObjectId)
     doc_window_hash = FieldProperty(schema.String)
