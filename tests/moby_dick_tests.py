@@ -16,16 +16,16 @@ class MobyDickTests(TestCase):
 
     @attr('slow')
     def test_top_words_for_moby_dick(self):
-        tokens = get_moby_dick_tokens()
+        document = get_moby_dick_document()
         # This are the words that Zanette show up as the result of analysis
         zanette_top_words = ["i", "whale", "you", "ahab", "is",
                      "ye", "queequeg", "thou", "me", "of",
                      "he", "captain", "boat", "the", "stubb",
                      "his", "jonah", "was", "whales", "my"]
 
-        window_size, analysis = get_optimal_window_size(tokens, self.window_sizes, 20, sum_threshold=self.sum_threshold)
+        window_size, analysis = get_optimal_window_size(document, self.window_sizes, 20, sum_threshold=self.sum_threshold)
         top_words = [word for (word, iv_value) in analysis.top_words]
-        
+
         log.info("Window size = %s" % window_size)
         log.info("top words = %s" % top_words)
         log.info("zanette words = %s" % zanette_top_words)
