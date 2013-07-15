@@ -25,7 +25,7 @@ def populate_database():
                     text=raw_work['text'],
                     name=raw_work['name'],
                     month=raw_work['month'],
-                    year=int(raw_work['year'])
+                    year=raw_work['year']
                 )
                 odm_session.flush()
             except DuplicateKeyError:
