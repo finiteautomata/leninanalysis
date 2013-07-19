@@ -1,6 +1,6 @@
 from unittest import TestCase
+import pymongo
 from pymongo.errors import DuplicateKeyError
-
 from information_value.models import odm_session
 from information_value.models import Document
 from information_value.models import InformationValueResult

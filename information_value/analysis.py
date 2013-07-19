@@ -1,6 +1,7 @@
 import logging
 import operator
 import multiprocessing
+import pymongo
 from pymongo.errors import DuplicateKeyError
 
 from information_value.models import odm_session
@@ -38,10 +39,11 @@ class WindowAnalysis(object):
 # This global variable is shared across the threads
 __information_value_calculator = None
 __number_of_words = 20
+__document = None
 
-
-def get_window_size_analysis((window_size, document)):
+def _get_window_size_analysis(window_size):
     try:
+        document = __document
         log.info("Checking window_size = %s" % window_size)
         iv_words = __information_value_calculator.information_value(window_size)
         try:
@@ -52,30 +54,42 @@ def get_window_size_analysis((window_size, document)):
             log.warning('Result already found')
         return (window_size, WindowAnalysis(window_size, iv_words, number_of_words=__number_of_words))
     except WindowSizeTooLarge:
-        return (window_size, None)
+        return None
 
 
-def get_all_analysis(document, window_sizes, number_of_words=20):
+def _get_all_analysis(document, window_sizes, number_of_words=20):
     global __information_value_calculator
     global __number_of_words
+    global __document 
+    __document = document
     __number_of_words = number_of_words
     __information_value_calculator = InformationValueCalculator(document.tokens)
-    #pool = multiprocessing.Pool(processes=config.NUMBER_OF_THREADS)
-    #params = (window_sizes, document)
-    #analysis = pool.map(get_window_size_analysis, params)
-    #pool.close()
-    #pool.join()
-    #return analysis
-    res = []
-    for window_size in window_sizes:
-        res.append(get_window_size_analysis((window_size, document)))
-    return res
+    
+    pool = multiprocessing.Pool(processes=config.NUMBER_OF_THREADS)
+    analysis = pool.map(_get_window_size_analysis, window_sizes)
+    pool.close()
+    pool.join()
+
+    return filter(None, analysis)
+    
+def _get_all_analysis_single_threaded(document, window_sizes, number_of_words=20):
+    global __information_value_calculator
+    global __number_of_words
+    global __document
+    print window_sizes
+    __document = document
+    __number_of_words = number_of_words
+    __information_value_calculator = InformationValueCalculator(document.tokens)
+    
+    analysis = map(_get_window_size_analysis, window_sizes)
+
+    return filter(None, analysis)
 
 
 def get_optimal_window_size(document, window_sizes, number_of_words=20, sum_threshold=config.SUM_THRESHOLD):
-    results_per_window_size = get_all_analysis(document, window_sizes, number_of_words)
+    results_per_window_size = _get_all_analysis(document, window_sizes, number_of_words)
     #Criterio: maximo de promedio de IV sobre todas las palabras
-    best_result = max(results_per_window_size.iteritems(),
+    best_result = max(results_per_window_size,
         key= lambda res: res[1].iv_sum
         )
 

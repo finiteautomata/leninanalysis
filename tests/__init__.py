@@ -16,3 +16,5 @@ def init_logging():
     # add the handlers to the logger
     logger.addHandler(fh)
     logger.addHandler(ch)
+
+init_logging()
