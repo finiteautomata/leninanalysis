@@ -57,7 +57,7 @@ def _get_window_size_analysis(window_size):
         return None
 
 
-def _get_all_analysis(document, window_sizes, number_of_words=20):
+def get_all_analysis(document, window_sizes, number_of_words=20):
     global __information_value_calculator
     global __number_of_words
     global __document 
@@ -87,7 +87,7 @@ def _get_all_analysis_single_threaded(document, window_sizes, number_of_words=20
 
 
 def get_optimal_window_size(document, window_sizes, number_of_words=20, sum_threshold=config.SUM_THRESHOLD):
-    results_per_window_size = _get_all_analysis(document, window_sizes, number_of_words)
+    results_per_window_size = get_all_analysis(document, window_sizes, number_of_words)
     #Criterio: maximo de promedio de IV sobre todas las palabras
     best_result = max(results_per_window_size,
         key= lambda res: res[1].iv_sum
