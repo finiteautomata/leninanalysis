@@ -1,19 +1,14 @@
 # This Python file uses the following encoding: utf-8
 from __future__ import division
-import sys
 import logging
-from moby_dick import config as moby_dick_config
-sys.modules["config"] = moby_dick_config
-
-from tests import init_logging
+import config
+from tests import LeninTestCase
 from pymongo import MongoClient
-# This hack is to replace config module with the other config...
 from nose.plugins.attrib import attr
 from unittest import TestCase
 from nltk.corpus import gutenberg
 from includes.tokenizer import tokenize
 import information_value.models
-reload(information_value.models)
 from information_value.analysis import get_optimal_window_size
 from information_value.models import Document
 from information_value.models import odm_session
@@ -22,14 +17,15 @@ from information_value.models import odm_session
 
 log= logging.getLogger('lenin')
 
-class MobyDickTests(TestCase):
+class MobyDickTests(LeninTestCase):
     window_sizes = xrange(100, 3000, 100)
     sum_threshold = 0.01
 
     def setUp(self):
         init_logging()
         client = MongoClient()
-        client.drop_database('moby_dick')
+        print config.DATABASE_NAME
+        client.drop_database(config.DATABASE_NAME)
 
     @attr('slow')
     def test_top_words_for_moby_dick(self):

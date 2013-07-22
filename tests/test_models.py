@@ -1,19 +1,13 @@
 from unittest import TestCase
 import pymongo
+from tests import LeninTestCase
 from pymongo.errors import DuplicateKeyError
 from information_value.models import odm_session
 from information_value.models import Document
 from information_value.models import InformationValueResult
 
 
-class TestModels(TestCase):
-
-    def setUp(self):
-        from pymongo import MongoClient
-        client = MongoClient()
-        db = client.lenin
-        db.drop_collection('document')
-        db.drop_collection('information_value_result')
+class TestModels(LeninTestCase):
 
     def test_simple_document_pesistence(self):
         simple_doc = Document(
