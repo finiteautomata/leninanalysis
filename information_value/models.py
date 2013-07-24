@@ -45,11 +45,11 @@ class Document(MappedClass):
     name = FieldProperty(schema.String)
     text = FieldProperty(schema.String)
     month = FieldProperty(schema.String)
-    year = FieldProperty(schema.String)
+    year = FieldProperty(schema.Int)
     results = RelationProperty('InformationValueResult')
 
     def get_information_value_result(self, threshold):
-        #all_ivs = InformationValueResult.query.find({"document_id":self._id})
+        iv_res = None
         best_iv = 0.0
         total_words = len(self.tokens)
         take_words = int(threshold * total_words)
