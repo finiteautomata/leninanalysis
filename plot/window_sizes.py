@@ -1,4 +1,5 @@
 # coding: utf-8
+import operator
 import logging
 from information_value.models import Document
 import config
@@ -31,8 +32,10 @@ def get_max_ivs(documents):
     res = []
     for document in documents:
         for result in document.results:
-            res.append(result.iv_words[0][1])
-    #return [work['top_words_with_iv'][0][1] for work in works]
+            amount_to_be_taken = int(len(result.iv_words) * 0.01) or 10
+            sorted_words = sorted(result.iv_words.iteritems(), key=operator.itemgetter(1), reverse=True)[:amount_to_be_taken]
+            for word in sorted_words:
+                res.append(word[1])
     return res
 
 
@@ -68,7 +71,7 @@ def plot_scatter_max_ivs_vs_total_words(works):
         log.debug("Empty results. please execute ./cccp --calculate-results")
         return
 
-    plt.scatter(total_words, ivs)
+    plt.scatter(total_words[:len(ivs)], ivs)
     plt.title("Maximum IV per word vs Total Words")
     plt.xlabel("Total words")
     plt.ylabel("Maximum Information Value")
@@ -80,7 +83,7 @@ def plot_scatter_max_ivs_vs_window_sizes(documents):
     window_sizes = [getattr(document.get_information_value_result(0.01), 'window_size', 0) for document in documents]
     ivs = get_max_ivs(documents)
 
-    plt.scatter(window_sizes, ivs)
+    plt.scatter(window_sizes[:len(ivs)], ivs)
     plt.title("Maximum IV per word vs Best Window Size")
     plt.xlabel("Best Window Size")
     plt.ylabel("Maximum Information Value per word")
