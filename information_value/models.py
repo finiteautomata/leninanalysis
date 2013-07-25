@@ -55,7 +55,7 @@ class Document(MappedClass):
         take_words = int(threshold * total_words)
 
         for one_iv in self.results:
-            sum_iv = sum(map(lambda (w, iv): iv ,one_iv.iv_words[:take_words]))
+            sum_iv = sum(map(lambda (w, iv): iv , one_iv.iv_words.iteritems()))
             if best_iv <= sum_iv:
                 best_iv = sum_iv
                 iv_res = one_iv
