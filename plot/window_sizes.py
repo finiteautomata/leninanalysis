@@ -1,4 +1,5 @@
 # coding: utf-8
+import logging
 from information_value.models import Document
 import config
 import matplotlib.pyplot as plt
@@ -8,21 +9,22 @@ JSON_SUBSET_NAME = "lenin_work.subset.json"
 MIN_YEAR = config.MIN_YEAR
 MAX_YEAR = config.MAX_YEAR
 
+log = logging.getLogger('lenin')
 
 # Scatter plot de X los window sizes y en Y las palabras totales
 def plot_scatter_total_words_vs_window_sizes(documents):
     window_sizes = [getattr(document.get_information_value_result(0.01), 'window_size', 0) for document in documents]
     total_words = [len(document.text) for document in documents]
-    print 'win %s total %s' % (len(window_sizes), len(total_words))
+    log.debug('win %s total %s' % (len(window_sizes), len(total_words)))
     plt.scatter(window_sizes, total_words, label="Best window size with total words for each text")
     plt.xlabel("Best Window Size")
     plt.ylabel("Total words")
     plt.show()
 
 
-    print "Best window size = %s" % max(window_sizes)
-    print "Max total words = %s" % max(total_words)
-    print "Average window size = %s" % average(window_sizes)
+    log.debug("Best window size = %s" % max(window_sizes))
+    log.debug("Max total words = %s" % max(total_words))
+    log.debug("Average window size = %s" % average(window_sizes))
 
 
 def get_max_ivs(documents):
@@ -36,27 +38,35 @@ def get_max_ivs(documents):
 
 def plot_histogram_of_max_ivs(documents):
     ivs = get_max_ivs(documents)
-
+    if ivs == []:
+        log.debug("Empty results. please execute ./cccp --calculate-results")
+        return
     plt.hist(ivs)
     plt.title("Histogram of Maximum information value per work")
     plt.show()
 
-    print "Average max iv of all works = %s" % average(ivs)
+    log.debug("Average max iv of all works = %s" % average(ivs))
 
 
 def plot_histogram_of_max_ivs_of_long_works(documents):
     long_works = filter(lambda document: len(document.text) > 5000, documents)
     long_ivs = get_max_ivs(long_works)
+    if long_ivs == []:
+        log.debug("Empty results. please execute ./cccp --calculate-results")
+        return
 
     plt.hist(long_ivs)
     plt.title("Histogram of Maximum Information Value for Long Works")
     plt.show()
-    print "Average max iv of long works = %s" % average(long_ivs)
+    log.debug("Average max iv of long works = %s" % average(long_ivs))
 
 
 def plot_scatter_max_ivs_vs_total_words(works):
     ivs = get_max_ivs(works)
     total_words = [len(work.text) for work in works]
+    if ivs == []:
+        log.debug("Empty results. please execute ./cccp --calculate-results")
+        return
 
     plt.scatter(total_words, ivs)
     plt.title("Maximum IV per word vs Total Words")
@@ -64,11 +74,11 @@ def plot_scatter_max_ivs_vs_total_words(works):
     plt.ylabel("Maximum Information Value")
     plt.show()
 
-    print "Average max iv = %s" % average(ivs)
+    log.debug("Average max iv = %s" % average(ivs))
 
-def plot_scatter_max_ivs_vs_window_sizes(works):
-    window_sizes = [document.get_information_value_result(0.01).window_size for document in documents]
-    ivs = get_max_ivs(works)
+def plot_scatter_max_ivs_vs_window_sizes(documents):
+    window_sizes = [getattr(document.get_information_value_result(0.01), 'window_size', 0) for document in documents]
+    ivs = get_max_ivs(documents)
 
     plt.scatter(window_sizes, ivs)
     plt.title("Maximum IV per word vs Best Window Size")
