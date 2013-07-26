@@ -49,13 +49,17 @@ class Document(MappedClass):
     results = RelationProperty('InformationValueResult')
 
     def get_information_value_result(self, threshold):
-        #all_ivs = InformationValueResult.query.find({"document_id":self._id})
+        
         best_iv = 0.0
+        iv_res = None
         total_words = len(self.tokens)
         take_words = int(threshold * total_words)
-
+        print "total: "+str(total_words)
+        print "take: "+str(take_words)
         for one_iv in self.results:
-            sum_iv = sum(map(lambda (w, iv): iv ,one_iv.iv_words[:take_words]))
+            print one_iv
+            first_words = one_iv.iv_words
+            sum_iv = sum(map(lambda (w, iv): iv ,first_words))
             if best_iv <= sum_iv:
                 best_iv = sum_iv
                 iv_res = one_iv
