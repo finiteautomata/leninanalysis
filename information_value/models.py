@@ -45,7 +45,7 @@ class Document(MappedClass):
     name = FieldProperty(schema.String)
     text = FieldProperty(schema.String)
     month = FieldProperty(schema.String)
-    year = FieldProperty(schema.Int)
+    year = FieldProperty(schema.String)
     results = RelationProperty('InformationValueResult')
 
     def get_information_value_result(self, threshold):

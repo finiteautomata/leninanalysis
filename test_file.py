@@ -21,8 +21,8 @@ def war_and_rev():
 	model_it = models.Document.query.find({'name': {'$regex': '.*State.*'}}, {'text':0})
 	state_it = db.document.find({'name': {'$regex': '.*State.*'}}, {'text':0})
 
-
-	war_and_rev = models.Document.query.find({'_id': ObjectId("51e87f673092073a3fc5a026")}).first()
+	return state_it
+	#war_and_rev = models.Document.query.find({'_id': ObjectId("51e87f673092073a3fc5a026")}).first()
 	#print str(model_it.count())
 	#print str(state_it.count())
 	return war_and_rev
