@@ -1,4 +1,11 @@
 import logging
+import sys
+# This hack is to replace config module with the other config...
+from tests import config as test_config
+sys.modules["config"] = test_config
+import config
+import unittest
+from pymongo import MongoClient
 
 def init_logging():
     logger = logging.getLogger('lenin')
@@ -16,3 +23,13 @@ def init_logging():
     # add the handlers to the logger
     logger.addHandler(fh)
     logger.addHandler(ch)
+
+
+init_logging()
+
+class LeninTestCase(unittest.TestCase):
+    def setUp(self):
+        init_logging()
+        client = MongoClient()
+        print config.DATABASE_NAME
+        client.drop_database(config.DATABASE_NAME)

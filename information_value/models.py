@@ -45,26 +45,20 @@ class Document(MappedClass):
     name = FieldProperty(schema.String)
     text = FieldProperty(schema.String)
     month = FieldProperty(schema.String)
-    year = FieldProperty(schema.String)
+    year = FieldProperty(schema.Int)
     results = RelationProperty('InformationValueResult')
 
     def get_information_value_result(self, threshold):
-        
-        best_iv = 0.0
         iv_res = None
-        total_words = len(self.tokens)
-        take_words = int(threshold * total_words)
-        print "total: "+str(total_words)
-        print "take: "+str(take_words)
+        best_iv = 0.0
+
         for one_iv in self.results:
-            print one_iv
-            first_words = one_iv.iv_words
-            sum_iv = sum(map(lambda (w, iv): iv ,first_words))
+            sum_iv = sum(map(lambda (w, iv): iv, one_iv.iv_words.iteritems()))
             if best_iv <= sum_iv:
                 best_iv = sum_iv
                 iv_res = one_iv
         return iv_res
-
+        
     @property
     def tokens(self):
         tokenizer_func = getattr(self, 'tokenizer', tokenize)

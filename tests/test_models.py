@@ -1,19 +1,13 @@
 from unittest import TestCase
+import pymongo
+from tests import LeninTestCase
 from pymongo.errors import DuplicateKeyError
-
 from information_value.models import odm_session
 from information_value.models import Document
 from information_value.models import InformationValueResult
 
 
-class TestModels(TestCase):
-
-    def setUp(self):
-        from pymongo import MongoClient
-        client = MongoClient()
-        db = client.lenin
-        db.drop_collection('document')
-        db.drop_collection('information_value_result')
+class TestModels(LeninTestCase):
 
     def test_simple_document_pesistence(self):
         simple_doc = Document(
@@ -21,7 +15,7 @@ class TestModels(TestCase):
                 text="sarasa sarasa sarasa sarasa sarasa!",
                 name="test01",
                 month="Mar",
-                year="2013"
+                year=2013
                 )
         odm_session.flush()
         from_db = Document.query.get(name="test01")
@@ -37,7 +31,7 @@ class TestModels(TestCase):
                 text="sarasa sarasa sarasa sarasa sarasa!",
                 name="test02",
                 month="Mar",
-                year="2013"
+                year=2013
                 )
         InformationValueResult(
                 window_size=500,
@@ -57,7 +51,7 @@ class TestModels(TestCase):
                 text="sarasa sarasa sarasa sarasa sarasa!",
                 name="test02",
                 month="Mar",
-                year="2013"
+                year=2013
                 )
         InformationValueResult(
                 window_size=500,

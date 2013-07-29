@@ -90,29 +90,12 @@ class InformationValueCalculator:
 
 		random_entropy = self.entropy(self.randomized_text, window_size)
 
-		information_value = {}
+		information_value_per_word = {}
 		for word in self.word_fdist.samples():
 			freq = self.word_fdist.freq(word)
-			information_value[word] =  freq * abs(ordered_entropy[word] - random_entropy[word])
+			information_value_per_word[word] =  freq * abs(ordered_entropy[word] - random_entropy[word])
 
-		return information_value
-
-	def get_window_size_analysis(self, window_size, number_of_words=20):
-		information_value = self.information_value(window_size)
-		# sort the words according to their information value
-		sorted_words = sorted(information_value.iteritems(), key=operator.itemgetter(1), reverse=True)
-		max_iv = sorted_words[0][1]
-		# Sum the reverse of sorted_words to improve numerical stability
-		iv_sum = reduce(lambda x,y: x+y[1], reversed(sorted_words), 0)
-		iv_average = iv_sum / self.word_fdist.N()
-
-		return {
-			'window_size' : window_size,
-			'words' : sorted_words[:number_of_words],
-			'average_iv' : iv_average,
-			'iv_sum' : iv_sum,
-			'max_iv' : max_iv
-		}
+		return information_value_per_word
 
 
 def get_window(tokens, window_size, number_of_window):
