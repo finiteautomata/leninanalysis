@@ -8,3 +8,4 @@ lenin_work*
 lenin_data.json
 .coverage
 htmlcov/*
+*.bak
