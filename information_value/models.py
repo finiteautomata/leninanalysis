@@ -73,6 +73,12 @@ class InformationValueResult(MappedClass):
         unique_indexes = [('doc_window_hash', ), ]
         extensions = [DocumentWindowSizeDuplicateHash]
 
+    def __repr__(self):
+        return "IVR(%s window size, %s iv-words)" % (self.window_size,len(self.iv_words))
+    
+    def __str__(self):
+        return self.__repr__()
+
     _id = FieldProperty(schema.ObjectId)
     doc_window_hash = FieldProperty(schema.String)
     window_size = FieldProperty(schema.Int)

@@ -16,6 +16,7 @@
 #from text import *
 #from bson.objectid import ObjectId
 
+#reload(*)
 from text import * 
 #client = MongoClient()
 #db = client.lenin

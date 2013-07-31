@@ -11,7 +11,8 @@
 #from includes import wn_analyzer as wna
 #from plot.window_sizes import plot_iv_things
 #from pymongo import MongoClient
-from information_value.models import Document
+from information_value import models
+from includes.tokenizer import tokenize
 #from bson.objectid import ObjectId
 
 
@@ -120,10 +121,26 @@ class TextList(object):
 
     return total
 
+  def get_all_iv_words(self):
+    dict_k_v = {}
+    for text in self:
+      for w,c in text.iv_words.items():
+        try:
+          dict_k_v[w] += 1
+        except:
+          dict_k_v[w] = 1
+    return dict_k_v
+
   def print_texts(self):
     for text in self.texts:
       print text
-  
+ 
+  def results(self):
+    res = list()
+    for text in self:
+      res.append(text.result_list)
+    return res
+
   def __repr__(self):
     params = ( self.name,
               self.total_texts,
@@ -148,22 +165,7 @@ class TextList(object):
 
 class Text(object):
 
-  @property
-  def short_name(self):
-    return self.name.replace("Lenin: ", "")
-
-  def __repr__(self):
-    params = ( self.year,
-              self.month.capitalize(),
-              self.short_name,
-              self.total_tokens,
-              self.total_results)
-
-    return "Text(%s, %s - %s, %s tokens, %s results)" % params
-    #"+str(self.total_results)+" results)"
-    
-  def __str__(self):
-    return self.__repr__()
+ 
 
   def __init__(self, a_document):
     self.doc = a_document
@@ -175,6 +177,85 @@ class Text(object):
     self.month = unicode(self.doc.month).encode('utf-8')
     self.year = unicode(self.doc.year).encode('utf-8')
     self.results = self.doc.results
+    #tricky default
+    self.clean_zeros()
+
+  #trivial, removes 'Lenin: ' as prefix
+  @property
+  def short_name(self):
+    
+    ss = self.name.replace("Lenin: ", "")
+    return ss[: 50 + ss[50:].find(" ")]+"..."
+
+  def __repr__(self):
+    if self.total_results > 0:
+      params = ( self.year,
+              self.month.capitalize(),
+              self.short_name,
+              self.total_tokens,
+              self.total_results)
+      res = "Text(%s, %s - %s, %s tks, %s res:" % params
+      for iv_res in self.result_list():
+        res+=" "+ iv_res.__repr__()
+      res += ")"
+      
+      return res
+    #"+str(self.total_results)+" results)"
+
+    else:
+      params = ( self.year,
+              self.month.capitalize(),
+              self.short_name,
+              self.total_tokens,
+              self.total_results)
+      return "Text(%s, %s - %s, %s tks, %s res)" % params 
+      
+  @property
+  def iv_words(self):
+    if  self.total_results == 0:
+      return dict()
+    #if self.total_results != 1:
+      #print 'ALARMA DE ARBITRARIEDAD INJUSTIFICADA: esta tomando uno de varios resultados'
+
+    return self.results[0].iv_words
+
+    
+  def __str__(self):
+    return self.__repr__()
+
+  #def total_iv_word
+  
+  #generators test
+  def result_list(self):
+    for each in self.results:
+      yield each
+
+  #unset all words with 0.0 as value for iv_words of all IVResults
+  def clean_zeros(self):
+    for each in self.results:
+      each = self.aux_clean_zeros(each)
+  
+  
+
+  #Takes an IVResults and clean all iv_words with 0.0
+  def aux_clean_zeros(self, result):
+    res = dict()
+    for w,c in result.iv_words.items():
+        if c > 0.0:
+          res[w] = c
+    result.iv_words = res
+    return result
+
+  
+  def print_results(self):
+  
+    x = dict()
+    for res in self.result_list():
+      print "res for ws=%s: %s iv-words " % (res.window_size, len(res.iv_words))
+      for w,c in res.iv_words.items():
+        print w,c
+      
+    return x
 
   @property
   def tokens(self):
@@ -188,3 +269,7 @@ class Text(object):
   @property
   def total_tokens(self):
     return len(self.tokens)
+
+
+textos = TextList("Revolution", True)
+texto = textos.texts[0]
