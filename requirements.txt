@@ -18,5 +18,6 @@ pymongo==2.5.1
 pytest==2.3.5
 scipy
 Ming==0.3.6
+#nose extends unittest to make testing easier
 nose==1.3.0
 Scrapy
