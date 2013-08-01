@@ -7,7 +7,7 @@ from nltk.tokenize import wordpunct_tokenize
 log = logging.getLogger('lenin')
 
 
-class Segmentator(object):
+class WindowsSizeGenerator(object):
 
     def __init__(self, document):
         self.document = document
@@ -17,4 +17,5 @@ class Segmentator(object):
         for sentence in wordpunct_tokenize(self.document.text):
             self.counter[len(sentence)] += 1
         log.debug(self.counter.most_common())
-        return ( common[0] for common in self.counter.most_common() if common[0] > 1)
+        return xrange(100, 3000, 100) 
+        #return ( common[0] for common in self.counter.most_common() if common[0] > 1)

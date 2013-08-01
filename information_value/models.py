@@ -63,6 +63,63 @@ class Document(MappedClass):
     def tokens(self):
         tokenizer_func = getattr(self, 'tokenizer', tokenize)
         return tokenizer_func(self.text)
+    #trivial, removes 'Lenin: ' as prefix
+    @property
+    def short_name(self):
+      ss = self.name.replace("Lenin: ", "")
+      return ss[: 50 + ss[50:].find(" ")]+"..."
+    
+    #generators test
+    def result_list(self):
+      for each in self.results:
+        yield each
+
+    @property
+    def total_results(self):
+      return len(self.results)
+
+    @property
+    def total_tokens(self):
+      return len(self.tokens)
+
+    
+  
+    def __str__(self):
+      return self.__repr__()
+
+    def __repr__(self):
+      params = (  unicode(self.year).encode('utf-8'),
+                    unicode(self.month.capitalize()).encode('utf-8'),
+                    unicode(self.short_name).encode('utf-8'),
+                    unicode(self.total_tokens).encode('utf-8'),
+                    unicode(self.total_results).encode('utf-8')
+                )
+      if self.total_results > 0:
+        res = "Doc(%s, %s - %s, %s tks, %s res:" % params
+        for iv_res in self.result_list():
+          res+=" "+ iv_res.__repr__()
+        res += ")"
+        return res
+      else:
+        return "Doc(%s, %s - %s, %s tks, %s res)" % params 
+     
+    #unset all words with 0.0 as value for iv_words of all IVResults
+    def no_zero_results(self):
+        res = list()
+        for each in self.results:
+            res.append(self.aux_clean_zeros(each))
+        return res
+
+
+    #Takes an IVResults and clean all iv_words with 0.0
+    def aux_clean_zeros(self, result):
+        res = dict()
+        for w,c in result.iv_words.items():
+            if c > 0.0:
+              res[w] = c
+        result.iv_words = res
+        #print result.iv_words
+        return result        
 
 
 class InformationValueResult(MappedClass):
@@ -85,3 +142,133 @@ class InformationValueResult(MappedClass):
     iv_words = FieldProperty(schema.Anything)
     document_id = ForeignIdProperty(Document)
     document = RelationProperty(Document)
+
+
+class DocumentList(object):
+  
+
+
+  def __init__(self, name = 'State', only_with_results = False):
+    
+    self.search_criterion =  {'name': {'$regex': '.*'+name+'.*' }}
+    
+    self.only_with_results = only_with_results
+
+    if name == "":
+      name = "All docs"
+    self.name = name
+    self.base_load()
+    #print self
+
+  
+  def base_load(self):
+    self.current = 0
+    
+    it = Document.query.find(self.search_criterion)
+    
+    res = list()
+    for doc in it:
+      if not self.only_with_results or len(doc.results) > 0:
+            res.append(doc)
+
+            #print "%s" % len(doc.results)
+          
+
+    self.documents = res
+    #self.texts = map(Text, self.documents)  
+    #self
+    print self
+
+  def add_month(self, month = None):
+    if month is not None:
+      self.search_criterion['month'] = month
+      self.name += " %s" % month.capitalize()
+    
+    self.base_load()
+
+  def add_year(self, year = None):
+    
+    if year is not None:
+      self.search_criterion['year'] = year
+      self.name += " %s" % year
+    
+    self.base_load()
+    #return self
+
+
+  def __iter__(self):
+        self.current = 0
+        return self
+
+  def next(self):
+    if self.current > len(self.documents)-1:
+      self.current = 0
+      raise StopIteration
+    else:
+        self.current += 1
+        return self.documents[self.current-1]
+  
+  @property
+  def total_docs(self):
+    return len(self.documents)
+
+  @property
+  def total_tokens(self):
+    total = 0
+    for text in self:
+      total += text.total_tokens
+
+    return total
+
+  @property
+  def total_results(self):
+    total = 0
+    for text in self:
+      total += text.total_results
+
+    return total
+
+  @property
+  def mean_tokens(self):
+    return int(self.total_tokens / self.total_docs)
+
+    return total
+
+  def get_all_iv_words(self):
+    dict_k_v = {}
+    for text in self:
+      for w,c in text.iv_words.items():
+        try:
+          dict_k_v[w] += 1
+        except:
+          dict_k_v[w] = 1
+    return dict_k_v
+
+  def print_docs(self):
+    for text in self.documents:
+      print text
+ 
+  def results(self):
+    res = list()
+    for text in self:
+      res.append(text.result_list)
+    return res
+
+  def __repr__(self):
+    params = ( self.name,
+              self.total_docs,
+              #self.total_tokens,
+              self.mean_tokens,
+              self.total_results)
+
+    return "DocumentList(%s, %s txts, ~%s tks/txt, %s res)" % params
+    #return "TextList(%s, %s txts, %s tks [~%s tk/txt], %s res)" % params
+    #return "TextList("+self.name+": "+self.search_criterion.__str__()+") total: "+str(len(self.texts))
+    #return "TextList("+self.name+", "+str(self.total_docs)+" texts, "+"pepe"+")"
+    
+  def __str__(self):
+    return self.__repr__()
+    #res = self.__repr__()
+    #for text in self.texts:
+    #  res+="\r\n"+text.__repr__()
+    #return res+"\r\n"+self.__repr__()    

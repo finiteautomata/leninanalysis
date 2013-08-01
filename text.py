@@ -52,12 +52,11 @@ class TextList(object):
     
     it = models.Document.query.find(self.search_criterion)
     
-    if not self.only_with_results:
-      res = it
-    else:
-        res = list()
-        for doc in it:
-          if len(doc.results) > 0:
+    #  res = it
+    #else:
+    res = list()
+    for doc in it:
+      if not self.only_with_results or len(doc.results) > 0:
             res.append( doc)  
             #print "%s" % len(doc.results)
           
