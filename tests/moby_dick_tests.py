@@ -2,9 +2,11 @@
 from __future__ import division
 import logging
 import config
+from cccp import init_logging
 from tests import LeninTestCase
 from pymongo import MongoClient
 from nose.plugins.attrib import attr
+import unittest
 from unittest import TestCase
 from nltk.corpus import gutenberg
 from includes.tokenizer import tokenize

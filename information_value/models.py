@@ -6,6 +6,7 @@ from pymongo.errors import DuplicateKeyError
 
 from ming import Session, create_datastore
 from ming import schema
+import operator
 from ming.odm import ODMSession
 from ming.odm.mapper import MapperExtension
 from ming.odm.property import ForeignIdProperty
@@ -14,7 +15,9 @@ from ming.odm.declarative import MappedClass
 
 import config
 from includes.tokenizer import tokenize
+from information_value.calculator import InformationValueCalculator
 
+MIN_TOKENS = 2000
 
 log = logging.getLogger('lenin')
 
@@ -47,6 +50,16 @@ class Document(MappedClass):
     month = FieldProperty(schema.String)
     year = FieldProperty(schema.String)
     results = RelationProperty('InformationValueResult')
+
+    def get_iv_by_window_size(self, window_size):
+      sort = lambda iv_words: sorted(iv_words.iteritems(), key=operator.itemgetter(1), reverse=True)
+      
+      for res in self.results:
+        if res.window_size == window_size:
+          return sort(res.iv_words)
+      
+      iv_calc = InformationValueCalculator(self.tokens);
+      return sort(iv_calc.information_value(window_size))
 
     def get_information_value_result(self, threshold):
         iv_res = None
@@ -169,7 +182,8 @@ class DocumentList(object):
     res = list()
     for doc in it:
       if not self.only_with_results or len(doc.results) > 0:
-            res.append(doc)
+            if doc.total_tokens > MIN_TOKENS:
+              res.append(doc)
 
             #print "%s" % len(doc.results)
           
