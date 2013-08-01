@@ -271,5 +271,5 @@ class Text(object):
     return len(self.tokens)
 
 
-textos = TextList("Revolution", True)
-texto = textos.texts[0]
+#textos = TextList("Revolution", True)
+#texto = textos.texts[0]
