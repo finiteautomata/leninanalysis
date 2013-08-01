@@ -15,7 +15,7 @@ class LeninPipeline(object):
                 url=item['url'],
                 text=item['text'],
                 month=item['month'],
-                year=int(item['year'])
+                year=item['year'],
                 )
         try:
             odm_session.flush()

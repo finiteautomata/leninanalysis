@@ -4,7 +4,7 @@ from scrapy.contrib.spiders import CrawlSpider, Rule
 from scrapy.contrib.linkextractors.sgml import SgmlLinkExtractor
 from work_assembler import WorkAssembler
 from work_builder import SimpleWorkBuilder
-
+from url_regex import INDEX_REGEX, CHAPTER_REGEX
 
 class LeninSpider(CrawlSpider):
     name = "lenin"
@@ -13,8 +13,6 @@ class LeninSpider(CrawlSpider):
     "http://www.marxists.org/archive/lenin/by-date.htm"
     ]
 
-    INDEX_REGEX = '.+/archive/lenin/.*index\.htm'
-    CHAPTER_REGEX = '.+/archive/lenin/works/.+/(jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec).+\.htm'
     #Estas son las reglas que aplica a cada link que encuentra
     rules = (
       Rule(SgmlLinkExtractor(allow=".+devel.+"), callback='nada'),

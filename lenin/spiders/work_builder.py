@@ -19,7 +19,7 @@ class WorkBuilder:
     if not contents or len(contents) == 0:
       log.msg( "ALERTA!!!!!!!!!!!", level=log.WARNING)
       log.msg( "%s me da contents nulos " % self.get_title().encode('ascii', 'ignore'), level=log.WARNING)
-      log.msg(self.response.url, level=WARNING)
+      log.msg(self.response.url, level=log.WARNING)
     clean_text = contents[0]
     clean_text = clean_text.lower()
     clean_text = clean_text.replace('&#x000a;','\n')

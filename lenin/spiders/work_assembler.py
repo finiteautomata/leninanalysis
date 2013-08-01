@@ -4,7 +4,7 @@ from work_builder import SimpleWorkBuilder, WorkBuilder
 from scrapy import log
 from scrapy.http import Request
 from lenin.items import LeninWork
-
+from url_regex import INDEX_REGEX, CHAPTER_REGEX
 
 class WorkAssembler(WorkBuilder):
   def __init__(self, response, parent=None):
@@ -50,8 +50,7 @@ class WorkAssembler(WorkBuilder):
     for i, link in enumerate(links):
       #ésto es para evitar el problema de la última referencia (si creo la lambda a mano referenciando a i, cuando llame va a ser siempre el último valor)
       self.requests.append(Request(base_url+link, callback=self.create_callback_for_chapter(i)))
-    #return self.requests
-    return []
+    return self.requests
 
   def get_text(self):
     #Esto hace el join respetando el orden de los capitulos?
