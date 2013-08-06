@@ -1,1 +1,1 @@
-# This Python file uses the following encoding: utf-8data_dir = 'D:\\INCC\\svn2\\TP Lenin\\data\\'MIN_YEAR = 1900MAX_YEAR = 1904  		#WNA_VERBOSE# 0 = sin output# 1 = solo output de años# 2 = output de años y una linea por palabra# 3 = output completo (legible en dump o para judge_word solo) WNA_VERBOSE =1
+WNA_VERBOSE=1NUMBER_OF_THREADS = 1SUM_THRESHOLD = 0.01DATABASE_NAME = 'lenin'
