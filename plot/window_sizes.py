@@ -6,9 +6,6 @@ import config
 import matplotlib.pyplot as plt
 from scipy import average
 
-MIN_YEAR = config.MIN_YEAR
-MAX_YEAR = config.MAX_YEAR
-
 log = logging.getLogger('lenin')
 
 
