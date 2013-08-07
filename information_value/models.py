@@ -42,15 +42,15 @@ class DocumentWindowSizeDuplicateHash(MapperExtension):
 
 class InformationValueResult(MappedClass):
 
-#    def __init__(self, *args, **kwargs):
-#      super(InformationValueResult, self).__init__(args, kwargs)
+    def __init__(self, *args, **kwargs):
+      super(InformationValueResult, self).__init__(*args, **kwargs)
       
-#      amount_to_be_taken = int(len(self.iv_words) * SUM_THRESHOLD) or 10
-#      sorted_words = sorted(self.iv_words.iteritems(), key=operator.itemgetter(1), reverse=True)[:amount_to_be_taken]
-#      self.max_iv = sorted_words[0][1]
+      amount_to_be_taken = int(len(self.iv_words) * SUM_THRESHOLD) or 10
+      sorted_words = sorted(self.iv_words.iteritems(), key=operator.itemgetter(1), reverse=True)[:amount_to_be_taken]
+      self.max_iv = sorted_words[0][1]
       # Sum the reverse of sorted_words to improve numerical stability
-#      self.iv_sum = reduce(lambda x, y: x + y[1], reversed(sorted_words), 0)
-#      self.top_words = sorted_words[:number_of_words]
+      self.iv_sum = reduce(lambda x, y: x + y[1], reversed(sorted_words), 0)
+      self.top_words = sorted_words[:number_of_words]
 
     class __mongometa__:
         session = odm_session
@@ -133,7 +133,6 @@ class Document(MappedClass):
     @property
     def total_tokens(self):
       return len(self.tokens)
-
     
   
     def __str__(self):

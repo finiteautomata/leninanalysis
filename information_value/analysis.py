@@ -41,6 +41,21 @@ __information_value_calculator = None
 __number_of_words = 20
 __document = None
 
+def get_window_size_analysis(document, window_size):
+    try:
+        log.info("Checking window_size = %s" % window_size)
+        iv_words = InformationValueCalculator(document.tokens).information_value(window_size)
+        try:
+            InformationValueResult(window_size=window_size, document=document, iv_words=iv_words)
+            log.info("Storing results for document %s, window_size %s" % (document.name, window_size))
+            odm_session.flush()
+        except DuplicateKeyError:
+            log.warning('Result already found')
+        return (window_size, WindowAnalysis(window_size, iv_words, number_of_words=__number_of_words))
+    except WindowSizeTooLarge:
+        return None
+
+
 def _get_window_size_analysis(window_size):
     try:
         document = __document
