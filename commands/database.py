@@ -6,7 +6,7 @@ from pymongo.errors import DuplicateKeyError
 from information_value.models import odm_session
 from information_value.models import Document
 from includes.tokenizer import tokenize
-from includes.ws_generator import WindowsSizeGenerator
+from includes.ws_generator import WindowsScaleGenerator
 from information_value.analysis import get_all_analysis
 
 
@@ -37,7 +37,7 @@ def calculate_results():
     for document in Document.query.find().all():
         log.info("Calculating information values for document %s" % document.name)
         document.tokenizer = tokenize
-        win_size_generator = WindowsSizeGenerator(document)
+        win_size_generator = WindowsScaleGenerator(document)
         window_sizes = win_size_generator.window_size()
         results = get_all_analysis(document, window_sizes, number_of_words=5000)
 

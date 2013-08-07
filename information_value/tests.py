@@ -1,6 +1,8 @@
+#! coding: utf-8
+# THIS IMPORT MUST BE THE FIRST IN EVERY tests.py FILE
+from test import LeninTestCase
 from unittest import TestCase
 import pymongo
-from tests import LeninTestCase
 from pymongo.errors import DuplicateKeyError
 from information_value.models import odm_session
 from information_value.models import Document
@@ -69,3 +71,18 @@ class TestModels(LeninTestCase):
             odm_session.flush()
         count = InformationValueResult.query.find({"document_id":simple_doc._id}).count()
         self.assertEquals(count, 1)
+
+class InformationValueResultTest(TestCase):
+
+    def test_create_information_value_result(self):
+        simple_doc = Document(
+                url="http://www.sarasa.com.ar",
+                text="sarasa sarasa sarasa sarasa sarasa!",
+                name="test02",
+                month="Mar",
+                year='2013'
+                )
+        InformationValueResult(    
+            window_size = 200,
+            iv_words = [(str(i), i/100.0) for i in range(100)],
+            document = simple_doc)

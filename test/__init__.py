@@ -1,8 +1,10 @@
 import logging
 import sys
+
 # This hack is to replace config module with the other config...
-from tests import config as test_config
+from test import config as test_config
 sys.modules["config"] = test_config
+
 import config
 import unittest
 from pymongo import MongoClient

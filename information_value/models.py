@@ -8,6 +8,7 @@ from ming import Session, create_datastore
 from ming import schema
 import operator
 from ming.odm import ODMSession
+from ming.odm import Mapper
 from ming.odm.mapper import MapperExtension
 from ming.odm.property import ForeignIdProperty
 from ming.odm.property import FieldProperty, RelationProperty
@@ -18,6 +19,8 @@ from includes.tokenizer import tokenize
 from information_value.calculator import InformationValueCalculator
 
 MIN_TOKENS = 2000
+SUM_THRESHOLD = config.SUM_THRESHOLD
+
 
 log = logging.getLogger('lenin')
 
@@ -37,6 +40,39 @@ class DocumentWindowSizeDuplicateHash(MapperExtension):
         instance.doc_window_hash = doc_window_hash
 
 
+class InformationValueResult(MappedClass):
+
+    def __init__(self, *args, **kwargs):
+      super(InformationValueResult, self).__init__(*args, **kwargs)
+      
+      amount_to_be_taken = int(len(self.iv_words) * SUM_THRESHOLD) or 10
+      sorted_words = sorted(self.iv_words.iteritems(), key=operator.itemgetter(1), reverse=True)[:amount_to_be_taken]
+      self.max_iv = sorted_words[0][1]
+      # Sum the reverse of sorted_words to improve numerical stability
+      self.iv_sum = reduce(lambda x, y: x + y[1], reversed(sorted_words), 0)
+      self.top_words = sorted_words[:number_of_words]
+
+    class __mongometa__:
+        session = odm_session
+        name = 'information_value_result'
+        unique_indexes = [('doc_window_hash', ), ]
+        extensions = [DocumentWindowSizeDuplicateHash]
+
+    def __repr__(self):
+        return "IVR(%s window size, %s iv-words)" % (self.window_size,len(self.iv_words))
+    
+    def __str__(self):
+        return self.__repr__()
+
+    _id = FieldProperty(schema.ObjectId)
+    doc_window_hash = FieldProperty(schema.String)
+    window_size = FieldProperty(schema.Int)
+    iv_words = FieldProperty(schema.Anything)
+    document_id = ForeignIdProperty('Document')
+    document = RelationProperty('Document')
+
+
+
 class Document(MappedClass):
 
     class __mongometa__:
@@ -49,7 +85,7 @@ class Document(MappedClass):
     text = FieldProperty(schema.String)
     month = FieldProperty(schema.String)
     year = FieldProperty(schema.String)
-    results = RelationProperty('InformationValueResult')
+    results = RelationProperty(InformationValueResult)
 
     def top_words(self):
       iv_words = self.get_iv_by_window_size(self.total_tokens / 12)[:20]
@@ -64,8 +100,11 @@ class Document(MappedClass):
         if res.window_size == window_size:
           return sort(res.iv_words)
       
-      iv_calc = InformationValueCalculator(self.tokens);
-      return sort(iv_calc.information_value(window_size))
+      iv_words = InformationValueCalculator(self.tokens).information_value(window_size)
+      iv_words = sort(iv_words)
+      InformationValueResult(window_size=window_size, document=self, iv_words=iv_words)
+      odm_session.flush()
+      return iv_words
 
     def get_information_value_result(self, threshold):
         iv_res = None
@@ -100,7 +139,6 @@ class Document(MappedClass):
     @property
     def total_tokens(self):
       return len(self.tokens)
-
     
   
     def __str__(self):
@@ -141,31 +179,7 @@ class Document(MappedClass):
         return result        
 
 
-class InformationValueResult(MappedClass):
-
-    class __mongometa__:
-        session = odm_session
-        name = 'information_value_result'
-        unique_indexes = [('doc_window_hash', ), ]
-        extensions = [DocumentWindowSizeDuplicateHash]
-
-    def __repr__(self):
-        return "IVR(%s window size, %s iv-words)" % (self.window_size,len(self.iv_words))
-    
-    def __str__(self):
-        return self.__repr__()
-
-    _id = FieldProperty(schema.ObjectId)
-    doc_window_hash = FieldProperty(schema.String)
-    window_size = FieldProperty(schema.Int)
-    iv_words = FieldProperty(schema.Anything)
-    document_id = ForeignIdProperty(Document)
-    document = RelationProperty(Document)
-
-
 class DocumentList(object):
-  
-
 
   def __init__(self, name = 'State', only_with_results = False):
     
@@ -292,3 +306,5 @@ class DocumentList(object):
     #for text in self.texts:
     #  res+="\r\n"+text.__repr__()
     #return res+"\r\n"+self.__repr__()    
+
+Mapper.compile_all()
