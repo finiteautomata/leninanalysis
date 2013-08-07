@@ -51,6 +51,12 @@ class Document(MappedClass):
     year = FieldProperty(schema.String)
     results = RelationProperty('InformationValueResult')
 
+    def top_words(self):
+      iv_words = self.get_iv_by_window_size(self.total_tokens / 12)[:20]
+
+      iv_sum = sum([iv_value for (word, iv_value) in iv_words])
+      return [(word, iv_value / iv_sum) for (word, iv_value) in iv_words]
+
     def get_iv_by_window_size(self, window_size):
       sort = lambda iv_words: sorted(iv_words.iteritems(), key=operator.itemgetter(1), reverse=True)
       
@@ -250,8 +256,8 @@ class DocumentList(object):
 
   def get_all_iv_words(self):
     dict_k_v = {}
-    for text in self:
-      for w,c in text.iv_words.items():
+    for doc in self:
+      for w,c in doc.top_words():
         try:
           dict_k_v[w] += 1
         except:
