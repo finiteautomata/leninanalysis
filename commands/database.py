@@ -40,11 +40,3 @@ def calculate_results():
         win_size_generator = WindowsScaleGenerator(document)
         window_sizes = win_size_generator.window_size()
         results = get_all_analysis(document, window_sizes, number_of_words=5000)
-
-
-def cleandb():
-    from pymongo import MongoClient
-    client = MongoClient()
-    db = client.lenin
-    db.drop_collection('document')
-    db.drop_collection('information_value_result')
