@@ -23,11 +23,7 @@ def main():
     parser.add_argument('--populate-database', action='store_true', default=False, help="From the scrapped works creates database called \"lenin\" (it assumes you're running MongoDB at localhost)")
     parser.add_argument('--plot-iv-analysis', action='store_true', default=False, help="Shows some plot about Information Value Analysis")
     parser.add_argument('--calculate-results', action='store_true', default=False, help="Calculate Information Value Results for Documents")
-    group = parser.add_argument_group('Document Analysis')
-    group.add_argument('--analysis-document', action='store_true', default=False, help="Set this flag for starting a document analysis")
-    group.add_argument('name', type=str, help='The name of the document')
-    group.add_argument('window_size_algorithm', type=str, help='Uses a given window generator algorithm')
-    group.add_argument('plot', action='store_true', default=False, help='Use this flag for show plots')
+    parser.add_argument('--analysis_document', nargs='+', metavar=('name', 'window_size_algorithm'), help='--analysis-document [document_name [window_sizes_generator_algorithm]]')
 
     # Parse args
     args = parser.parse_args()
@@ -45,10 +41,7 @@ def main():
         calculate_results()
     if args.analysis_document:
         from commands.database import calculate_results
-        if args.window_size_algorithm:
-            calculate_results(name=args.name, window_size_algorithm=args.window_size_algorithm)
-        if args.plot:
-            print 'plot'
+        calculate_results(name=args.analysis_document[0], window_size_algorithm=args.analysis_document[1])
 
 def init_logging():
     logger = logging.getLogger('lenin')
