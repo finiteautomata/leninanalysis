@@ -4,17 +4,10 @@ import config
 import logging
 import argparse
 import subprocess
-from commands.database import populate_database
-from commands.database import calculate_results
-from includes import preprocessor as pre
-from includes import wn_analyzer as wna
-from plot.window_sizes import plot_iv_things
 
 
 reload(config)
 
-
-JSON_SUBSET_NAME = "lenin_work.subset.json"
 
 # Scraps ALL the works
 def scrap_all_works():
@@ -30,6 +23,11 @@ def main():
     parser.add_argument('--populate-database', action='store_true', default=False, help="From the scrapped works creates database called \"lenin\" (it assumes you're running MongoDB at localhost)")
     parser.add_argument('--plot-iv-analysis', action='store_true', default=False, help="Shows some plot about Information Value Analysis")
     parser.add_argument('--calculate-results', action='store_true', default=False, help="Calculate Information Value Results for Documents")
+    group = parser.add_argument_group('Document Analysis')
+    group.add_argument('--analysis-document', action='store_true', default=False, help="Set this flag for starting a document analysis")
+    group.add_argument('name', type=str, help='The name of the document')
+    group.add_argument('window_size_algorithm', type=str, help='Uses a given window generator algorithm')
+    group.add_argument('plot', action='store_true', default=False, help='Use this flag for show plots')
 
     # Parse args
     args = parser.parse_args()
@@ -37,11 +35,20 @@ def main():
     if args.scrap:
         scrap_all_works()
     if args.populate_database:
+        from commands.database import populate_database
         populate_database()
     if args.plot_iv_analysis:
+        from plot.window_sizes import plot_iv_things
         plot_iv_things()
     if args.calculate_results:
+        from commands.database import calculate_results
         calculate_results()
+    if args.analysis_document:
+        from commands.database import calculate_results
+        if args.window_size_algorithm:
+            calculate_results(name=args.name, window_size_algorithm=args.window_size_algorithm)
+        if args.plot:
+            print 'plot'
 
 def init_logging():
     logger = logging.getLogger('lenin')
