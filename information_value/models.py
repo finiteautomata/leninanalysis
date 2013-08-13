@@ -19,7 +19,6 @@ from includes.tokenizer import tokenize
 from information_value.calculator import InformationValueCalculator
 
 MIN_TOKENS = 2000
-SUM_THRESHOLD = config.SUM_THRESHOLD
 
 
 log = logging.getLogger('lenin')
@@ -40,20 +39,22 @@ class DocumentWindowSizeDuplicateHash(MapperExtension):
         instance.doc_window_hash = doc_window_hash
 
 
-import pdb
-
 class InformationValueResult(MappedClass):
 
-    def __init__(self, *args, **kwargs):
+
+    def __init__(self, sum_threshold=config.SUM_THRESHOLD, *args, **kwargs):
       super(InformationValueResult, self).__init__(*args, **kwargs)
+      self.set_iv_sum(sum_threshold=sum_threshold)      
       
+    def set_iv_sum(self, sum_threshold):
       # Todo: improve performance of this...
       sorted_ivs = sorted(self.iv_words.itervalues(), reverse=True)
       self.max_iv = sorted_ivs[0]
-      amount_to_be_taken = int(len(sorted_ivs) * SUM_THRESHOLD) or 10
+      amount_to_be_taken = int(len(sorted_ivs) * sum_threshold) or 10
       sorted_ivs = sorted_ivs[:amount_to_be_taken]
       # Sum the reverse of sorted_words to improve numerical stability
       self.iv_sum = reduce(lambda x, y: x + y, reversed(sorted_ivs), 0)
+
 
     class __mongometa__:
         session = odm_session
