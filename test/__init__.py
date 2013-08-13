@@ -28,10 +28,16 @@ def init_logging():
 
 
 init_logging()
+client = MongoClient()
 
 class LeninTestCase(unittest.TestCase):
     def setUp(self):
         init_logging()
-        client = MongoClient()
-        print config.DATABASE_NAME
+    
+        print "Dropping database %s in setup" % config.DATABASE_NAME
         client.drop_database(config.DATABASE_NAME)
+    
+    def tearDown(self):
+        print "Dropping database %s in teardown" % config.DATABASE_NAME
+        client.drop_database(config.DATABASE_NAME)
+        

@@ -1,5 +1,5 @@
 #! coding:utf-8
-from information_value.models import Document
+from information_value.models import Document, InformationValueResult
 from includes.factories import BaseFactory
 
 
@@ -11,3 +11,10 @@ class DocumentFactory(BaseFactory):
     month="Mar"
     year='2013'
 
+
+class InformationValueResultFactory(BaseFactory):
+    model = InformationValueResult
+    window_size = 100
+    iv_words = {
+            "sarasa" : 0.01
+    }    
