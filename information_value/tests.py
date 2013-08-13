@@ -66,3 +66,4 @@ class InformationValueResultTest(LeninTestCase):
             0.099 + 0.098 + 0.097 
         """
         self.assertAlmostEqual(iv_result.iv_sum, 0.099 + 0.098 + 0.097)
+    

@@ -1,4 +1,6 @@
+#! coding:utf-8
 from __future__ import division
+from test import LeninTestCase
 import random
 import math
 from unittest import TestCase, skip
@@ -7,10 +9,10 @@ from information_value.calculator import InformationValueCalculator
 from information_value.models import odm_session
 from information_value.models import Document
 from information_value import analysis
-from tests import iv_oracle
+from test import iv_oracle
 
 
-class InformationValueCalculatorTest(TestCase):
+class InformationValueCalculatorTest(LeninTestCase):
     """
     Frequency calculations
     """

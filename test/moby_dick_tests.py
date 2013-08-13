@@ -1,9 +1,9 @@
 # This Python file uses the following encoding: utf-8
 from __future__ import division
+from test import LeninTestCase
 import logging
 import config
 from cccp import init_logging
-from tests import LeninTestCase
 from pymongo import MongoClient
 from nose.plugins.attrib import attr
 import unittest
