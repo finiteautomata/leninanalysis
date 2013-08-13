@@ -72,7 +72,7 @@ class TestModels(LeninTestCase):
         count = InformationValueResult.query.find({"document_id":simple_doc._id}).count()
         self.assertEquals(count, 1)
 
-class InformationValueResultTest(TestCase):
+class InformationValueResultTest(LeninTestCase):
 
     def test_create_information_value_result(self):
         simple_doc = Document(
@@ -84,5 +84,5 @@ class InformationValueResultTest(TestCase):
                 )
         InformationValueResult(    
             window_size = 200,
-            iv_words = [(str(i), i/100.0) for i in range(100)],
+            iv_words = {"sarasa" : 1.0},
             document = simple_doc)

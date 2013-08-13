@@ -40,17 +40,20 @@ class DocumentWindowSizeDuplicateHash(MapperExtension):
         instance.doc_window_hash = doc_window_hash
 
 
+import pdb
+
 class InformationValueResult(MappedClass):
 
     def __init__(self, *args, **kwargs):
       super(InformationValueResult, self).__init__(*args, **kwargs)
       
-      amount_to_be_taken = int(len(self.iv_words) * SUM_THRESHOLD) or 10
-      sorted_words = sorted(self.iv_words.iteritems(), key=operator.itemgetter(1), reverse=True)[:amount_to_be_taken]
-      self.max_iv = sorted_words[0][1]
+      # Todo: improve performance of this...
+      sorted_ivs = sorted(self.iv_words.itervalues(), reverse=True)
+      self.max_iv = sorted_ivs[0]
+      amount_to_be_taken = int(len(sorted_ivs) * SUM_THRESHOLD) or 10
+      sorted_ivs = sorted_ivs[:amount_to_be_taken]
       # Sum the reverse of sorted_words to improve numerical stability
-      self.iv_sum = reduce(lambda x, y: x + y[1], reversed(sorted_words), 0)
-      self.top_words = sorted_words[:number_of_words]
+      self.iv_sum = reduce(lambda x, y: x + y, reversed(sorted_ivs), 0)
 
     class __mongometa__:
         session = odm_session
