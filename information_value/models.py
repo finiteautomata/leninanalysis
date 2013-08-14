@@ -42,13 +42,15 @@ class DocumentWindowSizeDuplicateHash(MapperExtension):
 class InformationValueResult(MappedClass):
 
 
-    def __init__(self, sum_threshold=config.SUM_THRESHOLD, *args, **kwargs):
-      super(InformationValueResult, self).__init__(*args, **kwargs)
+    def __init__(self, iv_words, sum_threshold=config.SUM_THRESHOLD, *args, **kwargs):
+      if type(iv_words) is dict:
+        iv_words = list(iv_words.iteritems())
+      super(InformationValueResult, self).__init__(*args, iv_words=iv_words, **kwargs)
       self.set_iv_sum(sum_threshold=sum_threshold)      
       
     def set_iv_sum(self, sum_threshold):
       # Todo: improve performance of this...
-      sorted_ivs = sorted(self.iv_words.itervalues(), reverse=True)
+      sorted_ivs = sorted(map(operator.itemgetter(1), self.iv_words), reverse=True)
       self.max_iv = sorted_ivs[0]
       amount_to_be_taken = int(len(sorted_ivs) * sum_threshold) or 10
       sorted_ivs = sorted_ivs[:amount_to_be_taken]
