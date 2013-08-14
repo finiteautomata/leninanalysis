@@ -102,7 +102,7 @@ class Document(MappedClass):
         stop_words = []
 
       iv_words = self.get_iv_by_window_size(self.total_tokens / 12)
-      iv_words = [(w, c) for (w,c) in iv_words if w not in stop_words and (not greater_than_zero or c > 0.0)][:total_words]
+      iv_words = [(t[0], t[1]) for t in iv_words if t[0] not in stop_words and (not greater_than_zero or t[1] > 0.0)][:total_words]
       
 
       iv_sum = sum([iv_value for (word, iv_value) in iv_words])
@@ -116,7 +116,6 @@ class Document(MappedClass):
           return sort(res.iv_words)
 
       iv_words = InformationValueCalculator(self.tokens).information_value(window_size)
-      iv_words = sort(iv_words)
       InformationValueResult(window_size=window_size, document=self, iv_words=iv_words)
       try:
           odm_session.flush()
