@@ -199,9 +199,12 @@ class Document(MappedClass):
 
 class DocumentList(object):
 
-  def __init__(self, name = 'State', only_with_results = False):
+  def __init__(self, name = 'State', only_with_results = False, year = None):
 
     self.search_criterion =  {'name': {'$regex': '.*'+name+'.*' }}
+    
+    if year is not None:
+      self.search_criterion['year'] = year
 
     self.only_with_results = only_with_results
 
@@ -229,7 +232,7 @@ class DocumentList(object):
     self.documents = res
     #self.texts = map(Text, self.documents)
     #self
-    print self
+    #print self
 
   def add_month(self, month = None):
     if month is not None:
