@@ -17,6 +17,7 @@ from ming.odm.declarative import MappedClass
 import config
 from includes.tokenizer import tokenize
 from information_value.calculator import InformationValueCalculator
+from nltk.corpus import stopwords
 
 MIN_TOKENS = 2000
 
@@ -92,8 +93,17 @@ class Document(MappedClass):
     year = FieldProperty(schema.String)
     results = RelationProperty(InformationValueResult)
 
-    def top_words(self):
-      iv_words = self.get_iv_by_window_size(self.total_tokens / 12)[:20]
+    def top_words(self, total_words = 20, no_stop_words = True, greater_than_zero = True):
+      
+      
+      if no_stop_words:
+        stop_words = stopwords.words('english')
+      else:
+        stop_words = []
+
+      iv_words = self.get_iv_by_window_size(self.total_tokens / 12)
+      iv_words = [(w, c) for (w,c) in iv_words if w not in stop_words and (not greater_than_zero or c > 0.0)][:total_words]
+      
 
       iv_sum = sum([iv_value for (word, iv_value) in iv_words])
       return [(word, iv_value / iv_sum) for (word, iv_value) in iv_words]
