@@ -1,12 +1,15 @@
+import sys
 import json
+import inspect
 import logging
 
 from pymongo.errors import DuplicateKeyError
 
 from information_value.models import odm_session
 from information_value.models import Document
+from information_value.models import DocumentList
 from includes.tokenizer import tokenize
-from includes.ws_generator import WindowsScaleGenerator
+import includes.ws_generator
 from information_value.analysis import get_all_analysis
 
 
@@ -32,19 +35,24 @@ def populate_database():
                 log.info("Duplicate found skipping...")
         log.info("Done")
 
+def _get_windows_size_generators(class_name):
+  # used for search classes by name in ws_generator
+  res = []
+  for name, obj in inspect.getmembers(sys.modules['includes.ws_generator']):
+    if inspect.isclass(obj):
+        if name == class_name:
+            return obj
 
-def calculate_results():
-    for document in Document.query.find().all():
-        log.info("Calculating information values for document %s" % document.name)
-        document.tokenizer = tokenize
-        win_size_generator = WindowsScaleGenerator(document)
-        window_sizes = win_size_generator.window_size()
-        results = get_all_analysis(document, window_sizes, number_of_words=5000)
-
-
-def cleandb():
-    from pymongo import MongoClient
-    client = MongoClient()
-    db = client.lenin
-    db.drop_collection('document')
-    db.drop_collection('information_value_result')
+def calculate_results(name=None, window_size_algorithm='WindowsHardCodedSizeGenerator'):
+  algorithm_class = _get_windows_size_generators(window_size_algorithm)
+  if name is None:
+    documents =  Document.query.find().all()
+  else:
+    documents = DocumentList(name).documents
+  log.info("Selected window size generator %s" % window_size_algorithm)
+  for document in documents:
+    log.info("Calculating information values for document %s" % document.name)
+    document.tokenizer = tokenize
+    win_size_generator = algorithm_class(document)
+    window_sizes = win_size_generator.window_size()
+    results = get_all_analysis(document, window_sizes, number_of_words=5000)

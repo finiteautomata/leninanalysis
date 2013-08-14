@@ -41,14 +41,15 @@ class DocumentWindowSizeDuplicateHash(MapperExtension):
 
 class InformationValueResult(MappedClass):
 
-
-    def __init__(self, sum_threshold=config.SUM_THRESHOLD, *args, **kwargs):
-      super(InformationValueResult, self).__init__(*args, **kwargs)
+    def __init__(self, iv_words, sum_threshold=config.SUM_THRESHOLD, *args, **kwargs):
+      if type(iv_words) is dict:
+        iv_words = list(iv_words.iteritems())
+      super(InformationValueResult, self).__init__(*args, iv_words=iv_words, **kwargs)
       self.set_iv_sum(sum_threshold=sum_threshold)      
       
     def set_iv_sum(self, sum_threshold):
       # Todo: improve performance of this...
-      sorted_ivs = sorted(self.iv_words.itervalues(), reverse=True)
+      sorted_ivs = sorted(map(operator.itemgetter(1), self.iv_words), reverse=True)
       self.max_iv = sorted_ivs[0]
       amount_to_be_taken = int(len(sorted_ivs) * sum_threshold) or 10
       sorted_ivs = sorted_ivs[:amount_to_be_taken]
@@ -64,7 +65,7 @@ class InformationValueResult(MappedClass):
 
     def __repr__(self):
         return "IVR(%s window size, %s iv-words)" % (self.window_size,len(self.iv_words))
-    
+
     def __str__(self):
         return self.__repr__()
 
@@ -98,16 +99,19 @@ class Document(MappedClass):
       return [(word, iv_value / iv_sum) for (word, iv_value) in iv_words]
 
     def get_iv_by_window_size(self, window_size):
-      sort = lambda iv_words: sorted(iv_words.iteritems(), key=operator.itemgetter(1), reverse=True)
-      
+      sort = lambda iv_words: sorted(iv_words, key=operator.itemgetter(1), reverse=True)
+
       for res in self.results:
         if res.window_size == window_size:
           return sort(res.iv_words)
-      
+
       iv_words = InformationValueCalculator(self.tokens).information_value(window_size)
       iv_words = sort(iv_words)
       InformationValueResult(window_size=window_size, document=self, iv_words=iv_words)
-      odm_session.flush()
+      try:
+          odm_session.flush()
+      except DuplicateKeyError:
+          pass
       return iv_words
 
     def get_information_value_result(self, threshold):
@@ -120,7 +124,7 @@ class Document(MappedClass):
                 best_iv = sum_iv
                 iv_res = one_iv
         return iv_res
-        
+
     @property
     def tokens(self):
         tokenizer_func = getattr(self, 'tokenizer', tokenize)
@@ -130,7 +134,7 @@ class Document(MappedClass):
     def short_name(self):
       ss = self.name.replace("Lenin: ", "")
       return ss[: 50 + ss[50:].find(" ")]+"..."
-    
+
     #generators test
     def result_list(self):
       for each in self.results:
@@ -143,8 +147,8 @@ class Document(MappedClass):
     @property
     def total_tokens(self):
       return len(self.tokens)
-    
-  
+
+
     def __str__(self):
       return self.__repr__()
 
@@ -162,8 +166,8 @@ class Document(MappedClass):
         res += ")"
         return res
       else:
-        return "Doc(%s, %s - %s, %s tks, %s res)" % params 
-     
+        return "Doc(%s, %s - %s, %s tks, %s res)" % params
+
     #unset all words with 0.0 as value for iv_words of all IVResults
     def no_zero_results(self):
         res = list()
@@ -180,15 +184,15 @@ class Document(MappedClass):
               res[w] = c
         result.iv_words = res
         #print result.iv_words
-        return result        
+        return result
 
 
 class DocumentList(object):
 
   def __init__(self, name = 'State', only_with_results = False):
-    
+
     self.search_criterion =  {'name': {'$regex': '.*'+name+'.*' }}
-    
+
     self.only_with_results = only_with_results
 
     if name == "":
@@ -197,12 +201,12 @@ class DocumentList(object):
     self.base_load()
     #print self
 
-  
+
   def base_load(self):
     self.current = 0
-    
+
     it = Document.query.find(self.search_criterion)
-    
+
     res = list()
     for doc in it:
       if not self.only_with_results or len(doc.results) > 0:
@@ -210,10 +214,10 @@ class DocumentList(object):
               res.append(doc)
 
             #print "%s" % len(doc.results)
-          
+
 
     self.documents = res
-    #self.texts = map(Text, self.documents)  
+    #self.texts = map(Text, self.documents)
     #self
     print self
 
@@ -221,15 +225,15 @@ class DocumentList(object):
     if month is not None:
       self.search_criterion['month'] = month
       self.name += " %s" % month.capitalize()
-    
+
     self.base_load()
 
   def add_year(self, year = None):
-    
+
     if year is not None:
       self.search_criterion['year'] = year
       self.name += " %s" % year
-    
+
     self.base_load()
     #return self
 
@@ -245,7 +249,7 @@ class DocumentList(object):
     else:
         self.current += 1
         return self.documents[self.current-1]
-  
+
   @property
   def total_docs(self):
     return len(self.documents)
@@ -285,7 +289,7 @@ class DocumentList(object):
   def print_docs(self):
     for text in self.documents:
       print text
- 
+
   def results(self):
     res = list()
     for text in self:
@@ -303,12 +307,12 @@ class DocumentList(object):
     #return "TextList(%s, %s txts, %s tks [~%s tk/txt], %s res)" % params
     #return "TextList("+self.name+": "+self.search_criterion.__str__()+") total: "+str(len(self.texts))
     #return "TextList("+self.name+", "+str(self.total_docs)+" texts, "+"pepe"+")"
-    
+
   def __str__(self):
     return self.__repr__()
     #res = self.__repr__()
     #for text in self.texts:
     #  res+="\r\n"+text.__repr__()
-    #return res+"\r\n"+self.__repr__()    
+    #return res+"\r\n"+self.__repr__()
 
 Mapper.compile_all()
