@@ -116,12 +116,13 @@ class Document(MappedClass):
           return sort(res.iv_words)
 
       iv_words = InformationValueCalculator(self.tokens).information_value(window_size)
-      InformationValueResult(window_size=window_size, document=self, iv_words=iv_words)
+      res = InformationValueResult(window_size=window_size, document=self, iv_words=iv_words)
+
       try:
           odm_session.flush()
       except DuplicateKeyError:
           pass
-      return iv_words
+      return sort(res.iv_words)
 
     def get_information_value_result(self, threshold):
         iv_res = None
