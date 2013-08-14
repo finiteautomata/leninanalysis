@@ -8,7 +8,7 @@ from commands.database import populate_database
 from commands.database import calculate_results
 from commands.database import cleandb
 from includes import preprocessor as pre
-from includes import wn_analyzer as wna
+from analyzers import wn_analyzer as wna
 from plot.window_sizes import plot_iv_things
 
 

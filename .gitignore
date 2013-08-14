@@ -9,3 +9,5 @@ lenin_data.json
 .coverage
 htmlcov/*
 *.bak
+*.log
+dump/

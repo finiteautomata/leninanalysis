@@ -5,7 +5,7 @@ import config
 import information_value as iv
 import zipf as zf
 import utils
-import wn_analyzer as wna
+from analyzers import wn_analyzer as wna
 
 class Preprocessor:
 	
