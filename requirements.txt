@@ -8,11 +8,11 @@ argparse==1.2.1
 coverage==3.6
 #ipython==0.13.2
 ipython
+ipdb==0.7
 #matplotlib==1.2.1
 matplotlib
-#nltk==2.0.4
-nltk
-#numpy==1.7.1
+nltk==2.0.4
+
 numpy
 pymongo==2.5.1
 pytest==2.3.5
