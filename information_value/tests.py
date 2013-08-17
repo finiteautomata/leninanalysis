@@ -2,6 +2,8 @@
 # THIS IMPORT MUST BE THE FIRST IN EVERY tests.py FILE
 from test import LeninTestCase
 from unittest import TestCase
+import types
+import operator
 import pymongo
 from pymongo.errors import DuplicateKeyError
 from information_value.models import odm_session
@@ -67,3 +69,21 @@ class InformationValueResultTest(LeninTestCase):
         """
         self.assertAlmostEqual(iv_result.iv_sum, 0.099 + 0.098 + 0.097)
     
+class DocumentTest(LeninTestCase):
+
+    def test_top_words_returns_words_in_same_order_of_iv_top_words_for_best_window_size(self):
+        top_words = [
+            ("bar", 0.2),
+            ("foo", 0.01),
+            ("john", 0.001),
+            ("sarasa", 0.0005),
+        ]
+
+        document = get_document_with_top_words(top_words=top_words)
+
+        self.assertEquals([word for word, iv in document.top_words()], [word for word, iv in document.top_words()])
+
+def get_document_with_top_words(top_words):
+    document = DocumentFactory()
+    document.get_iv_by_window_size = types.MethodType(lambda self, window_size: top_words, document)
+    return document

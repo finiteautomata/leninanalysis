@@ -93,17 +93,9 @@ class Document(MappedClass):
     year = FieldProperty(schema.String)
     results = RelationProperty(InformationValueResult)
 
-    def top_words(self, total_words = 20, no_stop_words = True, greater_than_zero = True):
-      
-      
-      if no_stop_words:
-        stop_words = stopwords.words('english')
-      else:
-        stop_words = []
-
+    def top_words(self, total_words = 20, stop_words = stopwords.words('english'), greater_than_zero = True):
       iv_words = self.get_iv_by_window_size(self.total_tokens / 12)
       iv_words = [(t[0], t[1]) for t in iv_words if t[0] not in stop_words and (not greater_than_zero or t[1] > 0.0)][:total_words]
-      
 
       iv_sum = sum([iv_value for (word, iv_value) in iv_words])
       return [(word, iv_value / iv_sum) for (word, iv_value) in iv_words]
