@@ -2,7 +2,7 @@
 from __future__ import division
 import nltk
 from nltk.corpus import wordnet as wn
-from information_value import models
+from information_value.models import *
 
 
 import config
@@ -12,10 +12,9 @@ class WordNetAnalyzer:
 
   #synsets is a list((synset, ponderation))
   #sum(ponderation) must be 1
-  def __init__(self, document, synsets):
+  def __init__(self, synsets, document = None):
     self.document = document
     self.synsets = synsets
-    self.top_words = document.top_words()
     assert sum([ponderation for (synset, ponderation) in self.synsets]) == 1.0
 
   #return list((word, ponderation [between 0 and 1], result [between 0 and 1]))
@@ -23,12 +22,16 @@ class WordNetAnalyzer:
     return [(word, ponderation, self.judge_word(word) )  for (word, ponderation) in self.top_words]
 
   #return a value between 0 and 1
-  def get_results(self):
+  def judge_doc(self, document = None):
+    if document != None:
+       self.document = document
+    self.top_words = self.document.top_words(10000)
     return sum([ponderation * result for (word, ponderation, result) in self.get_words_results()])
+  
 
 
   #get all synsets for a given word
-  def get_word_synsets(self, word):
+  def get_word_synsets(self, word, take_only_first = True):
     lemmas = wn.lemmas(word)
     #si no me da lemmas, intento algo
     if len(lemmas) == 0:
@@ -39,7 +42,10 @@ class WordNetAnalyzer:
         return []
     
     #some distances doesn't handle not-noun words
-    return [lemma.synset for lemma in lemmas if lemma.synset.name.split('.')[1] == 'n']
+    synsets =  [lemma.synset for lemma in lemmas if lemma.synset.name.split('.')[1] == 'n']
+    if take_only_first:
+      return synsets[:1]
+    return synsets
 
   def judge_synset(self, synset):
 
@@ -54,7 +60,8 @@ class WordNetAnalyzer:
     return self.distance_measure(path, lch, wup)
 
   def distance_measure(self, path, lch, wup):
-      return (path + lch + wup) / 3
+      #return (path + lch + wup) / 3
+      return path #others are not between 0 and 1
 
   #judge a word according to criterion
   #@return double a value between 1.0 and 0.0
@@ -64,7 +71,90 @@ class WordNetAnalyzer:
     else: return 0
 
 
+def get_wnas():
+  war_docs = DocumentList("War")
+  politic_docs = DocumentList("Politic")
+  war_synsets = [(wn.synset('war.n.01'), 1.0)]
+  politics_synsets = [(wn.synset('politics.n.01'), 1.0)]
+  praxis_synsets = [(wn.synset('practice.n.03'), 1.0)]
+  theory_synsets = [(wn.synset('theory.n.01'), 1.0)]
+  rev_synsets = [(wn.synset('revolution.n.02'), 1.0)]
+  #(wn.synset('theorization.n.01'), 0.5),  #the production or use of theories
+
+  return {'war': WordNetAnalyzer(war_synsets), 
+          'politics': WordNetAnalyzer(politics_synsets), 
+          'theory': WordNetAnalyzer(theory_synsets),
+          'praxis': WordNetAnalyzer(praxis_synsets),
+          'revolution': WordNetAnalyzer(rev_synsets),
+        }
+
+def example_analyzer():
+  state_list = DocumentList("State and Rev")
+  state_doc = state_list.documents[0]
+  abstraction_synsets = [(wn.synset('abstraction.n.06'), 1.0)]
+  wna = WordNetAnalyzer(abstraction_synsets)
+  return wna
+
+def test():
+  general_docs = DocumentList("")
+  war_docs = DocumentList("War")
+  politic_docs = DocumentList("Politic")
+  war_synsets = [(wn.synset('war.n.01'), 1.0)]
+  politics_synsets = [(wn.synset('politics.n.01'), 1.0)]
+
+  war_wna = WordNetAnalyzer(war_synsets)
+  politics_wna = WordNetAnalyzer(politics_synsets)
+
+  war_wna_war_docs= sum([war_wna.judge_doc(doc)  for doc in war_docs]) / war_docs.total_docs
+  war_wna_politic_docs = sum([war_wna.judge_doc(doc)  for doc in politic_docs]) / politic_docs.total_docs
+  war_wna_general_docs = sum([war_wna.judge_doc(doc)  for doc in general_docs]) / general_docs.total_docs
+  
+  print "WAR-Analyzer: war docs: %s, politics docs: %s, general docs: %s" % (war_wna_war_docs, war_wna_politic_docs,war_wna_general_docs )
+  
+  politic_wna_war_docs = sum([politics_wna.judge_doc(doc)  for doc in war_docs]) / war_docs.total_docs
+  politic_wna_politic_docs = sum([politics_wna.judge_doc(doc)  for doc in politic_docs]) / politic_docs.total_docs
+  politic_wna_general_docs = sum([politics_wna.judge_doc(doc)  for doc in general_docs]) / general_docs.total_docs
+
+  print "POLITICS-Analyzer: war docs: %s, politics docs: %s, general docs: %s" % (politic_wna_war_docs, politic_wna_politic_docs, politic_wna_general_docs)
+
+def judge_list(doc_list, analyzer):
+  return (sum([analyzer.judge_doc(doc)  for doc in doc_list]) / doc_list.total_docs)*100
  
+def write_tp():
+  wnas = get_wnas()
+
+
+  for year in range(1893, 1924):
+    doc_list = DocumentList("", False, str(year))
+    print "%s  praxis: %.2f, theory:  %.2f, rev: %.2f, war: %.2f, politics: %.2f" % (year, 
+                                                          judge_list(doc_list, wnas["praxis"]),
+                                                          judge_list(doc_list, wnas["theory"]), 
+                                                          judge_list(doc_list, wnas["revolution"]),
+                                                          judge_list(doc_list, wnas["war"]),
+                                                          judge_list(doc_list, wnas["politics"]),
+
+                                                        )
+
+  
+def compare_obvious():
+  wnas = get_wnas()
+  prac = DocumentList("Two Tactics").documents[0] #Two Tactics
+  theo = DocumentList("arxism").documents[0] # Concluding Remarks to the Symposium Marxism and Liquidationism'
+  docs = [prac, theo]
+  for doc in docs:
+    print "praxis: %.2f, theory:  %.2f, rev: %.2f, war: %.2f, politics: %.2f  %s" % (
+                                                                                      wnas["praxis"].judge_doc(doc)*100,
+                                                                                      wnas["theory"].judge_doc(doc)*100,
+                                                                                      wnas["revolution"].judge_doc(doc)*100,
+                                                                                      wnas["war"].judge_doc(doc)*100,
+                                                                                      wnas["politics"].judge_doc(doc)*100,
+                                                                                      doc.short_name
+                                                                                    )
+
+
+
+
+
 def normalize(theory, praxis):
   if theory > praxis:
     t = 1.0
