@@ -11,9 +11,9 @@ ipython
 ipdb==0.7
 #matplotlib==1.2.1
 matplotlib
+mock==1.0.1
 nltk==2.0.4
-
-numpy
+numpy==1.7.1
 pymongo==2.5.1
 pytest==2.3.5
 scipy

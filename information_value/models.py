@@ -100,14 +100,15 @@ class Document(MappedClass):
       iv_sum = sum([iv_value for (word, iv_value) in iv_words])
       return [(word, iv_value / iv_sum) for (word, iv_value) in iv_words]
 
-    def get_iv_by_window_size(self, window_size):
+    # calculator_class is poor man's dependency injection :)
+    def get_iv_by_window_size(self, window_size, calculator_class=InformationValueCalculator):
       sort = lambda iv_words: sorted(iv_words, key=operator.itemgetter(1), reverse=True)
 
       for res in self.results:
         if res.window_size == window_size:
           return sort(res.iv_words)
 
-      iv_words = InformationValueCalculator(self.tokens).information_value(window_size)
+      iv_words = calculator_class(self.tokens).information_value(window_size)
       res = InformationValueResult(window_size=window_size, document=self, iv_words=iv_words)
 
       try:

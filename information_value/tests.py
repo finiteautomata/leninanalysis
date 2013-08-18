@@ -5,6 +5,7 @@ from unittest import TestCase
 import types
 import operator
 import pymongo
+from mock import Mock
 from pymongo.errors import DuplicateKeyError
 from information_value.models import odm_session
 from information_value.models import Document
@@ -83,7 +84,26 @@ class DocumentTest(LeninTestCase):
 
         self.assertEquals([word for word, iv in document.top_words()], [word for word, iv in document.top_words()])
 
+    def test_information_value_result_is_created_if_it_didnt_exists(self):
+        document = DocumentFactory()
+        calculator_class = mock_calculator_class_returning(iv_words=[
+            ("bar", 0.2),
+            ("foo", 0.01),
+            ("john", 0.001),
+            ("sarasa", 0.0005),
+        ])
+
+        document.get_iv_by_window_size(100, calculator_class=calculator_class)
+
+        calculator_class.assert_called_with(document.tokens)
+
 def get_document_with_top_words(top_words):
     document = DocumentFactory()
     document.get_iv_by_window_size = types.MethodType(lambda self, window_size: top_words, document)
     return document
+
+def mock_calculator_class_returning(iv_words):
+    calculator_mock = Mock()
+    calculator_mock.information_value.return_value = iv_words
+
+    return Mock(return_value=calculator_mock)
