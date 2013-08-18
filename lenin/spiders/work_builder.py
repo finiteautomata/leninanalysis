@@ -20,6 +20,7 @@ class WorkBuilder:
       log.msg( "ALERTA!!!!!!!!!!!", level=log.WARNING)
       log.msg( "%s me da contents nulos " % self.get_title().encode('ascii', 'ignore'), level=log.WARNING)
       log.msg(self.response.url, level=log.WARNING)
+      return
     clean_text = contents[0]
     clean_text = clean_text.lower()
     clean_text = clean_text.replace('&#x000a;','\n')
