@@ -44,6 +44,11 @@ __document = None
 def get_window_size_analysis(document, window_size):
     try:
         log.info("Checking window_size = %s" % window_size)
+        #check if result already exists
+        if InformationValueResult.query.find({"window_size": window_size, "document_id": document._id}).count() > 0:
+            log.warning('Result already found on database')
+            return
+
         iv_words = InformationValueCalculator(document.tokens).information_value(window_size)
         try:
             InformationValueResult(window_size=window_size, document=document, iv_words=iv_words)
@@ -60,6 +65,11 @@ def _get_window_size_analysis(window_size):
     try:
         document = __document
         log.info("Checking window_size = %s" % window_size)
+        #check if result already exists
+        if InformationValueResult.query.find({"window_size": window_size, "document_id": document._id}).count() > 0:
+            log.warning('Result already found on database')
+            return
+
         iv_words = __information_value_calculator.information_value(window_size)
         try:
             InformationValueResult(window_size=window_size, document=document, iv_words=iv_words)
