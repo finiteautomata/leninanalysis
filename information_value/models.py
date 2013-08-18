@@ -73,7 +73,7 @@ class InformationValueResult(MappedClass):
     _id = FieldProperty(schema.ObjectId)
     doc_window_hash = FieldProperty(schema.String)
     window_size = FieldProperty(schema.Int)
-    iv_words = FieldProperty(schema.Anything)
+    iv_words = FieldProperty(schema.Array(schema.Anything)) # Array or list
     document_id = ForeignIdProperty('Document')
     document = RelationProperty('Document')
 
