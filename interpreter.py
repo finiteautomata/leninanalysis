@@ -10,4 +10,6 @@ ming_config = {'ming.document_store.uri': config.DATABASE_URL}
 ming.configure(**ming_config)
 
 from information_value.models import Document, DocumentList, InformationValueResult
+from analyzers.wn_analyzer import WordNetAnalyzer
+from nltk.corpus import wordnet as wn
 
