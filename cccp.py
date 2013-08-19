@@ -58,9 +58,9 @@ def main():
             documents = doc_list.documents
         calculate_results(documents=documents, window_size_algorithm=args.window_size_generator)
     if args.plot:
-            from plot import window_sizes
-            window_sizes.plot_scale_vs_information(doc_list.documents)
-            print 'Plotting'
+        from plot import window_sizes
+        window_sizes.plot_scale_vs_information(doc_list.documents)
+        #window_sizes.plot_len_vs_most_informative(doc_list.documents)
 
 def init_logging():
     logger = logging.getLogger('lenin')
