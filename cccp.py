@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
+import sys
 import config
 import logging
 import argparse
@@ -21,10 +22,15 @@ def main():
     # Parameter to scrap all the works before or not
     parser.add_argument('--scrap', action='store_true', default=False, help='Scraps all the Lenin Works')
     parser.add_argument('--populate-database', action='store_true', default=False, help="From the scrapped works creates database called \"lenin\" (it assumes you're running MongoDB at localhost)")
+    parser.add_argument('--plot', action='store_true', default=False, help="Add this flag for plotting")
+    parser.add_argument('--analysis', action='store_true', default=False, help="Add this flag for results calculation")
     parser.add_argument('--plot-iv-analysis', action='store_true', default=False, help="Shows some plot about Information Value Analysis")
+    parser.add_argument('--window_size_generator', default='WindowsHardCodedSizeGenerator', help="Select a Window Size generator Algorhitm")
     parser.add_argument('--calculate-results', action='store_true', default=False, help="Calculate Information Value Results for Documents")
-    parser.add_argument('--analysis_document', nargs='+', metavar=('name', 'window_size_algorithm'), help='--analysis-document [document_name [window_sizes_generator_algorithm]]')
-
+    parser.add_argument('--documents', nargs='+', metavar=('name'), help='Selects documents from name regex')
+    if len(sys.argv)==1:
+        parser.print_help()
+        sys.exit(1)
     # Parse args
     args = parser.parse_args()
 
@@ -39,9 +45,21 @@ def main():
     if args.calculate_results:
         from commands.database import calculate_results
         calculate_results()
-    if args.analysis_document:
+
+    doc_list = None
+    if args.documents:
+        from information_value.models import DocumentList
+        doc_list = DocumentList(args.documents[0])
+    if args.analysis:
         from commands.database import calculate_results
-        calculate_results(name=args.analysis_document[0], window_size_algorithm=args.analysis_document[1])
+        documents = None
+        if doc_list:
+            documents = doc_list.documents
+        calculate_results(documents=documents, window_size_algorithm=args.window_size_generator)
+    if args.plot:
+            from plot import window_sizes
+            window_sizes.plot_scale_vs_information(doc_list.documents)
+            print 'Plotting'
 
 def init_logging():
     logger = logging.getLogger('lenin')

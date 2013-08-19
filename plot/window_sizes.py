@@ -1,11 +1,14 @@
 # coding: utf-8
 import operator
 import logging
-from information_value.models import Document
-import config
+from operator import itemgetter
+
 import matplotlib.pyplot as plt
 from scipy import average
 
+import config
+from information_value.models import Document
+from information_value.models import DocumentList
 log = logging.getLogger('lenin')
 
 
@@ -116,3 +119,17 @@ def plot_xy(x_label, x, y_label, y):
     plt.xlabel(x_label)
     plt.ylabel(y_label)
     plt.show()
+
+def plot_scale_vs_information(documents):
+    for index, document in enumerate(documents):
+        x = []; y= []
+        #TODO        sorted_results =
+        for result in document.results:
+            x.append(result.window_size)
+            iv_sum = sum(sorted(map(operator.itemgetter(1), result.iv_words), reverse=True))
+            y.append(iv_sum)
+        plt.plot(x, y, 'o')
+        plt.title('Document: %s' % document.name)
+        plt.ylabel('Information [bits/word]')
+        plt.xlabel('Scale [words]')
+        plt.show()

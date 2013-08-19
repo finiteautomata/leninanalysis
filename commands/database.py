@@ -43,16 +43,15 @@ def _get_windows_size_generators(class_name):
         if name == class_name:
             return obj
 
-def calculate_results(name=None, window_size_algorithm='WindowsHardCodedSizeGenerator'):
+def calculate_results(documents=None, window_size_algorithm='WindowsHardCodedSizeGenerator'):
   algorithm_class = _get_windows_size_generators(window_size_algorithm)
-  if name is None:
-    documents =  Document.query.find().all()
-  else:
-    documents = DocumentList(name).documents
+  if documents is None:
+      documents = Document.query.find().all()
   log.info("Selected window size generator %s" % window_size_algorithm)
   for document in documents:
     log.info("Calculating information values for document %s" % document.name)
-    document.tokenizer = tokenize
-    win_size_generator = algorithm_class(document)
-    window_sizes = win_size_generator.window_size()
-    results = get_all_analysis(document, window_sizes, number_of_words=5000)
+    if document.text:
+        document.tokenizer = tokenize
+        win_size_generator = algorithm_class(document)
+        window_sizes = win_size_generator.window_size()
+        get_all_analysis(document, window_sizes, number_of_words=5000)
