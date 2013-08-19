@@ -8,14 +8,25 @@ from information_value.models import *
 import config
 reload(config)
 
+#Similarity definitions: http://nltk.googlecode.com/svn/trunk/doc/api/nltk.corpus.reader.wordnet.Synset-class.html#path_similarity
 class WordNetAnalyzer:
 
   #synsets is a list((synset, ponderation))
   #sum(ponderation) must be 1
-  def __init__(self, synsets, document = None):
+  def __init__(self, synsets, document = None, use_similarity = 'path'):
     self.document = document
     self.synsets = synsets
+    self.use_similarity = use_similarity
     assert sum([ponderation for (synset, ponderation) in self.synsets]) == 1.0
+
+  def set_similarity(self, use_similarity):
+    self.use_similarity = use_similarity
+
+  #creates the trivial synsets set for a given word
+  @staticmethod
+  def get_init_synsets_for_word(word, take_only_first = False):
+    synsets = WordNetAnalyzer.get_word_synsets(word, take_only_first)
+    return [(synset, 1.0/ len(synsets)) for synset in synsets]
 
   #return list((word, ponderation [between 0 and 1], result [between 0 and 1]))
   def get_words_results(self):
@@ -29,9 +40,9 @@ class WordNetAnalyzer:
     return sum([ponderation * result for (word, ponderation, result) in self.get_words_results()])
   
 
-
   #get all synsets for a given word
-  def get_word_synsets(self, word, take_only_first = True):
+  @staticmethod
+  def get_word_synsets(word, take_only_first = False):
     lemmas = wn.lemmas(word)
     #si no me da lemmas, intento algo
     if len(lemmas) == 0:
@@ -49,26 +60,46 @@ class WordNetAnalyzer:
 
   def judge_synset(self, synset):
 
-    paths = [syn.path_similarity(synset)*ponderacion for (syn, ponderacion) in self.synsets]
-    path = sum(paths) / len(paths)
+    paths = [syn.path_similarity(synset) for (syn, ponderacion) in self.synsets]
+    #paths = [syn.path_similarity(synset)*ponderacion for (syn, ponderacion) in self.synsets]
+    #path = sum(paths) / len(paths)
+    #path = sum(paths)
+    path = max(paths)
     
-    lchs = [syn.lch_similarity(synset)*ponderacion for (syn, ponderacion) in self.synsets]
-    lch = sum(lchs) / len(lchs)
+    lchs = [syn.lch_similarity(synset) for (syn, ponderacion) in self.synsets]
+    #lchs = [syn.lch_similarity(synset)*ponderacion for (syn, ponderacion) in self.synsets]
+    #lch = sum(lchs) / len(lchs)
+    lch  = max(lchs)
 
-    wups = [syn.wup_similarity(synset)*ponderacion for (syn, ponderacion) in self.synsets]
-    wup = sum(wups) / len(wups)
+    #wups = [syn.wup_similarity(synset)*ponderacion for (syn, ponderacion) in self.synsets]
+    wups = [syn.wup_similarity(synset) for (syn, ponderacion) in self.synsets]
+    #wup = sum(wups) / len(wups)
+    wup = max(wups)
+    
     return self.distance_measure(path, lch, wup)
 
   def distance_measure(self, path, lch, wup):
+      if self.use_similarity == 'path':
+        return path
+      elif self.use_similarity == 'lch':
+        return lch
+      elif self.use_similarity == 'wup':
+        return wup
+      else:
+        return path
       #return (path + lch + wup) / 3
-      return path #others are not between 0 and 1
+       #others are not between 0 and 1
 
   #judge a word according to criterion
   #@return double a value between 1.0 and 0.0
-  def judge_word(self, word):
-    synsets_results = [self.judge_synset(synset) for synset in self.get_word_synsets(word)]
-    if len(synsets_results) != 0: return  sum(synsets_results) / len(synsets_results) 
-    else: return 0
+  def judge_word(self, word, take_only_first_synset = False):
+    synsets_results = [self.judge_synset(synset) for synset in self.get_word_synsets(word, take_only_first_synset)]
+    if len(synsets_results) != 0: 
+      return max(synsets_results)
+      #return sum(synsets_results)
+      #return  sum(synsets_results) / len(synsets_results) 
+    else: 
+      return 0
 
 
 def get_wnas():
@@ -125,26 +156,34 @@ def write_tp():
 
   maximum = 0.0
   res = dict()
-  for year in range(1893, 1924):
+  for year in range(1900, 1905):
+    print year
     doc_list = DocumentList("", False, str(year))
-    aux  = (year, 
-                          judge_list(doc_list, wnas["praxis"]),
-                          judge_list(doc_list, wnas["theory"]), 
-                          judge_list(doc_list, wnas["revolution"]),
-                          judge_list(doc_list, wnas["war"]),
-                          judge_list(doc_list, wnas["politics"])
-                  )
-    maximum = max(maximum, aux[1], aux[2], aux[3], aux[4], aux[5])
-    res[year] = aux
+    #aux  = (              judge_list(doc_list, wnas["praxis"]),
+#                          judge_list(doc_list, wnas["theory"]), 
+#                          judge_list(doc_list, wnas["revolution"]),
+#                          judge_list(doc_list, wnas["war"]),
+#                          judge_list(doc_list, wnas["politics"])
+#                  )
+    res[year]  = {'praxis':     judge_list(doc_list, wnas["praxis"]),
+                  'theory':     judge_list(doc_list, wnas["theory"]), 
+                  'revolution': judge_list(doc_list, wnas["revolution"]),
+                  'war':        judge_list(doc_list, wnas["war"]),
+                  'politics':   judge_list(doc_list, wnas["politics"])
+                  }
+  return res
+    #maximum = max(maximum, aux[1], aux[2], aux[3], aux[4], aux[5])
+    #res[year] = aux
+
   
-  for year in range(1893, 1924):
-    print "%s  praxis: %.2f, theory:  %.2f, rev: %.2f, war: %.2f, politics: %.2f" %  (year, 
-                                                                                        res[year][1] / maximum, 
-                                                                                        res[year][2] / maximum, 
-                                                                                        res[year][3] / maximum,
-                                                                                        res[year][4] / maximum,
-                                                                                        res[year][5] / maximum,
-                                                                                        )
+  #for year in range(1893, 1924):
+   # print "%s  praxis: %.2f, theory:  %.2f, rev: %.2f, war: %.2f, politics: %.2f" %  (year, 
+    #                                                                                    res[year][1] / maximum, 
+     #                                                                                   res[year][2] / maximum, 
+      #                                                                                  res[year][3] / maximum,
+       #                                                                                 res[year][4] / maximum,
+        #                                                                                res[year][5] / maximum,
+#                                                                                        )
 
                                                 
 
