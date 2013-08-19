@@ -2,10 +2,6 @@
 # THIS IMPORT MUST BE THE FIRST IN EVERY tests.py FILE
 #from test import LeninTestCaseNoDrop
 import unittest
-from unittest import TestCase
-from pymongo import MongoClient
-
-client = MongoClient()
 
 from information_value.models import Document
 from information_value.models import InformationValueResult

@@ -1,13 +1,13 @@
 import logging
 import sys
 
-# This hack is to replace config module with the other config...
-from test import config as test_config
-sys.modules["config"] = test_config
-
 import config
 import unittest
+import ming
 from pymongo import MongoClient
+
+ming_config = {'ming.document_store.uri': config.TEST_DATABASE_URL}
+ming.configure(**ming_config)
 
 def init_logging():
     logger = logging.getLogger('lenin')

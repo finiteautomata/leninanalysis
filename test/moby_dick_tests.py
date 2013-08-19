@@ -61,9 +61,9 @@ def get_moby_dick_document():
     # document uses tokenizer func for create tokens, since we need to enforce
     # only_alphanum and clean_punct we need a wrapper
     def tokenizer_wrapper(raw_text):
-        return map(str.lower, tokenize(raw_text, only_alphanum=True, clean_punctuation=True))
+        return map(str.lower, map(str, tokenize(raw_text, only_alphanum=True, clean_punctuation=True)))
     document.tokenizer = tokenizer_wrapper
 
     odm_session.flush()
-    
+
     return document

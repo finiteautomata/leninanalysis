@@ -6,6 +6,7 @@ import logging
 import argparse
 import subprocess
 
+import ming
 
 reload(config)
 
@@ -79,5 +80,8 @@ def init_logging():
     logger.addHandler(ch)
 
 if __name__ == "__main__":
+    ming_config = {'ming.document_store.uri': config.DATABASE_URL}
+    ming.configure(**ming_config)
+
     init_logging()
     main()

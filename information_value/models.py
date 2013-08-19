@@ -7,6 +7,7 @@ from pymongo.errors import DuplicateKeyError
 from ming import Session, create_datastore
 from ming import schema
 import operator
+from ming.session import Session
 from ming.odm import ODMSession
 from ming.odm import Mapper
 from ming.odm.mapper import MapperExtension
@@ -24,8 +25,7 @@ MIN_TOKENS = 2000
 
 log = logging.getLogger('lenin')
 
-bind = create_datastore(config.DATABASE_NAME)
-session = Session(bind)
+session = Session.by_name('document_store')
 odm_session = ODMSession(doc_session=session)
 
 
