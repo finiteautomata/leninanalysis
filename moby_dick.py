@@ -15,6 +15,9 @@ from information_value.models import InformationValueResult
 from information_value.models import Document
 
 
+import ming
+ming_config = {'ming.document_store.uri': config.DATABASE_URL}
+ming.configure(**ming_config)
 
 
 log= logging.getLogger('lenin')
