@@ -64,7 +64,7 @@ def main():
         window_sizes.plot_scale_vs_information(doc_list.documents)
         #window_sizes.plot_len_vs_most_informative(doc_list.documents)
     if args.notebook_server:
-        subprocess.call("ipython notebook --notebook-dir=notebooks")
+        subprocess.call("ipython notebook --notebook-dir=notebooks", shell=True)
     if args.shell:
         subprocess.call("ipython -i interpreter.py", shell=True)
 
