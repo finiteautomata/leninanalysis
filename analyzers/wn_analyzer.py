@@ -25,7 +25,7 @@ class WordNetAnalyzer:
   def judge_doc(self, document = None):
     if document != None:
        self.document = document
-    self.top_words = self.document.top_words(10000)
+    self.top_words = self.document.top_words(20)
     return sum([ponderation * result for (word, ponderation, result) in self.get_words_results()])
   
 
@@ -123,17 +123,30 @@ def judge_list(doc_list, analyzer):
 def write_tp():
   wnas = get_wnas()
 
-
+  maximum = 0.0
+  res = dict()
   for year in range(1893, 1924):
     doc_list = DocumentList("", False, str(year))
-    print "%s  praxis: %.2f, theory:  %.2f, rev: %.2f, war: %.2f, politics: %.2f" % (year, 
-                                                          judge_list(doc_list, wnas["praxis"]),
-                                                          judge_list(doc_list, wnas["theory"]), 
-                                                          judge_list(doc_list, wnas["revolution"]),
-                                                          judge_list(doc_list, wnas["war"]),
-                                                          judge_list(doc_list, wnas["politics"]),
+    aux  = (year, 
+                          judge_list(doc_list, wnas["praxis"]),
+                          judge_list(doc_list, wnas["theory"]), 
+                          judge_list(doc_list, wnas["revolution"]),
+                          judge_list(doc_list, wnas["war"]),
+                          judge_list(doc_list, wnas["politics"])
+                  )
+    maximum = max(maximum, aux[1], aux[2], aux[3], aux[4], aux[5])
+    res[year] = aux
+  
+  for year in range(1893, 1924):
+    print "%s  praxis: %.2f, theory:  %.2f, rev: %.2f, war: %.2f, politics: %.2f" %  (year, 
+                                                                                        res[year][1] / maximum, 
+                                                                                        res[year][2] / maximum, 
+                                                                                        res[year][3] / maximum,
+                                                                                        res[year][4] / maximum,
+                                                                                        res[year][5] / maximum,
+                                                                                        )
 
-                                                        )
+                                                
 
   
 def compare_obvious():
