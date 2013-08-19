@@ -11,3 +11,4 @@ htmlcov/*
 *.bak
 *.log
 dump/
+*.out
