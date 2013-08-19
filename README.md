@@ -44,3 +44,7 @@ $ ./cccp.py --populate-database
 ```
 $ ./cccp.py --calculate-results
 ``` 
+
+
+##Links
+* Similarity definitions: http://nltk.googlecode.com/svn/trunk/doc/api/nltk.corpus.reader.wordnet.Synset-class.html#path_similarity
