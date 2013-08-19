@@ -21,6 +21,7 @@ def scrap_all_works():
 def main():
     parser = argparse.ArgumentParser(description='Central de Control de Comandos y Procesos para el TP de Analisis de Lenin.')
     # Parameter to scrap all the works before or not
+    parser.add_argument('--shell', action='store_true', default=False, help="Opens an ipython console with db configured")
     parser.add_argument('--scrap', action='store_true', default=False, help='Scraps all the Lenin Works')
     parser.add_argument('--populate-database', action='store_true', default=False, help="From the scrapped works creates database called \"lenin\" (it assumes you're running MongoDB at localhost)")
     parser.add_argument('--plot', action='store_true', default=False, help="Add this flag for plotting")
@@ -61,6 +62,8 @@ def main():
         from plot import window_sizes
         window_sizes.plot_scale_vs_information(doc_list.documents)
         #window_sizes.plot_len_vs_most_informative(doc_list.documents)
+    if args.shell:
+        ret = subprocess.call("ipython -i interpreter.py", shell=True)
 
 def init_logging():
     logger = logging.getLogger('lenin')
