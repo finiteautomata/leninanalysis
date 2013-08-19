@@ -51,7 +51,7 @@ def get_window_size_analysis(document, window_size):
 
         iv_words = InformationValueCalculator(document.tokens).information_value(window_size)
         try:
-            InformationValueResult(window_size=window_size, document=document, iv_words=iv_words)
+            InformationValueResult(window_size=window_size, document_id=document._id, iv_words=iv_words)
             log.info("Storing results for document %s, window_size %s" % (document.name, window_size))
             odm_session.flush()
         except DuplicateKeyError:
@@ -72,7 +72,7 @@ def _get_window_size_analysis(window_size):
 
         iv_words = __information_value_calculator.information_value(window_size)
         try:
-            InformationValueResult(window_size=window_size, document=document, iv_words=iv_words)
+            InformationValueResult(window_size=window_size, document_id=document._id, iv_words=iv_words)
             log.info("Storing results for document %s, window_size %s" % (document.name, window_size))
             odm_session.flush()
         except DuplicateKeyError:

@@ -117,12 +117,12 @@ class Document(MappedClass):
           pass
       return sort(res.iv_words)
 
-    def get_information_value_result(self, threshold):
+    def get_information_value_result(self):
         iv_res = None
         best_iv = 0.0
 
         for one_iv in self.results:
-            sum_iv = sum(map(lambda (w, iv): iv, one_iv.iv_words.iteritems()))
+            sum_iv = sum(map(lambda (w, iv): iv, one_iv.iv_words))
             if best_iv <= sum_iv:
                 best_iv = sum_iv
                 iv_res = one_iv

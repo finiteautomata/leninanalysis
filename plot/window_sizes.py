@@ -133,3 +133,18 @@ def plot_scale_vs_information(documents):
         plt.ylabel('Information [bits/word]')
         plt.xlabel('Scale [words]')
         plt.show()
+
+
+def plot_len_vs_most_informative(documents=None):
+    if documents is None:
+        documents = Document.query.find().all()
+    x = []; y = []
+    for document in documents:
+        x.append(len(document.tokens))
+        y.append(document.get_information_value_result().window_size)
+
+    plt.plot(x, y, 'o')
+    plt.title('All text in Database')
+    plt.ylabel('Most informative scale [words]')
+    plt.xlabel('Text length [words]')
+    plt.show()

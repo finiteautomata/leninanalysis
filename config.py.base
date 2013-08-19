@@ -1,6 +1,6 @@
 WNA_VERBOSE=1
 NUMBER_OF_THREADS = 1
 SUM_THRESHOLD = 0.01
-DATABASE_NAME = 'lenin'
+DATABASE_NAME = 'tests'
 DATABASE_URL = 'mongodb://localhost:27017/lenin'
-TEST_DATABASE_URL = 'mim:///localhost:27017/moby_dick'
+TEST_DATABASE_URL = 'mim:///localhost:27017/tests'
