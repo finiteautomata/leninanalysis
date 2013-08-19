@@ -30,6 +30,7 @@ def main():
     parser.add_argument('--window_size_generator', default='WindowsHardCodedSizeGenerator', help="Select a Window Size generator Algorhitm")
     parser.add_argument('--calculate-results', action='store_true', default=False, help="Calculate Information Value Results for Documents")
     parser.add_argument('--documents', nargs='+', metavar=('name'), help='Selects documents from name regex')
+    parser.add_argument('--notebook-server', action='store_true', default=False, help='Starts notebook server')
     if len(sys.argv)==1:
         parser.print_help()
         sys.exit(1)
@@ -62,8 +63,11 @@ def main():
         from plot import window_sizes
         window_sizes.plot_scale_vs_information(doc_list.documents)
         #window_sizes.plot_len_vs_most_informative(doc_list.documents)
+    if args.notebook_server:
+        subprocess.call("ipython notebook --notebook-dir=notebooks", shell=True)
     if args.shell:
-        ret = subprocess.call("ipython -i interpreter.py", shell=True)
+        subprocess.call("ipython -i interpreter.py", shell=True)
+
 
 def init_logging():
     logger = logging.getLogger('lenin')
