@@ -14,7 +14,7 @@ class WindowsHardCodedSizeGenerator(object):
         self.counter = Counter()
 
     def window_size(self):
-        return xrange(100, self.document.total_tokens / 2 , 100) 
+        return xrange(100, 10000 , 100) 
         #return ( common[0] for common in self.counter.most_common() if common[0] > 1)
 
 
