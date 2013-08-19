@@ -5,8 +5,14 @@
 from scrapy import log
 from pymongo.errors import DuplicateKeyError
 
+import config
 from information_value.models import Document
 from information_value.models import odm_session
+
+import ming
+ming_config = {'ming.document_store.uri': config.DATABASE_URL}
+ming.configure(**ming_config)
+
 
 class LeninPipeline(object):
     def process_item(self, item, spider):
@@ -21,5 +27,6 @@ class LeninPipeline(object):
             odm_session.flush()
         except DuplicateKeyError:
             log.msg('Duplicate found', level=log.WARNING)
+            return
         log.msg('Document saved', level=log.INFO)
         return item
