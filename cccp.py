@@ -60,9 +60,12 @@ def main():
             documents = doc_list.documents
         calculate_results(documents=documents, window_size_algorithm=args.window_size_generator)
     if args.plot:
-        from plot import window_sizes
-        window_sizes.plot_scale_vs_information(doc_list.documents)
+        #from plot import window_sizes
+        from plot import wn_plots
+        #window_sizes.plot_scale_vs_information(doc_list.documents)
         #window_sizes.plot_len_vs_most_informative(doc_list.documents)
+        import analyzers.wn_analyzer as wa
+        wn_plots.plot_year_vs_concept_value(wa.write_tp())
     if args.notebook_server:
         subprocess.call("ipython notebook --notebook-dir=notebooks", shell=True)
     if args.shell:
