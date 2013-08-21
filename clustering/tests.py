@@ -1,7 +1,7 @@
 #! coding:utf-8
 from mock import Mock
 from unittest import TestCase
-from distance import path_distance
+from distance import path_distance, word_path_distance
 
 class DistanceTest(TestCase):
 
@@ -30,6 +30,18 @@ class DistanceTest(TestCase):
 
 
         self.assertAlmostEqual(path_distance(document1, document2), 0.0)
+
+    def test_distance_to_text_skips_verbs(self):
+        document1 = create_document_with_words([
+            ("war", 0.1),
+            ("is", 0.01),
+        ])
+        document2 = create_document_with_words([
+            ("revolution", 0.3),
+            ("kicked", 0.01)
+        ])
+
+        self.assertAlmostEqual(path_distance(document1, document2), word_path_distance("war", "revolution"))
 
 
 
