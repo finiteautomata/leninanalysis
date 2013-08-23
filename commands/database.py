@@ -43,7 +43,7 @@ def _get_windows_size_generators(class_name):
         if name == class_name:
             return obj
 
-def calculate_results(documents=None, window_size_algorithm='WindowsHardCodedSizeGenerator'):
+def calculate_results(documents=None, window_size_algorithm='WindowsHardCodedSizeGenerator', store_only_best = False):
   algorithm_class = _get_windows_size_generators(window_size_algorithm)
   if documents is None:
       documents = Document.query.find().all()
@@ -55,3 +55,17 @@ def calculate_results(documents=None, window_size_algorithm='WindowsHardCodedSiz
         win_size_generator = algorithm_class(document)
         window_sizes = win_size_generator.window_size()
         get_all_analysis(document, window_sizes, number_of_words=5000)
+        if store_only_best:
+          _delete_non_best_analysis(document, window_sizes)
+
+def _delete_non_best_analysis(document, window_sizes):
+  best_res = document.get_information_value_result()
+  log.info("Best window size for %s: %s" % (document.name, best_res.window_size))
+  log.info("Removing other results from mongo")
+  for one_res in document.results:
+    if one_res.window_size !=  best_res.window_size:
+      log.info("Removing window size %s" % one_res.window_size)
+      one_res.delete()
+  log.info("Flushing")
+  odm_session.flush()
+

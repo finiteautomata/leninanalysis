@@ -130,6 +130,7 @@ class Document(MappedClass):
                 iv_res = one_iv
         return iv_res
 
+
     @property
     def tokens(self):
         tokenizer_func = getattr(self, 'tokenizer', tokenize)

@@ -26,6 +26,7 @@ def main():
     parser.add_argument('--populate-database', action='store_true', default=False, help="From the scrapped works creates database called \"lenin\" (it assumes you're running MongoDB at localhost)")
     parser.add_argument('--plot', action='store_true', default=False, help="Add this flag for plotting")
     parser.add_argument('--analysis', action='store_true', default=False, help="Add this flag for results calculation")
+    parser.add_argument('--analysis-store-only-best', action='store_true', default=False, help="Add this flag for results calculation storing only the best result")
     parser.add_argument('--plot-iv-analysis', action='store_true', default=False, help="Shows some plot about Information Value Analysis")
     parser.add_argument('--window_size_generator', default='WindowsHardCodedSizeGenerator', help="Select a Window Size generator Algorhitm")
     parser.add_argument('--calculate-results', action='store_true', default=False, help="Calculate Information Value Results for Documents")
@@ -58,7 +59,13 @@ def main():
         documents = None
         if doc_list:
             documents = doc_list.documents
-        calculate_results(documents=documents, window_size_algorithm=args.window_size_generator)
+        calculate_results(documents=documents, window_size_algorithm=args.window_size_generator, store_only_best=False)
+    if args.analysis_store_only_best:
+        from commands.database import calculate_results
+        documents = None
+        if doc_list:
+            documents = doc_list.documents
+        calculate_results(documents=documents, window_size_algorithm=args.window_size_generator, store_only_best=True)    
     if args.plot:
         #from plot import window_sizes
         from plot import wn_plots
