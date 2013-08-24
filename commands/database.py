@@ -48,8 +48,12 @@ def calculate_results(documents=None, window_size_algorithm='WindowsHardCodedSiz
   if documents is None:
       documents = Document.query.find().all()
   log.info("Selected window size generator %s" % window_size_algorithm)
+  i = 1
   for document in documents:
-    log.info("Calculating information values for document %s" % document.name)
+    log.info("Calculating information values for document %s (%i/%i)" % (document.name, i,len(documents)))
+    i = i+1
+
+    
     if document.text:
         document.tokenizer = tokenize
         win_size_generator = algorithm_class(document)
