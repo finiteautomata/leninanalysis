@@ -21,7 +21,7 @@ def plot_year_vs_concept_value(values):
         }
     """
 
-    x = values.keys()
+    x = sorted(map(int, values.keys()))
     print x
     y_concepts = defaultdict(list)
     for year, word_values in values.iteritems():
@@ -29,7 +29,7 @@ def plot_year_vs_concept_value(values):
             y_concepts[word].append(value)
 
     for key, y_concept in y_concepts.iteritems():
-        plt.plot(x, y_concept, 'o')
+        plt.plot(x, y_concept, '-o')
 
     legend(y_concepts.keys())
 
