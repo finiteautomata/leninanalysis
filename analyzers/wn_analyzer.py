@@ -103,8 +103,8 @@ class WordNetAnalyzer:
 
 
 def get_wnas():
-  war_docs = DocumentList("War")
-  politic_docs = DocumentList("Politic")
+  #war_docs = DocumentList("War")
+  #politic_docs = DocumentList("Politic")
   war_synsets = [(wn.synset('war.n.01'), 1.0)]
   politics_synsets = [(wn.synset('politics.n.01'), 1.0)]
   praxis_synsets = [(wn.synset('practice.n.03'), 1.0)]
@@ -113,6 +113,8 @@ def get_wnas():
   #(wn.synset('theorization.n.01'), 0.5),  #the production or use of theories
 
   return {'war': WordNetAnalyzer(war_synsets), 
+          'civil_war': WordNetAnalyzer([(wn.synset("civil_war.n.01"), 1.0)]), 
+          'ww': WordNetAnalyzer([(wn.synset("world_war.n.01"), 1.0)]), 
           'politics': WordNetAnalyzer(politics_synsets), 
           'theory': WordNetAnalyzer(theory_synsets),
           'praxis': WordNetAnalyzer(praxis_synsets),
@@ -149,15 +151,22 @@ def test():
   print "POLITICS-Analyzer: war docs: %s, politics docs: %s, general docs: %s" % (politic_wna_war_docs, politic_wna_politic_docs, politic_wna_general_docs)
 
 def judge_list(doc_list, analyzer):
+  if doc_list.total_docs == 0:
+    return None
   return (sum([analyzer.judge_doc(doc)  for doc in doc_list]) / doc_list.total_docs)*100
  
-def write_tp():
+def year_vs_concept_data():
   wnas = get_wnas()
+  
+  war =  WordNetAnalyzer(WordNetAnalyzer.get_init_synsets_for_word("war"))
+  idealism =  WordNetAnalyzer(WordNetAnalyzer.get_init_synsets_for_word("idealism"))
+  rev =  WordNetAnalyzer(WordNetAnalyzer.get_init_synsets_for_word("revolution"))
+  filo =  WordNetAnalyzer(WordNetAnalyzer.get_init_synsets_for_word("philosophy"))
 
   maximum = 0.0
   res = dict()
-  for year in range(1900, 1905):
-    print year
+  for year in range(1899, 1923):
+    
     doc_list = DocumentList("", False, str(year))
     #aux  = (              judge_list(doc_list, wnas["praxis"]),
 #                          judge_list(doc_list, wnas["theory"]), 
@@ -165,12 +174,14 @@ def write_tp():
 #                          judge_list(doc_list, wnas["war"]),
 #                          judge_list(doc_list, wnas["politics"])
 #                  )
-    res[year]  = {'praxis':     judge_list(doc_list, wnas["praxis"]),
-                  'theory':     judge_list(doc_list, wnas["theory"]), 
-                  'revolution': judge_list(doc_list, wnas["revolution"]),
-                  'war':        judge_list(doc_list, wnas["war"]),
-                  'politics':   judge_list(doc_list, wnas["politics"])
+    res[year]  = {#'praxis':     judge_list(doc_list, wnas["praxis"]),
+                  #'theory':     judge_list(doc_list, wnas["theory"]), 
+                  'rev': (judge_list(doc_list, rev) -7),
+                  'filo': (judge_list(doc_list, filo)-7),
+                  'war':       ( judge_list(doc_list, war) - 7),
+                  'idea':       ( judge_list(doc_list, idealism) - 7),
                   }
+    print "year: %s, total docs: %s, war res: %s" % (year, doc_list.total_docs, res[year])
   return res
     #maximum = max(maximum, aux[1], aux[2], aux[3], aux[4], aux[5])
     #res[year] = aux

@@ -72,7 +72,7 @@ def main():
         #window_sizes.plot_scale_vs_information(doc_list.documents)
         #window_sizes.plot_len_vs_most_informative(doc_list.documents)
         import analyzers.wn_analyzer as wa
-        wn_plots.plot_year_vs_concept_value(wa.write_tp())
+        wn_plots.plot_year_vs_concept_value(wa.year_vs_concept_data())
     if args.notebook_server:
         subprocess.call("PYTHONPATH=$PYTHONPATH:$PWD; ipython notebook --notebook-dir=.", shell=True)
     if args.shell:

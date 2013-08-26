@@ -24,7 +24,9 @@ def plot_year_vs_concept_value(values):
     x = sorted(map(int, values.keys()))
     print x
     y_concepts = defaultdict(list)
-    for year, word_values in values.iteritems():
+    for year in x: #esto da orden, sino no andaba
+    #for year, word_values in values.iteritems():
+        word_values = values[year]
         for word, value in word_values.iteritems():
             y_concepts[word].append(value)
 
@@ -33,8 +35,8 @@ def plot_year_vs_concept_value(values):
 
     legend(y_concepts.keys())
 
-    ticks = np.arange(1893,1924, 6)
-    labels = np.arange(1893,1924, 6)
+    ticks = np.arange(1899,1924, 6)
+    labels = np.arange(1899,1924, 6)
     plt.xticks(ticks, labels)
     plt.title('Year vs Concept value')
     plt.xlabel('Year')
