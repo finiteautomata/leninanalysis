@@ -17,6 +17,12 @@ def scrap_all_works():
     print "Scrapy has returned %s" % ret
 
 
+def drop_iv():
+    from pymongo import MongoClient
+    client = MongoClient()
+    print "Dropping IV results"
+    db = client.lenin
+    db.drop_collection('information_value_result')
 
 def main():
     parser = argparse.ArgumentParser(description='Central de Control de Comandos y Procesos para el TP de Analisis de Lenin.')
@@ -25,6 +31,7 @@ def main():
     parser.add_argument('--scrap', action='store_true', default=False, help='Scraps all the Lenin Works')
     parser.add_argument('--populate-database', action='store_true', default=False, help="From the scrapped works creates database called \"lenin\" (it assumes you're running MongoDB at localhost)")
     parser.add_argument('--plot', action='store_true', default=False, help="Add this flag for plotting")
+    parser.add_argument('--drop-iv', action='store_true', default=False, help="Drop Information Value Results")
     parser.add_argument('--analysis', action='store_true', default=False, help="Add this flag for results calculation")
     parser.add_argument('--analysis-store-only-best', action='store_true', default=False, help="Add this flag for results calculation storing only the best result")
     parser.add_argument('--plot-iv-analysis', action='store_true', default=False, help="Shows some plot about Information Value Analysis")
@@ -54,6 +61,8 @@ def main():
     if args.documents:
         from information_value.models import DocumentList
         doc_list = DocumentList(args.documents[0])
+    if args.drop_iv:
+        drop_iv()
     if args.analysis:
         from commands.database import calculate_results
         documents = None
