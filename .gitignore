@@ -12,3 +12,6 @@ htmlcov/*
 *.log
 dump/
 *.out
+*.pdf
+*.aux
+*latexmk
