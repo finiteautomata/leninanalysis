@@ -1,7 +1,8 @@
 #! coding:utf-8
 import numpy
 from nltk.corpus import wordnet as wn
-
+from information_value.models import Document
+import config
 """
 Take the first noun synset
 """
@@ -52,3 +53,26 @@ def path_distance(doc1, doc2):
             pass
 
     return numpy.average(distances)
+
+
+def calculate_all_distances(documents, distance=path_distance):
+    from pymongo import MongoClient
+    client = MongoClient()
+    db = client[config.DATABASE_NAME]
+
+    distances = db.distances
+    distances.drop()
+
+    index = 0
+    for i in xrange(len(documents)):
+        doc1 = documents[i]
+        for j in xrange(i+1, len(documents)):
+            print "Distance from %i to %i" %(i, j)
+            doc2 = documents[2]
+            distances.insert({
+                "id1": doc1._id,
+                "id2": doc2._id,
+                "index": index,
+                "distance": path_distance(doc1, doc2)
+            })
+            index+=1
