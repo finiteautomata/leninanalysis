@@ -1,5 +1,6 @@
 *.pyc
 *~
+
 lenin.log
 config.py
 log/*
@@ -11,6 +12,7 @@ htmlcov/*
 *.bak
 *.log
 dump/
+stats/
 *.out
 *.pdf
 *.aux
