@@ -13,3 +13,6 @@ from information_value.models import Document, DocumentList, InformationValueRes
 from analyzers.wn_analyzer import WordNetAnalyzer
 from nltk.corpus import wordnet as wn
 
+from pymongo import MongoClient
+client = MongoClient()
+db = client[config.DATABASE_NAME]
