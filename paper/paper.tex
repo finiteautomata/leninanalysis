@@ -45,9 +45,7 @@ of the United States of America}
 
 \begin{article}
 \begin{abstract}
-In order to discover how much related to Russian History in nearly 20th century
-were Lenin works, we use the information value concept to extract the most important 
-words from them. Therefore, we find out how far are them from certain concepts such as
+In order to discover how much related were Lenin Works to Russian History in nearly 20th century, we use the information value concept to extract the most important words from them. Therefore, we find out how far are them from certain concepts such as
 war, revolution, theory, etc. We expected this concepts to be nearer and farther to concepts 
 treated in Lenin's works depending on the events ranging from 1900 to 1924.
 \end{abstract}
@@ -56,18 +54,25 @@ treated in Lenin's works depending on the events ranging from 1900 to 1924.
 
 \abbreviations{NLP}
 
-\dropcap{I}n this article we study the evolution of ``almost-sharp'' fronts
-for the surface quasi-geostrophic equation. This 2-D active scalar
-equation reads for the surface quasi-geostrophic equation. 
+\dropcap{I}n this article we study distances in metric spaces consisting on words, and how we can
+represent a text (an ordered set of words) as a smaller subset of their most representative words.
+
+In \cite{DARWIN}, Zanette and Montemurro defined the information value of a word in a text. This is
+a real value that quantifies how much information that word carries according to the text. Let $T$ be a 
+text, and $T'$ a random shuffled version of $T$, and $w$ a word appearing in $T$. 
+By $S_T(w)$ we denote the Shannon Entropy of $w$ with respect to $T$ (See appendix for more info). 
+
+The information value of $w$ in $T$ is 
+
 \begin{equation}
-\mfrac{D \theta}{Dt}=\mfrac{\pr \theta}{\pr t} + u\cdot \nabla
-\theta=0 \label{qg1}
+  IV_T(w) = f_w* | S_T(w) - S_{T'}(w) | 
 \end{equation}
-where,
-\begin{equation}
- u=(u_1,u_2)=(-\mfrac{\pr \psi}{\pr y},\mfrac{\pr \psi}{\pr
-x})\label{qg2} \end{equation}
-and,
+
+where $f_w$ is the frequency of appearance of $w$ in $T$. This value captures, in some way, whether a word
+has a distribution in text that is not exactly uniform; an order of the word in the text that brings some sense to it.
+
+Having these value, we can pull the most representative words out of a text by selecting those of greater information value.
+
 \begin{equation} (-\triangle)^{\f12}\psi=\theta \, ,\label{qg3} \end{equation}
 For simplicity we are considering fronts on the cylinder, i.e. we
 take $(x,y)$ in $\mathbb{R}/_{\displaystyle{\mathbb{Z}}}\times
@@ -84,21 +89,10 @@ where $\chi (x,y)\ \epsilon\ C^{\infty}_{0},\,\,
 with $0<r<R<\frac{1}{2}$. Also $ \eta\ \epsilon\ C^{\infty}_0$,
 $\eta(0,0)=0 $.
 
-The main mathematical interest in the quasi-geostrophic equation
-lies in its strong similarities with the 3-Euler equations. These
-results were first proved by Constantin, Majda and Tabak, see
-\cite{1}, \cite{2} and \cite{3} for more details. There
-are several other research lines for this equation, both
-theoretical and numerical. See  \cite{4}, \cite{5}, and
-\cite{6}.
-The question
-about the regularity of the solutions for QG  remains as an open
-problem.
 
 Recently one of the authors has obtained the equation for the
 evolution of sharp fronts (in the periodic setting), proving its
-local well-posedness for that equation. (see \cite{ZhaZha} and
-\cite{TSL} for more details). This is a problem in contour
+local well-posedness for that equation. This is a problem in contour
 dynamics. Contour dynamics for other fluid equations has been
 studied extensively. 
 
@@ -109,19 +103,6 @@ quasi-geostrophic equation recalling the notion of weak solution.
 
 For these solutions we have the following
 
-\begin{definition}
-A bounded function $\theta$ is a weak solution of QG if for any
-$\phi\,\epsilon\,
-C_0^{\infty}(\fdb\times\mathbb{R}\times[0,\vep])$ we have
-\begin{eqnarray}
-&&  \int_{\mathbb{R}^+\times\fd\times\mathbb{R}} \hspace{-25pt}
- \theta(x,y,t)\, \pr_t \phi
-\,(x,y,t) dy dx dt+\nonumber\\
-  & +&\int_{\mathbb{R}^+\times\fd\times\mathbb{R}}
-\hspace{-26pt} \theta\,(x,y,t) u(x,y,t)\cdot\nabla\phi\,(x,y,t)
-dydxdt = 0 \label{weaksol} \end{eqnarray}
-where $u$ is determined by equations \eqref{qg2} and \eqref{qg3}.
-\end{definition}
 
 \subsection{Data Sources}
 We are interested in studying the evolution of almost sharp fronts
@@ -147,27 +128,6 @@ $0<\delta<\frac{1}{2}$.
 
 %For these solutions we have the following
 
-\begin{theorem}
-If the active scalar $\theta$ is as in \eqref{theta} and satisfies
-the equation \eqref{weaksol}, then $\varphi$ satisfies the
-equation
-\begin{eqnarray}
-\mfrac{\pr \varphi}{\pr t}(x,t)&=&\hspace{-2pt}\dst
-\int_{\fd}\mfrac{\mfrac{\pr \varphi}{\pr x}(x,t)-\mfrac{\pr
-\varphi}{\pr
-u}(u,t)}{[(x-u)^{2}+(\varphi(x,t)-\varphi(u,t))^{2}]^{\f12}}\nonumber\\
-&&
-\chi(x-u,\varphi(x,t)-\varphi(u,t)) du \hspace{3pt} +
-\nonumber\\
-&+&\dst \int_{\fd} \Big{[}\mfrac{\pr \varphi} {\pr
-x}(x,t)-\mfrac{\pr \varphi}{\pr u} (u,t)\Big{]}
-\nonumber\\&&
-\eta(x-u,\varphi(x,t)-\varphi(u,t)) du + Error
-\end{eqnarray}
-with $|Error|\leq C\, \delta | log\delta| $ where $C$ depends only
-on $\|\theta\|_{L^{\infty}}$ and $\|
-\nabla\varphi\|_{L^{\infty}}$.
-\end{theorem}
 
 \begin{remark}
 Note that equation \eqref{theta} specifies  the function $\varphi$
@@ -178,7 +138,7 @@ $\delta |log \delta|$.
 
 In order to analyze the evolution of the ``almost-sharp'' front we
 substitute the above expression for $\theta$ in the definition of
-a weak solution (see \eqref{weaksol}). We use the notation $X =O(
+a weak solution (see). We use the notation $X =O(
 Y)$ to indicate that $|X|\leq C |Y|$ where the constant $C$
 depends only on $\|\theta\|_{L^{\infty}}$, $\|
 \nabla\varphi\|_{L^{\infty}}$ and $\|\phi\|_{C^1}$, where $\phi$
@@ -249,6 +209,26 @@ concentration of
 approximately one target template from either chr21 or ch1 per well.
 \end{materials}
 
+\appendix[Entropy of a word in a text]
+
+Let's recall from \cite{DARWIN} and \cite{ENTROPIC} the concept of information value of a word. 
+Let $T$ be a text, which has been split into $P$ pieces $T_1, T_2, \dots, T_P$, $w$ be a word in $T$,
+and $f_i$ the frequency of appearance of $w$ in $T_i$.
+
+For each part $1 \leq i \leq P$, we could define:
+
+\begin{equation}
+  p_i = \frac{f_i}{\Sigma_{j=1}^{P}f_i}
+\end{equation}
+
+This quantity stands for probability of finding $w$ in $T_i$, given that it is present in the text. So, 
+we define the Shannon information entropy of $w$ in $T$ as
+
+\begin{equation}
+  S = -\frac{1}{ln P}\sum_{i=1}^{P}p_i ln p_i
+\end{equation}
+
+
 \appendix[Estimating the Spectral Norm of a Matrix]
 In this appendix we describe a method for the estimation of the spectral norm
 of matrix $A$. The method does not require access to the individual
@@ -270,88 +250,10 @@ J.L.R.) and by National Science Foundation Grand DMS-0245242 (to C.F.).
 
 
 \begin{thebibliography}{10}
-\bibitem{BN}
-M.~Belkin and P.~Niyogi, {\em Using manifold structure for partially
-  labelled classification}, Advances in NIPS, 15 (2003).
-
-\bibitem{BBG:EmbeddingRiemannianManifoldHeatKernel}
-P.~B\'erard, G.~Besson, and S.~Gallot, {\em Embedding {R}iemannian
-  manifolds by their heat kernel}, Geom. and Fun. Anal., 4 (1994),
-  pp.~374--398.
-
-\bibitem{CLAcha1}
-R.R.~Coifman and S.~Lafon, {\em Diffusion maps}, Appl. Comp. Harm. Anal.,
-  21 (2006), pp.~5--30.
-
-\bibitem{DiffusionPNAS}
-R.R.~Coifman, S.~Lafon, A.~Lee, M.~Maggioni, B.~Nadler, F.~Warner, and
-  S.~Zucker, {\em Geometric diffusions as a tool for harmonic analysis and
-  structure definition of data. {P}art {I}: Diffusion maps}, Proc. of Nat.
-  Acad. Sci.,  (2005), pp.~7426--7431.
-
-\bibitem{Clementi:LowDimensionaFreeEnergyLandscapesProteinFolding}
-P.~Das, M.~Moll, H.~Stamati, L.~Kavraki, and C.~Clementi, {\em
-  Low-dimensional, free-energy landscapes of protein-folding reactions by
-  nonlinear dimensionality reduction}, P.N.A.S., 103 (2006), pp.~9885--9890.
-
-\bibitem{DoGri}
-D.~Donoho and C.~Grimes, {\em Hessian eigenmaps: new locally linear
-  embedding techniques for high-dimensional data}, Proceedings of the National
-  Academy of Sciences, 100 (2003), pp.~5591--5596.
-
-\bibitem{DoGri:WhenDoesIsoMap}
-D.~L. Donoho and C.~Grimes, {\em When does isomap recover natural
-  parameterization of families of articulated images?}, Tech. Report Tech. Rep.
-  2002-27, Department of Statistics, Stanford University, August 2002.
-
-\bibitem{GruterWidman:GreenFunction}
-M.~Gr\"uter and K.-O. Widman, {\em The {G}reen function for uniformly
-  elliptic equations}, Man. Math., 37 (1982), pp.~303--342.
-
-\bibitem{Simon:NeumannEssentialSpectrum}
-R.~Hempel, L.~Seco, and B.~Simon, {\em The essential spectrum of neumann
-  laplacians on some bounded singular domains}, 1991.
-
-\bibitem{1}
-Kadison, R.\ V.\ and Singer, I.\ M.\ (1959)
-Extensions of pure states, {\it Amer.\ J.\ Math.\ \bf
-81}, 383-400.
-
-\bibitem{2}
-Anderson, J.\ (1981) A conjecture concerning the pure states of
-$B(H)$ and a related theorem. in {\it Topics in Modern Operator
-Theory}, Birkha\"user, pp.\ 27-43.
-
-\bibitem{3}
-Anderson, J.\ (1979) Extreme points in sets of
-positive linear maps on $B(H)$. {\it J.\ Funct.\
-Anal.\
-\bf 31}, 195-217.
-
-\bibitem{4}
-Anderson, J.\ (1979) Pathology in the Calkin algebra. {\it J.\
-Operator Theory \bf 2}, 159-167.
-
-\bibitem{5}
-Johnson, B.\ E.\ and Parrott, S.\ K.\ (1972) Operators commuting
-with a von Neumann algebra modulo the set of compact operators.
-{\it J.\ Funct.\ Anal.\ \bf 11}, 39-61.
-
-\bibitem{6}
-Akemann, C.\ and Weaver, N.\ (2004) Consistency of a
-counterexample to Naimark's problem. {\it Proc.\ Nat.\ Acad.\
-Sci.\ USA \bf 101}, 7522-7525.
-
-\bibitem{TSL}
-J.~Tenenbaum, V.~de~Silva, and J.~Langford, {\em A global geometric
-  framework for nonlinear dimensionality reduction}, Science, 290 (2000),
-  pp.~2319--2323.
-
-\bibitem{ZhaZha}
-Z.~Zhang and H.~Zha, {\em Principal manifolds and nonlinear dimension
-  reduction via local tangent space alignement}, Tech. Report CSE-02-019,
-  Department of computer science and engineering, Pennsylvania State
-  University, 2002.
+\bibitem{DARWIN}
+M.A. Montemurro and D. H. Zanette, {\em The statistics of meaning: Darwin, Gibbon and Moby Dick}, Significance, Dec. 2009, 165-169.
+\bibitem{ENTROPIC}
+M.A. Montemurro and D. H. Zanette, {\em Entropic analysis of the role of words in literary texts}, Adv. Complex Systems 5, September 27th 2001
 \end{thebibliography}
 \end{article}
 
