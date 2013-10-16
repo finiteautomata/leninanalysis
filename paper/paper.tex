@@ -54,6 +54,8 @@ treated in Lenin's works depending on the events ranging from 1900 to 1924.
 
 \abbreviations{NLP}
 
+\section{Introduction}
+
 \dropcap{I}n this article we study distances in metric spaces consisting on words, and how we can
 represent a text (an ordered set of words) as a smaller subset of their most representative words.
 
@@ -72,6 +74,50 @@ where $f_w$ is the frequency of appearance of $w$ in $T$. This value captures, i
 has a distribution in text that is not exactly uniform; an order of the word in the text that brings some sense to it.
 
 Having these value, we can pull the most representative words out of a text by selecting those of greater information value.
+
+\section{Methods}
+\subsection{Corpus}
+*Scrapping marxists.org
+*Filtrado Obras chiquitas (cartas incluidas)
+*Números (obras totales obtenidas, promedio tokens)
+\subsection{Information Value Framework}
+*Aclarar settings de Zannette
+*Maximización, ventanas
+*Cálculo paralelo
+*Ajustes de parametros para que concuerden con los resultados de zanette
+*doc.top_words()
+  representación como set de palabras ponderadas por documento. 
+
+\subsection{Wordnet analyzer}
+Consideremos el siguiente problema: ¿cómo calcular la similaridad o distancia de un documento a un cierto concepto? El enfoque que utilizamos en este trabajo es el de realizar una representación del documento como un conjunto de palabras, y en base a esto usar una noción topológica de similaridad/distancia .
+
+*WordnetAnalyzer
+  *Synset
+  *path, lch, wup
+*judge_word
+*judge_doc
+*judge_year
+Dado un conjunto de palabras, definimos la distancia de una palabra a este conjunto como 
+
+S(x, C) = max { ... }
+
+Usamos la distancia path.
+
+Ahora, dado un documento, calculamos
+
+\section{Results}
+\subsection{Resultados sobre obras}
+* Tabla de top words de Estado y Revolución
+* Distancia a algunos conceptos de estado y revolución
+\subsection{Resultados sobre años}
+*
+* x = {años}, y = {concept value}
+
+\section{Discussion}
+* Zanette diferia en valores absolutos con los resultados nuestros. Moby Dick. 
+
+\section{Acknowledgments}
+\section{Literature cited}
 
 \begin{equation} (-\triangle)^{\f12}\psi=\theta \, ,\label{qg3} \end{equation}
 For simplicity we are considering fronts on the cylinder, i.e. we
