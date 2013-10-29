@@ -87,7 +87,7 @@ class Document(MappedClass):
     name = FieldProperty(schema.String)
     text = FieldProperty(schema.String)
     month = FieldProperty(schema.String)
-    year = FieldProperty(schema.String)
+    year = FieldProperty(schema.Int)
     number_of_words = FieldProperty(schema.Int)
     results = RelationProperty(InformationValueResult)
 
