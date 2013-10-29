@@ -75,10 +75,14 @@ has a distribution in text that is not exactly uniform; an order of the word in 
 
 Having these value, we can pull the most representative words out of a text by selecting those of greater information value.
 
-\section{Methods}
-\subsection{Corpus}
-*Scrapping marxists.org
-*Filtrado Obras chiquitas (cartas incluidas)
+\section{Method}
+\subsection{Text Corpus}
+We gathered Lenin's work from the "Marxists Internet Archive". This proved to be a difficult task as the works were not in a common HTML format. The tool we used to do this is Scrapy, a very comprehensive Python crawling framework.
+
+In order to reduce noise in the corpus, we filtered all the letters and works that were comparatively little. Our information value theory doesn't work very well with texts with little repetition of words, so we decided to remove texts with less than 1000 words. 
+
+
+
 *Números (obras totales obtenidas, promedio tokens)
 \subsection{Information Value Framework}
 *Aclarar settings de Zannette
@@ -119,28 +123,6 @@ Ahora, dado un documento, calculamos
 \section{Acknowledgments}
 \section{Literature cited}
 
-\begin{equation} (-\triangle)^{\f12}\psi=\theta \, ,\label{qg3} \end{equation}
-For simplicity we are considering fronts on the cylinder, i.e. we
-take $(x,y)$ in $\mathbb{R}/_{\displaystyle{\mathbb{Z}}}\times
-\mathbb{R}$. In this setting we define $-\triangle^{-\f12}$ that
-comes from inverting the third equation by convolution with the
-kernel. To avoid irrelevant considerations at $\infty$ we
-will take $\eta$ to be compactly supported
-\[
-\mfrac{\chi(u,v)}{(u^2+v^2)^{\f12}}+\eta(u,v)
-\]
-where $\chi (x,y)\ \epsilon\ C^{\infty}_{0},\,\,
-\chi(x,y)=1 \hspace{8pt} \mbox{in} \hspace{5pt} |x-y|\leq r \,\,
-\mbox{and}\,\, supp \chi$ is contained in $  \{|x-y|\leq R\} $
-with $0<r<R<\frac{1}{2}$. Also $ \eta\ \epsilon\ C^{\infty}_0$,
-$\eta(0,0)=0 $.
-
-
-Recently one of the authors has obtained the equation for the
-evolution of sharp fronts (in the periodic setting), proving its
-local well-posedness for that equation. This is a problem in contour
-dynamics. Contour dynamics for other fluid equations has been
-studied extensively. 
 
 
 \section{Analysis of almost sharp fronts}
@@ -155,89 +137,6 @@ We are interested in studying the evolution of almost sharp fronts
 for the QG equation. These are weak solutions of the equation with
 large gradient ($\sim \displaystyle{ \inlinefrac{1}{\delta}}$, where $2
 \delta$ is the thickness of the transition layer for $\theta$).
-
-\section{Discussion}
-\subsection{Cylindrical Case}
-We are going to consider the cylindrical case here. We consider a
-transition layer of thickness smaller than $2\delta$ in which
- $\theta$ changes from 0 to 1. (see Figure ).That means we are considering $\theta$  of the form
-\[
-\theta  = 1   \mbox{ if }\quad  y\geq \varphi(x,t)+\delta
-\]
-\[
-\theta \mbox{ bounded} \mbox{ if }\quad |\varphi(x,t)-y|\leq\delta
-\]
-\be \theta = 0  \mbox{ if }\quad  y\leq \varphi(x,t)-\delta
-\label{theta} \ee
-where $\varphi$ is a smooth periodic function and
-$0<\delta<\frac{1}{2}$.
-
-%For these solutions we have the following
-
-
-\begin{remark}
-Note that equation \eqref{theta} specifies  the function $\varphi$
-up to an error of order $\delta$. Theorem 1 provides an evolution
-equation for the function $\varphi$ up to an error of order
-$\delta |log \delta|$.
-\end{remark}
-
-In order to analyze the evolution of the ``almost-sharp'' front we
-substitute the above expression for $\theta$ in the definition of
-a weak solution (see). We use the notation $X =O(
-Y)$ to indicate that $|X|\leq C |Y|$ where the constant $C$
-depends only on $\|\theta\|_{L^{\infty}}$, $\|
-\nabla\varphi\|_{L^{\infty}}$ and $\|\phi\|_{C^1}$, where $\phi$
-is a test function appearing in Definition 1.
-
-We consider the 3 different regions defined by the form on
-$\theta$. Since $\theta=0$ in the region I the contribution from
-that region is 0, i.e.
-\[
-  \int_{I\times \mathbb{R}}
- \theta(x,y,t)\, \pr_t \phi
-\,(x,y,t) dy dx dt+  \]
-\[
-   +\int_{I\times \mathbb{R}}
- \theta\,(x,y,t) u(x,y,t)\cdot\nabla\phi\,(x,y,t) dydxdt = 0
-\]
-
-As for the region II
-\[
-\int_{II\times \mathbb{R}} \theta (x,y,t) \pr_t\phi (x,y,t)dx dy
-dt = O(\delta)
-\]
-since $\theta$ is bounded and hence $O(1)$, and the area of the
-region II is $O(\delta)$. As for the second term
-\[
-\int_{II\times \mathbb{R}} u \theta \nabla \phi dx dy dt =
-O(\delta log(\delta))
-\]
-
-To see this, we fix $t$. We must estimate
-\[
-\int_{\mathbb{R}^2} u\cdot(\mathbb{1}_{II}\theta\nabla\phi) dx dy
-\]
-We are left to estimate the terms
-\[
-\int_{III\times \mathbb{R}} \theta \pr_t\phi dx dy
-dt+\int_{III\times \mathbb{R}} \theta u_f\cdot \nabla \phi dx dy
-dt=:A+B
-\]
-
-\subsection{Observations}
-The following observations can be made form the numerical experiments
-described in this section, and are consistent with the results
-of more extensive experimentation performed by the authors:
-\begin{itemize}
-\item The CPU times in Tables 1--3 are compatible with the estimates in
-formulae {\bf 14}, {\bf 16}, and {\bf 23}.
-\item
-The precision produced by each of Algorithms {\bf I} and {\bf II}
-is similar to that provided by formula {\bf 3}, even when
-$\omega_{k+1}$ is close to the machine precision.
-\end{itemize}
-
 
 
 
