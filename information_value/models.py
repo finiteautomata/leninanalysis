@@ -88,6 +88,7 @@ class Document(MappedClass):
     text = FieldProperty(schema.String)
     month = FieldProperty(schema.String)
     year = FieldProperty(schema.String)
+    number_of_words = FieldProperty(schema.Int)
     results = RelationProperty(InformationValueResult)
 
     def top_words(self, total_words=20, stop_words=stopwords.words('english'), greater_than_zero=True, window_size=None):
