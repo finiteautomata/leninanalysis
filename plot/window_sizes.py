@@ -1,14 +1,10 @@
 # coding: utf-8
 import operator
 import logging
-from operator import itemgetter
-
 import matplotlib.pyplot as plt
 from scipy import average
 
-import config
 from information_value.models import Document
-from information_value.models import DocumentList
 log = logging.getLogger('lenin')
 
 

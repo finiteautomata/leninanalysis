@@ -85,7 +85,7 @@ def main():
     if args.notebook_server:
         subprocess.call("PYTHONPATH=$PYTHONPATH:$PWD; ipython notebook --notebook-dir=.", shell=True)
     if args.shell:
-        subprocess.call("ipython -i interpreter.py", shell=True)
+        subprocess.call("ipython -i interpreter.py --pylab", shell=True)
 
 
 def init_logging():
