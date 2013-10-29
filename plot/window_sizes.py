@@ -17,7 +17,7 @@ def plot_scatter_total_words_vs_window_sizes(documents):
     window_sizes = []
     total_words = []
     for document in documents:
-        best_iv = document.get_information_value_result(0.01)
+        best_iv = document.get_information_value_result()
         if best_iv:
             window_sizes.append(best_iv.window_size)
             total_words.append(len(document.text))

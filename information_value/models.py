@@ -194,7 +194,10 @@ class Document(MappedClass):
 class DocumentList(object):
 
     def __init__(self, name='State', only_with_results=False, year=None):
-        self.search_criterion = {'name': {'$regex': '.*'+name+'.*'}}
+        self.search_criterion = {
+            'name': {'$regex': '.*'+name+'.*'},
+            'number_of_words': {'$gte': MIN_TOKENS}
+        }
         if year is not None:
             self.search_criterion['year'] = year
         self.only_with_results = only_with_results
@@ -206,14 +209,7 @@ class DocumentList(object):
     def base_load(self):
         self.current = 0
         it = Document.query.find(self.search_criterion)
-
-        res = list()
-        for doc in it:
-            if not self.only_with_results or len(doc.results) > 0:
-                if doc.total_tokens > MIN_TOKENS:
-                    res.append(doc)
-
-        self.documents = res
+        self.documents = list(it)
 
     def add_month(self, month=None):
         if month is not None:
