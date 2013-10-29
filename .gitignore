@@ -1,6 +1,11 @@
 *.pyc
 *~
-
+*sublime-project
+*sublime-workspace
+*.dvi
+*.ps
+*.fls
+.env
 lenin.log
 config.py
 log/*
