@@ -8,25 +8,30 @@ from information_value.models import Document
 log = logging.getLogger('lenin')
 
 
-def plot_length_histogram(docs, title, number_of_bins):
+def plot_length_histogram(docs, title, **kwargs):
     num_tokens = [doc.number_of_words for doc in docs]
     plt.title(title)
     plt.xlabel("Number of words")
     plt.ylabel("Amount of works")
-    plt.hist(num_tokens, bins=number_of_bins)
+    plt.hist(num_tokens, **kwargs)
 
 
 def plot_small_documents():
     docs = Document.query.find({'number_of_words': {'$gte': 2000, '$lte': 20000}})
-    plot_length_histogram(docs, number_of_bins=9, title="Histogram for works with <20k words")
+    plot_length_histogram(
+        docs,
+        bins=9,
+        range=(2000, 20000),
+        title="Histogram for works with <20k words")
 
 
 def plot_big_documents():
     docs = Document.query.find({'number_of_words': {'$gte': 20000}})
     plot_length_histogram(
         docs,
+        range=(20000, 140000),
         title="Histogram for works with >20k words",
-        number_of_bins=10)
+        bins=12)
 
 
 def plot_tokens_per_year():
