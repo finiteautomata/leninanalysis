@@ -7,13 +7,16 @@
 %% BASIC CLASS FILE
 \documentclass{pnastwo}
 
+
 %% ADDITIONAL OPTIONAL STYLE FILES
 %\usepackage[dvips]{graphicx}
 %\usepackage{pnastwof}
 \usepackage{amssymb,amsfonts,amsmath}
 \usepackage[utf8]{inputenc}
 \usepackage[activeacute, spanish]{babel}
+\usepackage[dvips]{graphicx}
 \selectlanguage{spanish}
+
 
 %% OPTIONAL MACRO DEFINITIONS
 \def\s{\sigma}
@@ -79,30 +82,46 @@ Having these value, we can pull the most representative words out of a text by s
 \subsection{Text Corpus}
 We gathered Lenin's work from the "Marxists Internet Archive". This proved to be a difficult task as the works were not in a common HTML format. The tool we used to do this is Scrapy, a very comprehensive Python crawling framework.
 
-In order to reduce noise in the corpus, we filtered all the letters and works that were comparatively little. Our information value theory doesn't work very well with texts with little repetition of words, so we decided to remove texts with less than 1000 words. 
+In order to reduce noise in the corpus, we filtered all the letters and works that were comparatively little. Our information value theory doesn't work very well with texts with little repetition of words, so we decided to remove texts with less than 2000 words. 
+
+\begin{figure}
+\centerline{\includegraphics[width=.4\textwidth]{figures/tokens_per_year.eps}}
+\caption{Number of tokens per year}\label{afoto}
+\end{figure}
+
+\begin{figure}
+\centerline{\includegraphics[width=.4\textwidth]{figures/hist_tokens_small_works.eps}}
+\caption{Distribution of works with respect to size (small works)}\label{afoto}
+\end{figure}
 
 
+\begin{figure}
+\centerline{\includegraphics[width=.4\textwidth]{figures/hist_tokens_big_works.eps}}
+\caption{Distribution of works with respect to size (big works)}\label{afoto}
+\end{figure}
 
-*Números (obras totales obtenidas, promedio tokens)
+
+%*Números (obras totales obtenidas, promedio tokens)
 \subsection{Information Value Framework}
-*Aclarar settings de Zannette
-*Maximización, ventanas
-*Cálculo paralelo
-*Ajustes de parametros para que concuerden con los resultados de zanette
-*doc.top_words()
-  representación como set de palabras ponderadas por documento. 
+%
+%*Aclarar settings de Zannette
+%*Maximización, ventanas
+%*Cálculo paralelo
+%*Ajustes de parametros para que concuerden con los resultados de zanette
+%*doc.top_words()
+%  representación como set de palabras ponderadas por documento. 
 
 \subsection{Wordnet analyzer}
 Consideremos el siguiente problema: ¿cómo calcular la similaridad o distancia de un documento a un cierto concepto? El enfoque que utilizamos en este trabajo es el de realizar una representación del documento como un conjunto de palabras, y en base a esto usar una noción topológica de similaridad/distancia .
 
-*WordnetAnalyzer
-  *Synset
-  *path, lch, wup
-*judge_word
-*judge_doc
-*judge_year
-Dado un conjunto de palabras, definimos la distancia de una palabra a este conjunto como 
-
+% *WordnetAnalyzer
+%   *Synset
+%   *path, lch, wup
+% *judge_word
+% *judge_doc
+% *judge_year
+% Dado un conjunto de palabras, definimos la distancia de una palabra a este conjunto como 
+% 
 S(x, C) = max { ... }
 
 Usamos la distancia path.
@@ -249,6 +268,9 @@ chosen unique ref\/lections not used in the ref\/inement.}&5\quad &50&.0008&8&50
 \hline
 \end{tabular*}
 \end{table*}
+
+
+
 
 
 

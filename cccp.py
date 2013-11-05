@@ -35,6 +35,7 @@ def main():
     parser.add_argument('--analysis', action='store_true', default=False, help="Add this flag for results calculation")
     parser.add_argument('--analysis-store-only-best', action='store_true', default=False, help="Add this flag for results calculation storing only the best result")
     parser.add_argument('--plot-iv-analysis', action='store_true', default=False, help="Shows some plot about Information Value Analysis")
+    parser.add_argument('--plot-works', action='store_true', default=False, help="Plot corpus information")
     parser.add_argument('--window_size_generator', default='WindowsHardCodedSizeGenerator', help="Select a Window Size generator Algorhitm")
     parser.add_argument('--calculate-results', action='store_true', default=False, help="Calculate Information Value Results for Documents")
     parser.add_argument('--documents', nargs='+', metavar=('name'), help='Selects documents from name regex')
@@ -56,6 +57,10 @@ def main():
     if args.calculate_results:
         from commands.database import calculate_results
         calculate_results()
+
+    if args.plot_works:
+        from plot import works_plots
+        works_plots.plot_all()
 
     doc_list = None
     if args.documents:
@@ -85,7 +90,7 @@ def main():
     if args.notebook_server:
         subprocess.call("PYTHONPATH=$PYTHONPATH:$PWD; ipython notebook --notebook-dir=.", shell=True)
     if args.shell:
-        subprocess.call("ipython -i interpreter.py --pylab", shell=True)
+        subprocess.call("ipython -i interpreter.py", shell=True)
 
 
 def init_logging():
