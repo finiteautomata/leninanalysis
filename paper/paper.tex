@@ -7,13 +7,16 @@
 %% BASIC CLASS FILE
 \documentclass{pnastwo}
 
+
 %% ADDITIONAL OPTIONAL STYLE FILES
 %\usepackage[dvips]{graphicx}
 %\usepackage{pnastwof}
 \usepackage{amssymb,amsfonts,amsmath}
 \usepackage[utf8]{inputenc}
 \usepackage[activeacute, spanish]{babel}
+\usepackage[dvips]{graphicx}
 \selectlanguage{spanish}
+
 
 %% OPTIONAL MACRO DEFINITIONS
 \def\s{\sigma}
@@ -75,40 +78,102 @@ has a distribution in text that is not exactly uniform; an order of the word in 
 
 Having these value, we can pull the most representative words out of a text by selecting those of greater information value.
 
-\section{Methods}
-\subsection{Corpus}
-*Scrapping marxists.org
-*Filtrado Obras chiquitas (cartas incluidas)
-*Números (obras totales obtenidas, promedio tokens)
+\section{Method}
+\subsection{Text Corpus}
+We gathered Lenin's work from the "Marxists Internet Archive". This proved to be a difficult task as the works were not in a common HTML format. The tool we used to do this is Scrapy, a very comprehensive Python crawling framework.
+
+In order to reduce noise in the corpus, we filtered all the letters and works that were comparatively little. Our information value theory doesn't work very well with texts with little repetition of words, so we decided to remove texts with less than 2000 words. 
+
+\begin{figure}
+\centerline{\includegraphics[width=.4\textwidth]{figures/tokens_per_year.eps}}
+\caption{Number of works per year}\label{afoto}
+\end{figure}
+
+\begin{figure}
+\centerline{\includegraphics[width=.4\textwidth]{figures/hist_tokens_small_works.eps}}
+\caption{Distribution of works with respect to size (small works)}\label{afoto}
+\end{figure}
+
+
+\begin{figure}
+\centerline{\includegraphics[width=.4\textwidth]{figures/hist_tokens_big_works.eps}}
+\caption{Distribution of works with respect to size (big works)}\label{afoto}
+\end{figure}
+
+
+%*Números (obras totales obtenidas, promedio tokens)
 \subsection{Information Value Framework}
-*Aclarar settings de Zannette
-*Maximización, ventanas
-*Cálculo paralelo
-*Ajustes de parametros para que concuerden con los resultados de zanette
-*doc.top_words()
-  representación como set de palabras ponderadas por documento. 
+\medskip
+%
+%*Aclarar settings de Zannette
+%*Maximización, ventanas
+%*Cálculo paralelo
+%*Ajustes de parametros para que concuerden con los resultados de zanette
+%*doc.top_words()
+%  representación como set de palabras ponderadas por documento. 
 
 \subsection{Wordnet analyzer}
-Consideremos el siguiente problema: ¿cómo calcular la similaridad o distancia de un documento a un cierto concepto? El enfoque que utilizamos en este trabajo es el de realizar una representación del documento como un conjunto de palabras, y en base a esto usar una noción topológica de similaridad/distancia .
+Consideremos el siguiente problema:
+\newline
+¿Cómo calcular la similaridad o distancia de un documento a un cierto concepto? 
+\newline
+El enfoque que utilizamos en este trabajo es el de realizar una representación del documento como un conjunto de palabras, y en base a esto usar una noción topológica de similaridad/distancia. La proyección del documento al espacio de palabras la realizamos utilizando la t\'ecnica de Information Value reci\'en descripta.
+En este espacio, utilizamos Wordnet para definir una noción de distancia entre el conjunto de palabras que representan al texto y diferentes conjuntos representando conceptos.
+\newline
+Para un documento dado, el módulo de information value genera una lista con lo $n$ términos más importantes y su iv. Estos valores se normalizan -dividiendo por la suma de los valores-, obteniendo así uno de los inputs del proceso siguiente. Recordemos, nuestro objetivo es asignar una distancia entre un documento y un concepto. Digamos, decidir cuán presente está o cuán importante es un concepto en un documento.
+\newline
+Wordnet es una base de datos de palabras, agrupadas en conjuntos de sinónimos (synsets), cada uno de los cuales posee una definición y diferentes relaciones semánticas con otros synsets (por ejemplo: hipernimia, hiponimia, meronimia, etc). Sobre estas relaciones semánticas es posible definir distintas métricas de distancia y similaridad entre synsets (Ver [1])
+\newline
+Utilizando las métricas disponibles en el módulo nltk de python para wordnet definimos la similaridad entre dos palabras como la máxima similaridad entre todos los synsets de ambas. (**NOTA Parametrizable: puede ser sólo el primer synset de ambos y puede no ser la máxima similaridad sino un promedio. También para algunas métricas quedan afuera los synsets que no son sustantivos). 
+\begin{multline}
+S_w(w_1, w_2) = max \{ S_s(s_1, s_2) \}: s_1 \in synsets(w_1),\\ s_2 \in synsets(w_2)
+\end{multline}
 
-*WordnetAnalyzer
-  *Synset
-  *path, lch, wup
-*judge_word
-*judge_doc
-*judge_year
-Dado un conjunto de palabras, definimos la distancia de una palabra a este conjunto como 
+Para path similarity vale que $0 \leq S_w \leq 1$. 
 
-S(x, C) = max { ... }
+Sobre $S_w$ (de word similarity) definimos la similaridad de un documento a un término como:
 
-Usamos la distancia path.
+\begin{equation}
+S_{dw}(d, w) = sum \{ S_w(d_i, w) \times p(d_i)  \} 
+\end{equation}
 
-Ahora, dado un documento, calculamos
+donde las tuplas $(d_i , p(d_i))$ representan las palabras más importantes del documento $d$, y sus respectivos pesos normalizados. Vale que $0 \leq p(d_i) \leq 1$ pues está normalizado.
+
+Por ejemplo $S_{dw}$(“Estado y Revolución”, “guerra”) = NNN. $S_{dw}$ es una noción de cercanía entre un documento y una palabra.
+
+Finalmente, definimos la noción de similaridad entre un año y una palabra como el promedio de las similaridades ($S_{dw}$) 
+de los distintos documentos producidos durante ese año con la palabra en cuestión:
+\begin{equation}
+  S_{yw}(y, w) = mean \{ S_dw(y_i, w) \} : y_i \in docs(y) 
+\end{equation}
+
+Los resultados que presentaremos a continuaci\'on est\'an apoyados en distintas configuraciones de estas tres m\'etricas ($S_w$, $S_dw$ y $S_{yw}$).
+
+% *WordnetAnalyzer
+%   *Synset
+%   *path, lch, wup
+% *judge_word
+% *judge_doc
+% *judge_year
+% Dado un conjunto de palabras, definimos la distancia de una palabra a este conjunto como 
+% 
 
 \section{Results}
 \subsection{Resultados sobre obras}
 * Tabla de top words de Estado y Revolución
+\begin{center}
+  \begin{tabular}{ | l | l | l |}
+    \hline
+    \multicolumn{3}{|c|}{Top words for `State and Revolution'} \\ \hline
+    \# & Word & Information Value \\ \hline
+    1 & War & 20  \\ \hline
+    2 & Revolution & Frula  \\ \hline
+    3 & 10C & 21C \\ \hline
+  \end{tabular}
+\end{center}
+
 * Distancia a algunos conceptos de estado y revolución
+
 \subsection{Resultados sobre años}
 *
 * x = {años}, y = {concept value}
@@ -117,30 +182,9 @@ Ahora, dado un documento, calculamos
 * Zanette diferia en valores absolutos con los resultados nuestros. Moby Dick. 
 
 \section{Acknowledgments}
+
 \section{Literature cited}
 
-\begin{equation} (-\triangle)^{\f12}\psi=\theta \, ,\label{qg3} \end{equation}
-For simplicity we are considering fronts on the cylinder, i.e. we
-take $(x,y)$ in $\mathbb{R}/_{\displaystyle{\mathbb{Z}}}\times
-\mathbb{R}$. In this setting we define $-\triangle^{-\f12}$ that
-comes from inverting the third equation by convolution with the
-kernel. To avoid irrelevant considerations at $\infty$ we
-will take $\eta$ to be compactly supported
-\[
-\mfrac{\chi(u,v)}{(u^2+v^2)^{\f12}}+\eta(u,v)
-\]
-where $\chi (x,y)\ \epsilon\ C^{\infty}_{0},\,\,
-\chi(x,y)=1 \hspace{8pt} \mbox{in} \hspace{5pt} |x-y|\leq r \,\,
-\mbox{and}\,\, supp \chi$ is contained in $  \{|x-y|\leq R\} $
-with $0<r<R<\frac{1}{2}$. Also $ \eta\ \epsilon\ C^{\infty}_0$,
-$\eta(0,0)=0 $.
-
-
-Recently one of the authors has obtained the equation for the
-evolution of sharp fronts (in the periodic setting), proving its
-local well-posedness for that equation. This is a problem in contour
-dynamics. Contour dynamics for other fluid equations has been
-studied extensively. 
 
 
 \section{Analysis of almost sharp fronts}
@@ -155,89 +199,6 @@ We are interested in studying the evolution of almost sharp fronts
 for the QG equation. These are weak solutions of the equation with
 large gradient ($\sim \displaystyle{ \inlinefrac{1}{\delta}}$, where $2
 \delta$ is the thickness of the transition layer for $\theta$).
-
-\section{Discussion}
-\subsection{Cylindrical Case}
-We are going to consider the cylindrical case here. We consider a
-transition layer of thickness smaller than $2\delta$ in which
- $\theta$ changes from 0 to 1. (see Figure ).That means we are considering $\theta$  of the form
-\[
-\theta  = 1   \mbox{ if }\quad  y\geq \varphi(x,t)+\delta
-\]
-\[
-\theta \mbox{ bounded} \mbox{ if }\quad |\varphi(x,t)-y|\leq\delta
-\]
-\be \theta = 0  \mbox{ if }\quad  y\leq \varphi(x,t)-\delta
-\label{theta} \ee
-where $\varphi$ is a smooth periodic function and
-$0<\delta<\frac{1}{2}$.
-
-%For these solutions we have the following
-
-
-\begin{remark}
-Note that equation \eqref{theta} specifies  the function $\varphi$
-up to an error of order $\delta$. Theorem 1 provides an evolution
-equation for the function $\varphi$ up to an error of order
-$\delta |log \delta|$.
-\end{remark}
-
-In order to analyze the evolution of the ``almost-sharp'' front we
-substitute the above expression for $\theta$ in the definition of
-a weak solution (see). We use the notation $X =O(
-Y)$ to indicate that $|X|\leq C |Y|$ where the constant $C$
-depends only on $\|\theta\|_{L^{\infty}}$, $\|
-\nabla\varphi\|_{L^{\infty}}$ and $\|\phi\|_{C^1}$, where $\phi$
-is a test function appearing in Definition 1.
-
-We consider the 3 different regions defined by the form on
-$\theta$. Since $\theta=0$ in the region I the contribution from
-that region is 0, i.e.
-\[
-  \int_{I\times \mathbb{R}}
- \theta(x,y,t)\, \pr_t \phi
-\,(x,y,t) dy dx dt+  \]
-\[
-   +\int_{I\times \mathbb{R}}
- \theta\,(x,y,t) u(x,y,t)\cdot\nabla\phi\,(x,y,t) dydxdt = 0
-\]
-
-As for the region II
-\[
-\int_{II\times \mathbb{R}} \theta (x,y,t) \pr_t\phi (x,y,t)dx dy
-dt = O(\delta)
-\]
-since $\theta$ is bounded and hence $O(1)$, and the area of the
-region II is $O(\delta)$. As for the second term
-\[
-\int_{II\times \mathbb{R}} u \theta \nabla \phi dx dy dt =
-O(\delta log(\delta))
-\]
-
-To see this, we fix $t$. We must estimate
-\[
-\int_{\mathbb{R}^2} u\cdot(\mathbb{1}_{II}\theta\nabla\phi) dx dy
-\]
-We are left to estimate the terms
-\[
-\int_{III\times \mathbb{R}} \theta \pr_t\phi dx dy
-dt+\int_{III\times \mathbb{R}} \theta u_f\cdot \nabla \phi dx dy
-dt=:A+B
-\]
-
-\subsection{Observations}
-The following observations can be made form the numerical experiments
-described in this section, and are consistent with the results
-of more extensive experimentation performed by the authors:
-\begin{itemize}
-\item The CPU times in Tables 1--3 are compatible with the estimates in
-formulae {\bf 14}, {\bf 16}, and {\bf 23}.
-\item
-The precision produced by each of Algorithms {\bf I} and {\bf II}
-is similar to that provided by formula {\bf 3}, even when
-$\omega_{k+1}$ is close to the machine precision.
-\end{itemize}
-
 
 
 
@@ -350,6 +311,9 @@ chosen unique ref\/lections not used in the ref\/inement.}&5\quad &50&.0008&8&50
 \hline
 \end{tabular*}
 \end{table*}
+
+
+
 
 
 
