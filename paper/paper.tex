@@ -126,7 +126,7 @@ Wordnet es una base de datos de palabras, agrupadas en conjuntos de sinónimos (
 \newline
 Utilizando las métricas disponibles en el módulo nltk de python para wordnet definimos la similaridad entre dos palabras como la máxima similaridad entre todos los synsets de ambas. (**NOTA Parametrizable: puede ser sólo el primer synset de ambos y puede no ser la máxima similaridad sino un promedio. También para algunas métricas quedan afuera los synsets que no son sustantivos). 
 \begin{multline}
-S_w(w_1, w_2) = max \{ S_s(s_1, s_2) \}\\\ donde\ s_1 \in synsets(w_1), s_2 \in synsets(w_2)
+S_w(w_1, w_2) = max \{ S_s(s_1, s_2) \}: s_1 \in synsets(w_1),\\ s_2 \in synsets(w_2)
 \end{multline}
 
 Para path similarity vale que $0 \leq S_w \leq 1$. 
@@ -139,10 +139,15 @@ S_{dw}(d, w) = sum \{ S_w(d_i, w) \times p(d_i)  \}
 
 donde las tuplas $(d_i , p(d_i))$ representan las palabras más importantes del documento $d$, y sus respectivos pesos normalizados. Vale que $0 \leq p(d_i) \leq 1$ pues está normalizado.
 
-Por ejemplo $S_dw$(“Estado y Revolución”, “guerra”) = NNN. $S_dw$ es una noción de cercanía entre un documento y una palabra.
+Por ejemplo $S_{dw}$(“Estado y Revolución”, “guerra”) = NNN. $S_{dw}$ es una noción de cercanía entre un documento y una palabra.
 
 Finalmente, definimos la noción de similaridad entre un año y una palabra como el promedio de las similaridades ($S_{dw}$) 
-de los distintos documentos producidos durante ese año con la palabra en cuestión. 
+de los distintos documentos producidos durante ese año con la palabra en cuestión:
+\begin{equation}
+  S_{yw}(y, w) = mean \{ S_dw(y_i, w) \} : y_i \in docs(y) 
+\end{equation}
+
+Los resultados que presentaremos a continuaci\'on est\'an apoyados en distintas configuraciones de estas tres m\'etricas ($S_w$, $S_dw$ y $S_{yw}$).
 
 % *WordnetAnalyzer
 %   *Synset
@@ -156,7 +161,19 @@ de los distintos documentos producidos durante ese año con la palabra en cuesti
 \section{Results}
 \subsection{Resultados sobre obras}
 * Tabla de top words de Estado y Revolución
+\begin{center}
+  \begin{tabular}{ | l | l | l |}
+    \hline
+    \multicolumn{3}{|c|}{Top words for `State and Revolution'} \\ \hline
+    \# & Word & Information Value \\ \hline
+    1 & War & 20  \\ \hline
+    2 & Revolution & Frula  \\ \hline
+    3 & 10C & 21C \\ \hline
+  \end{tabular}
+\end{center}
+
 * Distancia a algunos conceptos de estado y revolución
+
 \subsection{Resultados sobre años}
 *
 * x = {años}, y = {concept value}
@@ -165,6 +182,7 @@ de los distintos documentos producidos durante ese año con la palabra en cuesti
 * Zanette diferia en valores absolutos con los resultados nuestros. Moby Dick. 
 
 \section{Acknowledgments}
+
 \section{Literature cited}
 
 
