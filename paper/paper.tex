@@ -103,6 +103,8 @@ In order to reduce noise in the corpus, we filtered all the letters and works th
 
 %*Números (obras totales obtenidas, promedio tokens)
 \subsection{Information Value Framework}
+
+\medskip
 %
 %*Aclarar settings de Zannette
 %*Maximización, ventanas
@@ -112,7 +114,41 @@ In order to reduce noise in the corpus, we filtered all the letters and works th
 %  representación como set de palabras ponderadas por documento. 
 
 \subsection{Wordnet analyzer}
-Consideremos el siguiente problema: ¿cómo calcular la similaridad o distancia de un documento a un cierto concepto? El enfoque que utilizamos en este trabajo es el de realizar una representación del documento como un conjunto de palabras, y en base a esto usar una noción topológica de similaridad/distancia .
+Consideremos el siguiente problema:
+\newline
+¿Cómo calcular la similaridad o distancia de un documento a un cierto concepto? 
+\newline
+El enfoque que utilizamos en este trabajo es el de realizar una representación del documento como un conjunto de palabras, y en base a esto usar una noción topológica de similaridad/distancia. La proyección del documento al espacio de palabras la realizamos utilizando la t\'ecnica de Information Value reci\'en descripta.
+En este espacio, utilizamos Wordnet para definir una noción de distancia entre el conjunto de palabras que representan al texto y diferentes conjuntos representando conceptos.
+\newline
+Para un documento dado, el módulo de information value genera una lista con lo $n$ términos más importantes y su iv. Estos valores se normalizan -dividiendo por la suma de los valores-, obteniendo así uno de los inputs del proceso siguiente. Recordemos, nuestro objetivo es asignar una distancia entre un documento y un concepto. Digamos, decidir cuán presente está o cuán importante es un concepto en un documento.
+\newline
+Wordnet es una base de datos de palabras, agrupadas en conjuntos de sinónimos (synsets), cada uno de los cuales posee una definición y diferentes relaciones semánticas con otros synsets (por ejemplo: hipernimia, hiponimia, meronimia, etc). Sobre estas relaciones semánticas es posible definir distintas métricas de distancia y similaridad entre synsets (Ver [1])
+\newline
+Utilizando las métricas disponibles en el módulo nltk de python para wordnet definimos la similaridad entre dos palabras como la máxima similaridad entre todos los synsets de ambas. (**NOTA Parametrizable: puede ser sólo el primer synset de ambos y puede no ser la máxima similaridad sino un promedio. También para algunas métricas quedan afuera los synsets que no son sustantivos). 
+\begin{multline}
+S_w(w_1, w_2) = max \{ S_s(s_1, s_2) \}: s_1 \in synsets(w_1),\\ s_2 \in synsets(w_2)
+\end{multline}
+
+Para path similarity vale que $0 \leq S_w \leq 1$. 
+
+Sobre $S_w$ (de word similarity) definimos la similaridad de un documento a un término como:
+
+\begin{equation}
+S_{dw}(d, w) = sum \{ S_w(d_i, w) \times p(d_i)  \} 
+\end{equation}
+
+donde las tuplas $(d_i , p(d_i))$ representan las palabras más importantes del documento $d$, y sus respectivos pesos normalizados. Vale que $0 \leq p(d_i) \leq 1$ pues está normalizado.
+
+Por ejemplo $S_{dw}$(“Estado y Revolución”, “guerra”) = NNN. $S_{dw}$ es una noción de cercanía entre un documento y una palabra.
+
+Finalmente, definimos la noción de similaridad entre un año y una palabra como el promedio de las similaridades ($S_{dw}$) 
+de los distintos documentos producidos durante ese año con la palabra en cuestión:
+\begin{equation}
+  S_{yw}(y, w) = mean \{ S_dw(y_i, w) \} : y_i \in docs(y) 
+\end{equation}
+
+Los resultados que presentaremos a continuaci\'on est\'an apoyados en distintas configuraciones de estas tres m\'etricas ($S_w$, $S_dw$ y $S_{yw}$).
 
 % *WordnetAnalyzer
 %   *Synset
@@ -122,16 +158,23 @@ Consideremos el siguiente problema: ¿cómo calcular la similaridad o distancia 
 % *judge_year
 % Dado un conjunto de palabras, definimos la distancia de una palabra a este conjunto como 
 % 
-S(x, C) = max { ... }
-
-Usamos la distancia path.
-
-Ahora, dado un documento, calculamos
 
 \section{Results}
 \subsection{Resultados sobre obras}
 * Tabla de top words de Estado y Revolución
+\begin{center}
+  \begin{tabular}{ | l | l | l |}
+    \hline
+    \multicolumn{3}{|c|}{Top words for `State and Revolution'} \\ \hline
+    \# & Word & Information Value \\ \hline
+    1 & War & 20  \\ \hline
+    2 & Revolution & Frula  \\ \hline
+    3 & 10C & 21C \\ \hline
+  \end{tabular}
+\end{center}
+
 * Distancia a algunos conceptos de estado y revolución
+
 \subsection{Resultados sobre años}
 *
 * x = {años}, y = {concept value}
@@ -140,6 +183,7 @@ Ahora, dado un documento, calculamos
 * Zanette diferia en valores absolutos con los resultados nuestros. Moby Dick. 
 
 \section{Acknowledgments}
+
 \section{Literature cited}
 
 
