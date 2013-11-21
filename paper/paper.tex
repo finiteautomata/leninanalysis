@@ -104,13 +104,23 @@ In order to reduce noise in the corpus, we filtered all the letters and works th
 %*Números (obras totales obtenidas, promedio tokens)
 \subsection{Information Value Framework}
 \medskip
-%
-%*Aclarar settings de Zannette
-%*Maximización, ventanas
-%*Cálculo paralelo
-%*Ajustes de parametros para que concuerden con los resultados de zanette
-%*doc.top_words()
-%  representación como set de palabras ponderadas por documento. 
+
+\subsubsection{Optimal window size selection}
+As \cite{DARWIN} mentions, we should consider the window size which maximizes the information value per word, for some sense of it.
+
+Let's suppose we have a document, and a window size $W_S$ for which the information value algorithm returns a list $\{(w_1, v_1), (w_2, v_2), \dots ,(w_n, v_n) \}$ of word-information value pairs, in decreasing order of information value so that $v_1 \geq v_2 \geq \dots \geq v_n$. How would we assign some value to this pair of document-window size so we can choose the optimal window size?
+
+One possibility would be to take the greater information value, in this case $v_1$. This approach, however, gives all the value just to a single word. Another chance would be to take the average of all the information values, but this leads to a lot of noise added because of words without any value.
+
+
+The chosen approach is a tradeoff between both. We take the average not of all the words, but of a percentage of the most significative words. We call this percentage the \emph{sum threshold}. If $n$ is the number of words in the document, and $0 \leq ST \leq 1$ is the sum threshold, we calculate
+
+\begin{equation}
+  \frac{\sum_{i=1}^{[ST n]}v_i}{n} 
+\end{equation}
+
+
+The threshold value we used is $ST=0.001$, so it would consider only the $\frac{n}{1000}$ most significant words. The reason behind this was that it fitted the results from \cite{DARWIN} for the texts The origin of the species, Moby Dick, and  The Analysis of the mind.
 
 \subsection{Wordnet analyzer}
 Consideremos el siguiente problema:
@@ -139,7 +149,7 @@ S_{dw}(d, w) = sum \{ S_w(d_i, w) \times p(d_i)  \}
 
 donde las tuplas $(d_i , p(d_i))$ representan las palabras más importantes del documento $d$, y sus respectivos pesos normalizados. Vale que $0 \leq p(d_i) \leq 1$ pues está normalizado.
 
-Por ejemplo $S_{dw}$(“Estado y Revolución”, “guerra”) = NNN. $S_{dw}$ es una noción de cercanía entre un documento y una palabra.
+Por ejemplo $S_{dw}$(“Estado y Revolución”, “guerra”) = 0.110. $S_{dw}$ es una noción de cercanía entre un documento y una palabra.
 
 Finalmente, definimos la noción de similaridad entre un año y una palabra como el promedio de las similaridades ($S_{dw}$) 
 de los distintos documentos producidos durante ese año con la palabra en cuestión:
@@ -240,28 +250,7 @@ quasi-geostrophic equation recalling the notion of weak solution.
 
 For these solutions we have the following
 
-
-\subsection{Data Sources}
-We are interested in studying the evolution of almost sharp fronts
-for the QG equation. These are weak solutions of the equation with
-large gradient ($\sim \displaystyle{ \inlinefrac{1}{\delta}}$, where $2
-\delta$ is the thickness of the transition layer for $\theta$).
-
-
-
-\begin{materials}
-\section{Digital RNA SNP Analysis} A real-time PCR assay was designed
-to amplify {\it PLAC4} mRNA, with the two SNP alleles being discriminated
-by TaqMan probes. {\it PLAC4} mRNA concentrations were quantified in
-extracted RNA samples followed by dilutions to approximately one target
-template molecule of either type (i.e., either allele) per well.
-Details are given in the {\it SI Materials and Methods}.
-
-\section{Digital RCD Analysis} Extracted DNA was quantified by
-spectrophotometry (NanoDrop Technologies, Wilmington, DE) and diluted to a
-concentration of 
-approximately one target template from either chr21 or ch1 per well.
-\end{materials}
+\appendix[Parallel calculus of information value]
 
 \appendix[Entropy of a word in a text]
 
