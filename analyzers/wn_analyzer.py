@@ -12,12 +12,18 @@ reload(config)
 # Similarity definitions:
 # http://nltk.googlecode.com/svn/trunk/doc/api/nltk.corpus.reader.wordnet.Synset-class.html#path_similarity
 class WordNetAnalyzer:
-  # synsets is a list((synset, ponderation))
-  # sum(ponderation) must be 1
 
-    def __init__(self, synsets, document=None, use_similarity='path'):
-        self.document = document
-        self.synsets = synsets
+    @classmethod
+    def create_analyzer_for(cls, word):
+        ponderated_synsets = cls.get_init_synsets_for_word(word)
+        return cls(ponderated_synsets)  
+
+    # ponderated_synsets is a list((synset, ponderation))
+    # sum(ponderation) must be 1
+
+    def __init__(self, ponderated_synsets, use_similarity='path'):
+        self.document = None
+        self.ponderated_synsets = ponderated_synsets
         self.use_similarity = use_similarity
 
     def set_similarity(self, use_similarity):
@@ -35,9 +41,9 @@ class WordNetAnalyzer:
         return [(word, ponderation, self.judge_word(word)) for (word, ponderation) in self.top_words]
 
     # return a value between 0 and 1
-    def judge_doc(self, document=None):
-        if document:
-            self.document = document
+    def judge_doc(self, document):
+        self.document = document
+
         self.top_words = self.document.top_words(20)
         return sum([ponderation * result for (word, ponderation, result) in self.get_words_results()])
 
@@ -61,27 +67,15 @@ class WordNetAnalyzer:
         return synsets
 
     def judge_synset(self, synset):
-
-        paths = [syn.path_similarity(synset) for (syn, ponderacion) in self.synsets]
-        path = max(paths)
-
-        lchs = [syn.lch_similarity(synset) for (syn, ponderacion) in self.synsets]
-        lch = max(lchs)
-
-        wups = [syn.wup_similarity(synset) for (syn, ponderacion) in self.synsets]
-        wup = max(wups)
-
-        return self.distance_measure(path, lch, wup)
-
-    def distance_measure(self, path, lch, wup):
-        if self.use_similarity == 'path':
-            return path
-        elif self.use_similarity == 'lch':
-            return lch
+        if self.use_similarity == 'lch':
+            lchs = (syn.lch_similarity(synset) for (syn, ponderacion) in self.ponderated_synsets)
+            return max(lchs)
         elif self.use_similarity == 'wup':
-            return wup
+            wups = (syn.wup_similarity(synset) for (syn, ponderacion) in self.ponderated_synsets)
+            return max(wups)
         else:
-            return path
+            synsets = (s[0] for s in self.ponderated_synsets)
+            return similarity_synsets_to_synset(synsets, synset)
 
     # judge a word according to criterion
     #@return double a value between 1.0 and 0.0
@@ -92,6 +86,14 @@ class WordNetAnalyzer:
             return max(synsets_results)
         else:
             return 0
+
+"""
+Returns the similarity between a set of synsets, and a particular synset
+"""
+def similarity_synsets_to_synset(list_of_synsets, synset):
+    similarities = [synset.path_similarity(_synset) for _synset in list_of_synsets]
+    return max(similarities)
+
 
 
 def get_wnas():
