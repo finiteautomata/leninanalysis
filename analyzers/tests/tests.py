@@ -5,15 +5,12 @@ from test import LeninTestCase
 from unittest import TestCase
 from unittest import skip
 
-from information_value.models import Document
-from information_value.models import InformationValueResult
-from information_value.models import DocumentList
 
 from analyzers.wn_analyzer import WordNetAnalyzer
 from analyzers.wn_analyzer import wn
 
 
-class TestAnalyzers(LeninTestCase):
+class TestAnalyzers(TestCase):
 
   def test_war_analyzer(self):
     
@@ -31,7 +28,7 @@ class TestAnalyzers(LeninTestCase):
     self.assertEqual((wn.synset("war.n.03"), 0.25), all_war_synset_list[2])
     self.assertEqual((wn.synset("war.n.04"), 0.25), all_war_synset_list[3])
     
-    all_war_analyzer =  WordNetAnalyzer(all_war_synset_list)
+    all_war_analyzer =  WordNetAnalyzer.create_analyzer_for("war")
     one_war_analyzer =  WordNetAnalyzer(just_first_war_synset_list)
 
     self.assertEqual(1.0, one_war_analyzer.judge_synset(just_first_war_synset_list[0][0]), "compara el analizador contra su propio synset")

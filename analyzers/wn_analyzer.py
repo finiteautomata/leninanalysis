@@ -12,8 +12,14 @@ reload(config)
 # Similarity definitions:
 # http://nltk.googlecode.com/svn/trunk/doc/api/nltk.corpus.reader.wordnet.Synset-class.html#path_similarity
 class WordNetAnalyzer:
-  # synsets is a list((synset, ponderation))
-  # sum(ponderation) must be 1
+
+    @classmethod
+    def create_analyzer_for(cls, word):
+        ponderated_synsets = cls.get_init_synsets_for_word(word)
+        return cls(ponderated_synsets)  
+
+    # ponderated_synsets is a list((synset, ponderation))
+    # sum(ponderation) must be 1
 
     def __init__(self, ponderated_synsets, use_similarity='path'):
         self.document = None
