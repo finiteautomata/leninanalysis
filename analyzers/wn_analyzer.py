@@ -61,26 +61,15 @@ class WordNetAnalyzer:
         return synsets
 
     def judge_synset(self, synset):
-        synsets = [s[0] for s in self.ponderated_synsets]
-        path = similarity_synsets_to_synset(synsets, synset)
-
-        lchs = [syn.lch_similarity(synset) for (syn, ponderacion) in self.ponderated_synsets]
-        lch = max(lchs)
-
-        wups = [syn.wup_similarity(synset) for (syn, ponderacion) in self.ponderated_synsets]
-        wup = max(wups)
-
-        return self.distance_measure(path, lch, wup)
-
-    def distance_measure(self, path, lch, wup):
-        if self.use_similarity == 'path':
-            return path
-        elif self.use_similarity == 'lch':
-            return lch
+        if self.use_similarity == 'lch':
+            lchs = [syn.lch_similarity(synset) for (syn, ponderacion) in self.ponderated_synsets]
+            return max(lchs)
         elif self.use_similarity == 'wup':
-            return wup
+            wups = [syn.wup_similarity(synset) for (syn, ponderacion) in self.ponderated_synsets]
+            return max(wups)
         else:
-            return path
+            synsets = [s[0] for s in self.ponderated_synsets]
+            return similarity_synsets_to_synset(synsets, synset)
 
     # judge a word according to criterion
     #@return double a value between 1.0 and 0.0
