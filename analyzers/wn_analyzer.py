@@ -155,6 +155,9 @@ def judge_list(doc_list, analyzer):
     return None
   return (sum([analyzer.judge_doc(doc)  for doc in doc_list]) / doc_list.total_docs)*100
  
+
+def wna_for(word):
+  return WordNetAnalyzer(WordNetAnalyzer.get_init_synsets_for_word(word))
 def year_vs_concept_data():
   wnas = get_wnas()
   
@@ -162,6 +165,9 @@ def year_vs_concept_data():
   idealism =  WordNetAnalyzer(WordNetAnalyzer.get_init_synsets_for_word("idealism"))
   rev =  WordNetAnalyzer(WordNetAnalyzer.get_init_synsets_for_word("revolution"))
   filo =  WordNetAnalyzer(WordNetAnalyzer.get_init_synsets_for_word("philosophy"))
+
+  music = wna_for("music")
+  entity = wna_for("entity")
 
   maximum = 0.0
   res = dict()
@@ -177,9 +183,11 @@ def year_vs_concept_data():
     res[year]  = {#'praxis':     judge_list(doc_list, wnas["praxis"]),
                   #'theory':     judge_list(doc_list, wnas["theory"]), 
                   'rev': (judge_list(doc_list, rev) -7),
-                  'filo': (judge_list(doc_list, filo)-7),
+                  #'filo': (judge_list(doc_list, filo)-7),
+                  'music': (judge_list(doc_list, music) -7),
+                  'entity': (judge_list(doc_list, entity) -7),
                   'war':       ( judge_list(doc_list, war) - 7),
-                  'idea':       ( judge_list(doc_list, idealism) - 7),
+                  #'idea':       ( judge_list(doc_list, idealism) - 7),
                   }
     print "year: %s, total docs: %s, war res: %s" % (year, doc_list.total_docs, res[year])
   return res
