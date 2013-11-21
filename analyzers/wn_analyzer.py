@@ -68,13 +68,13 @@ class WordNetAnalyzer:
 
     def judge_synset(self, synset):
         if self.use_similarity == 'lch':
-            lchs = [syn.lch_similarity(synset) for (syn, ponderacion) in self.ponderated_synsets]
+            lchs = (syn.lch_similarity(synset) for (syn, ponderacion) in self.ponderated_synsets)
             return max(lchs)
         elif self.use_similarity == 'wup':
-            wups = [syn.wup_similarity(synset) for (syn, ponderacion) in self.ponderated_synsets]
+            wups = (syn.wup_similarity(synset) for (syn, ponderacion) in self.ponderated_synsets)
             return max(wups)
         else:
-            synsets = [s[0] for s in self.ponderated_synsets]
+            synsets = (s[0] for s in self.ponderated_synsets)
             return similarity_synsets_to_synset(synsets, synset)
 
     # judge a word according to criterion
