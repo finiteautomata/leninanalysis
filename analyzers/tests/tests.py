@@ -12,6 +12,7 @@ from information_value.models import DocumentList
 from analyzers.wn_analyzer import WordNetAnalyzer
 from analyzers.wn_analyzer import wn
 
+
 class TestAnalyzers(LeninTestCase):
 
   def test_war_analyzer(self):

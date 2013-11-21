@@ -65,14 +65,8 @@ class WordNetAnalyzer:
         paths = [syn.path_similarity(synset) for (syn, ponderacion) in self.synsets]
         path = max(paths)
 
-        lchs = [syn.lch_similarity(synset) for (syn, ponderacion) in self.synsets]
-        lch = max(lchs)
-
-        wups = [syn.wup_similarity(synset) for (syn, ponderacion) in self.synsets]
-        wup = max(wups)
-
-        return self.distance_measure(path, lch, wup)
-
+        return path
+        
     def distance_measure(self, path, lch, wup):
         if self.use_similarity == 'path':
             return path
