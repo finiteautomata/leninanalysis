@@ -18,5 +18,7 @@ class GetInitSynsetsForWordTest(TestCase):
         synsets = WordNetAnalyzer.get_init_synsets_for_word(word)
 
         self.assertEqual(len(synsets), 4)
-        self.assertAlmostEqual(synsets[0][1], .25)
-     
+        self.assertAlmostEqual(synsets[0][1], .25)     
+        self.assertAlmostEqual(synsets[1][1], .25)
+        self.assertAlmostEqual(synsets[2][1], .25)
+        self.assertAlmostEqual(synsets[3][1], .25)
