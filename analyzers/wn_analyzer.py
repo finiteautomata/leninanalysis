@@ -15,9 +15,9 @@ class WordNetAnalyzer:
   # synsets is a list((synset, ponderation))
   # sum(ponderation) must be 1
 
-    def __init__(self, synsets, document=None, use_similarity='path'):
-        self.document = document
-        self.synsets = synsets
+    def __init__(self, ponderated_synsets, use_similarity='path'):
+        self.document = None
+        self.ponderated_synsets = ponderated_synsets
         self.use_similarity = use_similarity
 
     def set_similarity(self, use_similarity):
@@ -35,9 +35,9 @@ class WordNetAnalyzer:
         return [(word, ponderation, self.judge_word(word)) for (word, ponderation) in self.top_words]
 
     # return a value between 0 and 1
-    def judge_doc(self, document=None):
-        if document:
-            self.document = document
+    def judge_doc(self, document):
+        self.document = document
+
         self.top_words = self.document.top_words(20)
         return sum([ponderation * result for (word, ponderation, result) in self.get_words_results()])
 
@@ -61,14 +61,13 @@ class WordNetAnalyzer:
         return synsets
 
     def judge_synset(self, synset):
+        synsets = [s[0] for s in self.ponderated_synsets]
+        path = similarity_synsets_to_synset(synsets, synset)
 
-        paths = [syn.path_similarity(synset) for (syn, ponderacion) in self.synsets]
-        path = max(paths)
-
-        lchs = [syn.lch_similarity(synset) for (syn, ponderacion) in self.synsets]
+        lchs = [syn.lch_similarity(synset) for (syn, ponderacion) in self.ponderated_synsets]
         lch = max(lchs)
 
-        wups = [syn.wup_similarity(synset) for (syn, ponderacion) in self.synsets]
+        wups = [syn.wup_similarity(synset) for (syn, ponderacion) in self.ponderated_synsets]
         wup = max(wups)
 
         return self.distance_measure(path, lch, wup)
@@ -92,6 +91,14 @@ class WordNetAnalyzer:
             return max(synsets_results)
         else:
             return 0
+
+"""
+Returns the similarity between a set of synsets, and a particular synset
+"""
+def similarity_synsets_to_synset(list_of_synsets, synset):
+    similarities = [synset.path_similarity(_synset) for _synset in list_of_synsets]
+    return max(similarities)
+
 
 
 def get_wnas():

@@ -22,3 +22,4 @@ class GetInitSynsetsForWordTest(TestCase):
         self.assertAlmostEqual(synsets[1][1], .25)
         self.assertAlmostEqual(synsets[2][1], .25)
         self.assertAlmostEqual(synsets[3][1], .25)
+
