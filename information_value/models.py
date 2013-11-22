@@ -100,7 +100,8 @@ class Document(MappedClass):
       iv_words = [(t[0], t[1]) for t in iv_words if t[0] not in stop_words and (not greater_than_zero or t[1] > 0.0)][:total_words]
 
       iv_sum = sum([iv_value for (word, iv_value) in iv_words])
-      return [(word, iv_value / iv_sum) for (word, iv_value) in iv_words]
+      #return [(word, iv_value / iv_sum) for (word, iv_value) in iv_words]
+      return [(word, 1) for (word, iv_value) in iv_words]
       #return [(word, 1.0 / total_words) for (word, iv_value) in iv_words]
 
     # calculator_class is poor man's dependency injection :)
@@ -143,7 +144,7 @@ class Document(MappedClass):
     @property
     def short_name(self):
       ss = self.name.replace("Lenin: ", "")
-      return ss[: 50 + ss[50:].find(" ")]+"..."
+      return ss[: 40 + ss[40:].find(" ")]+"..."
 
     #generators test
     def result_list(self):
@@ -214,6 +215,8 @@ class DocumentList(object):
     self.base_load()
     #print self
 
+  def first(self):
+    return self.documents[0]
 
   def base_load(self):
     self.current = 0
@@ -327,5 +330,12 @@ class DocumentList(object):
     #for text in self.texts:
     #  res+="\r\n"+text.__repr__()
     #return res+"\r\n"+self.__repr__()
+
+def doc_for(name):
+  doc_list = DocumentList(name)
+  if doc_list.total_docs == 0:
+    return None
+  else:
+    return doc_list.first()
 
 Mapper.compile_all()

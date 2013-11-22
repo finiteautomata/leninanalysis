@@ -38,6 +38,9 @@ def main():
     parser.add_argument('--window_size_generator', default='WindowsHardCodedSizeGenerator', help="Select a Window Size generator Algorhitm")
     parser.add_argument('--calculate-results', action='store_true', default=False, help="Calculate Information Value Results for Documents")
     parser.add_argument('--documents', nargs='+', metavar=('name'), help='Selects documents from name regex')
+    parser.add_argument('--concepts', nargs='+', metavar=('word'), help='Selects concepts to print (works with --plot)')
+    parser.add_argument('--min', metavar=('year'), help='year to start plot (works with --plot, default=1899)')
+    parser.add_argument('--max', metavar=('year'), help='year to end plot (works with --plot, default=1923)')
     parser.add_argument('--notebook-server', action='store_true', default=False, help='Starts notebook server')
     if len(sys.argv)==1:
         parser.print_help()
@@ -57,12 +60,15 @@ def main():
         from commands.database import calculate_results
         calculate_results()
 
+
     doc_list = None
     if args.documents:
         from information_value.models import DocumentList
         doc_list = DocumentList(args.documents[0])
+    
     if args.drop_iv:
         drop_iv()
+    
     if args.analysis:
         from commands.database import calculate_results
         documents = None
@@ -70,18 +76,36 @@ def main():
             documents = doc_list.documents
         calculate_results(documents=documents, window_size_algorithm=args.window_size_generator, store_only_best=False)
     if args.analysis_store_only_best:
+        
         from commands.database import calculate_results
         documents = None
         if doc_list:
             documents = doc_list.documents
         calculate_results(documents=documents, window_size_algorithm=args.window_size_generator, store_only_best=True)    
+   
     if args.plot:
-        #from plot import window_sizes
+        
         from plot import wn_plots
         #window_sizes.plot_scale_vs_information(doc_list.documents)
         #window_sizes.plot_len_vs_most_informative(doc_list.documents)
         import analyzers.wn_analyzer as wa
-        wn_plots.plot_year_vs_concept_value(wa.year_vs_concept_data())
+        
+        concepts = None
+        if args.concepts:
+            concepts = args.concepts
+        if args.min:
+            year_min = int(args.min)
+        else:
+            year_min = 1899
+
+        if args.max:
+            year_max = int(args.max)
+        else:
+            year_max = 1923
+
+        data = wa.year_vs_concept_data(concepts, year_min, year_max)
+        wn_plots.plot_year_vs_concept_value(data)
+    
     if args.notebook_server:
         subprocess.call("PYTHONPATH=$PYTHONPATH:$PWD; ipython notebook --notebook-dir=.", shell=True)
     if args.shell:
@@ -90,13 +114,13 @@ def main():
 
 def init_logging():
     logger = logging.getLogger('lenin')
-    logger.setLevel(logging.DEBUG)
+    logger.setLevel(logging.INFO)
     # create file handler which logs even debug messages
     fh = logging.FileHandler('lenin.log')
-    fh.setLevel(logging.DEBUG)
+    fh.setLevel(logging.INFO)
     # create console handler with a higher log level
     ch = logging.StreamHandler()
-    ch.setLevel(logging.DEBUG)
+    ch.setLevel(logging.INFO)
     # create formatter and add it to the handlers
     formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
     fh.setFormatter(formatter)
