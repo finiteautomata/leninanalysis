@@ -98,7 +98,7 @@ class Document(MappedClass):
         iv_words = [(t[0], t[1]) for t in iv_words if t[0] not in stop_words and (not greater_than_zero or t[1] > 0.0)][:total_words]
 
         iv_sum = sum([iv_value for (word, iv_value) in iv_words])
-        return [(word, iv_value / iv_sum) for (word, iv_value) in iv_words]
+        return [(word, 1) for (word, iv_value) in iv_words]
 
     # calculator_class is poor man's dependency injection :)
     def get_iv_by_window_size(self, window_size, calculator_class=InformationValueCalculator):
@@ -138,7 +138,7 @@ class Document(MappedClass):
     @property
     def short_name(self):
         ss = self.name.replace("Lenin: ", "")
-        return ss[: 50 + ss[50:].find(" ")]+"..."
+        return ss[: 40 + ss[40:].find(" ")]+"..."
 
     #generators test
     def result_list(self):
@@ -193,18 +193,22 @@ class Document(MappedClass):
 
 class DocumentList(object):
 
-    def __init__(self, name='State', only_with_results=False, year=None):
+    def __init__(self, name = 'State', only_with_results = False, year = None):
         self.search_criterion = {
             'name': {'$regex': '.*'+name+'.*'},
             'number_of_words': {'$gte': MIN_TOKENS}
         }
+
         if year is not None:
             self.search_criterion['year'] = year
+
         self.only_with_results = only_with_results
+
         if name == "":
             name = "All docs"
         self.name = name
         self.base_load()
+
 
     def base_load(self):
         self.current = 0
@@ -287,5 +291,12 @@ class DocumentList(object):
 
     def __str__(self):
         return self.__repr__()
+
+def doc_for(name):
+  doc_list = DocumentList(name)
+  if doc_list.total_docs == 0:
+    return None
+  else:
+    return doc_list.first()
 
 Mapper.compile_all()
