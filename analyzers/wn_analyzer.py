@@ -16,7 +16,7 @@ class WordNetAnalyzer:
 
   #synsets is a list((synset, ponderation))
   #sum(ponderation) must be 1
-  def __init__(self, word, use_similarity = 'path'):
+  def __init__(self, word, use_similarity = config.analyzer['SIMILARITY_FUNCTION']):
 
     self.word = word
     self.synsets = WordNetAnalyzer.get_init_synsets_for_word(word)
@@ -29,21 +29,9 @@ class WordNetAnalyzer:
     self.use_similarity = use_similarity
 
 
-  def distance_measure(self, path, lch, wup):
-      if self.use_similarity == 'path':
-        return path
-      elif self.use_similarity == 'lch':
-        return lch
-      elif self.use_similarity == 'wup':
-        return wup
-      else:
-        return path
-      #return (path + lch + wup) / 3
-       #others are not between 0 and 1
-
 
   @staticmethod
-  def get_init_synsets_for_word(word, only_first = False):
+  def get_init_synsets_for_word(word, only_first = config.analyzer["WNA_SYNSET_USE_ONLY_FIRST"] ):
     '''
     creates the trivial synsets set for a given word
     '''
@@ -76,27 +64,28 @@ class WordNetAnalyzer:
       return None
     all_docs_with_values = [(doc, self.judge_doc(doc))  for doc in doc_list ]
 
-    filtered_with_values = [(d, v)  for (d,v) in all_docs_with_values if v > 0.4]
+    filtered_with_values = [(d, v)  for (d,v) in all_docs_with_values if v > config.analyzer["DOC_SIMILARITY_THRESHOLD"]]
     if len(filtered_with_values) == 0:
       return 0
 
-    return (sum([v for (d, v) in filtered_with_values]) / len(all_docs_with_values))  *1000     
+    return config.analyzer["DOC_TO_YEAR_PONDERATION"](all_docs_with_values, filtered_with_values)     
  
    
   def judge_doc(self, document):
     '''
       returns a value between 0 and 1
     '''
-    top_words_with_ivs = document.top_words(20)
+    top_words_with_ivs = document.top_words(config.analyzer["TAKE_N_TOP_WORDS"])
     top_words_with_results = self.judge_top_words(top_words_with_ivs)
     
     
-    doc_value = sum([ponderation * result for (word, ponderation, result) in top_words_with_results])
-    doc_value = sum([ponderation * result for (word, ponderation, result) in top_words_with_results if result > 0.4])
-    if doc_value > 0.4:
+    doc_value = config.analyzer["TOP_WORDS_TO_DOC_PONDERATION"](top_words_with_results)
+    
+    if doc_value > config.analyzer["DOC_SIMILARITY_THRESHOLD"]:
       log.info("{2:.2f} =  doc('{1}', '{0}')".format(document.short_name.encode('utf-8'), self.word, doc_value))
+    
     for (word, ponderation, result) in top_words_with_results:
-       if result > 0.4:
+       if result > config.analyzer["DOC_SIMILARITY_THRESHOLD"]:
           log.info("{2:.2f} = word('{1}', '{0}') word-iv: {3:.2f} ".format(word, self.word, result, ponderation))
     
     
@@ -112,14 +101,14 @@ class WordNetAnalyzer:
     return [(word, word_document_ponderation, self.judge_word(word) )  for (word, word_document_ponderation) in top_words]
 
 
-  def judge_word(self, word, only_first_synset = False):
+  def judge_word(self, word, only_first_synset = config.analyzer["INPUT_SYNSET_USE_ONLY_FIRST"]):
     '''
       calls judge_synset
       @returns double a value between 1.0 and 0.0
     '''
     synsets_results = [self.judge_synset(synset) for synset in self.get_word_synsets(word, only_first_synset)]
     if len(synsets_results) != 0: 
-      res = max(synsets_results)
+      res = config.analyzer["SYNSETS_TO_WORD_PONDERATION"](synsets_results)
       #res =  sum(synsets_results)
       #res =  sum(synsets_results) / len(synsets_results) 
     else: 
@@ -132,30 +121,18 @@ class WordNetAnalyzer:
 
   def judge_synset(self, synset):
 
-    paths = [syn.path_similarity(synset) for (syn, ponderacion) in self.synsets]
-    #paths = [syn.path_similarity(synset)*ponderacion for (syn, ponderacion) in self.synsets]
-    #path = sum(paths) / len(paths)
-    #path = sum(paths)
-    path = max(paths)
+    if self.use_similarity == 'path':
+        all_distances = [syn.path_similarity(synset) for (syn, ponderacion) in self.synsets]    
+    elif self.use_similarity == 'lch':
+        all_distances = [syn.lch_similarity(synset) for (syn, ponderacion) in self.synsets]
+    elif self.use_similarity == 'wup':
+        all_distances = [syn.wup_similarity(synset) for (syn, ponderacion) in self.synsets]
     
-    lchs = [syn.lch_similarity(synset) for (syn, ponderacion) in self.synsets]
-    #lchs = [syn.lch_similarity(synset)*ponderacion for (syn, ponderacion) in self.synsets]
-    #lch = sum(lchs) / len(lchs)
-    lch  = max(lchs)
-
-    #wups = [syn.wup_similarity(synset)*ponderacion for (syn, ponderacion) in self.synsets]
-    wups = [syn.wup_similarity(synset) for (syn, ponderacion) in self.synsets]
-    #wup = sum(wups) / len(wups)
-    wup = max(wups)
-    
-    return self.distance_measure(path, lch, wup)
+    return config.analyzer["SYNSET_SIMILARITY_PONDERATION"](all_distances)
 
   
-    
- 
 def wna_for(word):
   return WordNetAnalyzer(word)
-
 
 
 def wnas_for(words):

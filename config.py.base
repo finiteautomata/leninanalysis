@@ -4,3 +4,30 @@ SUM_THRESHOLD = 0.01
 DATABASE_NAME = 'tests'
 DATABASE_URL = 'mongodb://localhost:27017/lenin'
 TEST_DATABASE_URL = 'mim:///localhost:27017/tests'
+
+
+
+
+analyzer = dict()
+analyzer["DOC_SIMILARITY_THRESHOLD"] = 0.4
+analyzer["WORD_SIMILARITY_THRESHOLD"] = 0.4
+analyzer["TAKE_N_TOP_WORDS"] = 20
+
+#similarity function to compare between (path, wup, lch)
+analyzer["SIMILARITY_FUNCTION"] = 'path' 
+
+#Al construir WNA("war") se crean distintos synsets para la palabra "war". Usar solo el primer.
+analyzer["WNA_SYNSET_USE_ONLY_FIRST"] = False
+
+#Para cada palabra de un documento se crean distintos synsets para cruzar contra el del analizarod. Usar solo el primer.
+analyzer["INPUT_SYNSET_USE_ONLY_FIRST"] = False
+#Como agrupar en un valor la cruza entre distancias entre un synset y varios synsets
+analyzer["SYNSET_SIMILARITY_PONDERATION"] = max
+
+#Como agrupar en un valor todas las distancias de synsets entre
+analyzer["SYNSETS_TO_WORD_PONDERATION"] = max
+
+analyzer["TOP_WORDS_TO_DOC_PONDERATION"] = lambda top_words_with_results: sum([ponderation * result for (word, ponderation, result) in top_words_with_results if result > analyzer["WORD_SIMILARITY_THRESHOLD"]])
+
+analyzer["DOC_TO_YEAR_PONDERATION"] = lambda all_docs, filtered_docs:  (sum([v for (d, v) in filtered_docs]) / len(all_docs))  *1000
+
