@@ -16,6 +16,15 @@ def scrap_all_works():
     ret = subprocess.call("scrapy crawl lenin -o lenin_work.json -t json", shell=True)
     print "Scrapy has returned %s" % ret
 
+def set_number_of_tokens():
+    from includes.tokenizer import tokenize
+    from pymongo import MongoClient
+    client = MongoClient()
+    db = client[config.DATABASE_NAME]
+
+    for document in db.document.find():
+        document['number_of_words'] = len(tokenize(document['text']))
+        db.document.save(document)
 
 def drop_iv():
     from pymongo import MongoClient
@@ -43,6 +52,7 @@ def main():
     parser.add_argument('--min', metavar=('year'), help='year to start plot (works with --plot, default=1899)')
     parser.add_argument('--max', metavar=('year'), help='year to end plot (works with --plot, default=1923)')
     parser.add_argument('--notebook-server', action='store_true', default=False, help='Starts notebook server')
+    parser.add_argument('--set-number-of-tokens', action='store_true', default=False, help='Calculate number of words for each work')
     if len(sys.argv)==1:
         parser.print_help()
         sys.exit(1)
@@ -114,6 +124,9 @@ def main():
         subprocess.call("PYTHONPATH=$PYTHONPATH:$PWD; ipython notebook --notebook-dir=.", shell=True)
     if args.shell:
         subprocess.call("ipython -i interpreter.py", shell=True)
+
+    if args.set_number_of_tokens:
+        set_number_of_tokens()
 
 
 def init_logging():
