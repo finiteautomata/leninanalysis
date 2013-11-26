@@ -98,24 +98,15 @@ def main():
         calculate_results(documents=documents, window_size_algorithm=args.window_size_generator, store_only_best=True)    
    
     if args.plot:
-        
         from plot import wn_plots
-        #window_sizes.plot_scale_vs_information(doc_list.documents)
-        #window_sizes.plot_len_vs_most_informative(doc_list.documents)
         import analyzers.wn_analyzer as wa
         
         concepts = None
         if args.concepts:
             concepts = args.concepts
-        if args.min:
-            year_min = int(args.min)
-        else:
-            year_min = 1899
-
-        if args.max:
-            year_max = int(args.max)
-        else:
-            year_max = 1923
+        
+        year_min = int(args.min) if args.min else 1899
+        year_max = int(args.max) if args.max else 1923
 
         data = wa.year_vs_concept_data(concepts, year_min, year_max)
         wn_plots.plot_year_vs_concept_value(data)
