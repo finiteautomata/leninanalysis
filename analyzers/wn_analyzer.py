@@ -68,7 +68,7 @@ class WordNetAnalyzer:
         if len(filtered_with_values) == 0:
             return 0
 
-        return (sum([v for (d, v) in filtered_with_values]) / len(all_docs_with_values))  *1000     
+        return (sum([v for (d, v) in filtered_with_values]) / len(all_docs_with_values))   
 
 
     def judge_doc(self, document):

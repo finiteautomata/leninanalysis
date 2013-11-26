@@ -2,6 +2,7 @@
 from analyzers.wn_analyzer import WordNetAnalyzer 
 from unittest import TestCase
 from mock import Mock
+from utils import document_returning_top_words
 
 class JudgeDocTests(TestCase):
     def test_judge_doc_should_return_1_for_a_document_with_just_one_word(self):
@@ -39,8 +40,4 @@ class JudgeDocTests(TestCase):
         # As it is an hypernym, its similarity is 0.5
         self.assertAlmostEqual(wna.judge_doc(doc), 0.25 )
 
-def document_returning_top_words(*ponderated_words):
-    doc = Mock()
-    doc.top_words.return_value = ponderated_words
-    return doc
 

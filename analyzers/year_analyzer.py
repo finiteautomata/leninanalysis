@@ -25,7 +25,3 @@ class YearAnalyzer(object):
       
         print "year: {0}, #doc: {1}, res: {2}".format(year, number_of_documents, output)
         return year_res
-
-    def _year_vs_concept_analysis(self, concept, year):
-        analyzer = self.analyzers[concept]
-        return analyzer.judge_list(doc_list)
