@@ -25,4 +25,6 @@ class JudgeDocTests(TestCase):
     
         self.assertAlmostEqual(wna.judge_doc(doc), 1.0)
 
+    
+
 
