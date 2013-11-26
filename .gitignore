@@ -1,5 +1,6 @@
 *.pyc
 *~
+nosetests.xml
 .ipynb*
 *sublime-project
 *sublime-workspace
