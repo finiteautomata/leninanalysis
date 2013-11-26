@@ -25,6 +25,22 @@ class JudgeDocTests(TestCase):
     
         self.assertAlmostEqual(wna.judge_doc(doc), 1.0)
 
-    
+    def test_should_not_take_into_account_a_non_related_word(self):
+        wna = WordNetAnalyzer("war")
+        doc = document_returning_top_words(("war", 0.5), ("music", 0.5))
 
+        self.assertAlmostEqual(wna.judge_doc(doc), 0.5)
+
+    def test_should_take_into_account_an_immediate_hypernym(self):
+        # Action is a lemma of military action, which is an hypernym of war.n.01
+        wna = WordNetAnalyzer("action")
+        doc = document_returning_top_words(("war", 0.5), ("music", 0.4), ("fruit", 0.1))
+
+        # As it is an hypernym, its similarity is 0.5
+        self.assertAlmostEqual(wna.judge_doc(doc), 0.25 )
+
+def document_returning_top_words(*ponderated_words):
+    doc = Mock()
+    doc.top_words.return_value = ponderated_words
+    return doc
 
