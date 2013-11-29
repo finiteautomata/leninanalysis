@@ -193,13 +193,14 @@ class Document(MappedClass):
 
 class DocumentList(object):
 
-    def __init__(self, name = 'State', only_with_results = False, year = None):
+    def __init__(self, name = '', only_with_results = False, year = None):
         self.search_criterion = {
             'name': {'$regex': '.*'+name+'.*'},
             'number_of_words': {'$gte': MIN_TOKENS}
         }
 
         if year is not None:
+            self.year = year
             self.search_criterion['year'] = year
 
         self.only_with_results = only_with_results
@@ -211,44 +212,14 @@ class DocumentList(object):
 
 
     def base_load(self):
-        self.current = 0
-        it = Document.query.find(self.search_criterion)
-        self.documents = list(it)
-
-    def add_month(self, month=None):
-        if month is not None:
-            self.search_criterion['month'] = month
-            self.name += " %s" % month.capitalize()
-        self.base_load()
-
-    def add_year(self, year=None):
-        if year is not None:
-            self.search_criterion['year'] = year
-            self.name += " %s" % year
-        self.base_load()
+        self.documents_query = Document.query.find(self.search_criterion)
 
     def __iter__(self):
-        self.current = 0
-        return self
-
-    def next(self):
-        if self.current > len(self.documents)-1:
-            self.current = 0
-            raise StopIteration
-        else:
-            self.current += 1
-            return self.documents[self.current-1]
-
+        return self.documents_query
+        
     @property
     def total_docs(self):
-        return len(self.documents)
-
-    @property
-    def total_tokens(self):
-        total = 0
-        for text in self:
-            total += text.total_tokens
-        return total
+        return self.documents_query.count()
 
     @property
     def total_results(self):
@@ -256,10 +227,6 @@ class DocumentList(object):
         for text in self:
             total += text.total_results
         return total
-
-    @property
-    def mean_tokens(self):
-        return int(self.total_tokens / self.total_docs)
 
     def get_all_iv_words(self):
         dict_k_v = {}
@@ -280,17 +247,6 @@ class DocumentList(object):
         for text in self:
             res.append(text.result_list)
         return res
-
-    def __repr__(self):
-        params = (self.name,
-                  self.total_docs,
-                  self.mean_tokens,
-                  self.total_results)
-
-        return "DocumentList(%s, %s txts, ~%s tks/txt, %s res)" % params
-
-    def __str__(self):
-        return self.__repr__()
 
 def doc_for(name):
   doc_list = DocumentList(name)

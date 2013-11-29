@@ -1,7 +1,8 @@
 #! coding: utf-8
-from information_value.models import Document, DocumentList
+from information_value.models import DocumentList
 from wn_analyzer import wna_for
 import logging
+from interpreter import db
 
 log = logging.getLogger('lenin')
 
@@ -11,17 +12,19 @@ class YearAnalyzer(object):
         self.analyzers = dict((concept, wna_for(concept)) for concept in concepts)
  
     def analyze_year(self, year):
-        year_res = {}
-
-        documents = Document.query.find({"year": year})
-        number_of_documents = documents.count()
-        output = ""
+        year_analysis = db.year_analysis.find_one({"year": year}) or {"year": year}
+        documents = DocumentList(year=year)
         
         for concept in self.concepts:
-            analyzer = self.analyzers[concept]
-            year_res[concept] = analyzer.judge_list(documents)
-            log.info("{2:.2f} = year-distance('{1}', '{0}') ".format(year, concept, year_res[concept]))
-            output += "{0}: {1:.2f} ".format(concept, year_res[concept])
-      
-        print "year: {0}, #doc: {1}, res: {2}".format(year, number_of_documents, output)
-        return year_res
+            self.__analyze_year_against_concept(documents=documents, concept=concept, year_analysis=year_analysis)
+        
+        db.year_analysis.save(year_analysis)
+        return year_analysis
+
+    def __analyze_year_against_concept(self, documents, concept, year_analysis):
+        # Only calculate in case there's no analysis done
+        if concept in year_analysis.keys():
+            return
+        analyzer = self.analyzers[concept]
+        year_analysis[concept] = analyzer.judge_list(documents)
+    

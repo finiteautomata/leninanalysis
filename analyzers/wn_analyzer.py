@@ -136,12 +136,6 @@ def wnas_for(words):
 
 def year_vs_concept_data(concepts = None, year_min = 1899, year_max = 1923):
   
-    import config
-    from pymongo import MongoClient
-    client = MongoClient()
-    db = client[config.DATABASE_NAME]
-
-
     if not concepts:
         concepts = ["war", "idealism", "revolution", "philosophy"]
 
