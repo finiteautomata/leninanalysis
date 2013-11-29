@@ -5,7 +5,7 @@ import config
 import logging
 import argparse
 import subprocess
-
+from commands.year_analysis import calculate_year_analysis
 import ming
 
 reload(config)
@@ -39,6 +39,7 @@ def main():
     parser.add_argument('--shell', action='store_true', default=False, help="Opens an ipython console with db configured")
     parser.add_argument('--scrap', action='store_true', default=False, help='Scraps all the Lenin Works')
     parser.add_argument('--populate-database', action='store_true', default=False, help="From the scrapped works creates database called \"lenin\" (it assumes you're running MongoDB at localhost)")
+    parser.add_argument('--year-analysis', action='store_true', default=False, help="Calculate year analysis for each year between min-year and max-year")
     parser.add_argument('--plot', action='store_true', default=False, help="Add this flag for plotting")
     parser.add_argument('--drop-iv', action='store_true', default=False, help="Drop Information Value Results")
     parser.add_argument('--analysis', action='store_true', default=False, help="Add this flag for results calculation")
@@ -111,6 +112,16 @@ def main():
         data = wa.year_vs_concept_data(concepts, year_min, year_max)
         wn_plots.plot_year_vs_concept_value(data)
     
+    if args.year_analysis:
+
+        concepts = ["war", "idealism", "revolution", "philosophy"]
+        if args.concepts:
+            concepts = args.concepts
+        
+        min_year = int(args.min) if args.min else 1899
+        max_year = int(args.max) if args.max else 1923
+
+        calculate_year_analysis(min_year, max_year, concepts)
     if args.notebook_server:
         subprocess.call("PYTHONPATH=$PYTHONPATH:$PWD; ipython notebook --notebook-dir=.", shell=True)
     if args.shell:
@@ -120,26 +131,10 @@ def main():
         set_number_of_tokens()
 
 
-def init_logging():
-    logger = logging.getLogger('lenin')
-    logger.setLevel(logging.INFO)
-    # create file handler which logs even debug messages
-    fh = logging.FileHandler('lenin.log')
-    fh.setLevel(logging.INFO)
-    # create console handler with a higher log level
-    ch = logging.StreamHandler()
-    ch.setLevel(logging.INFO)
-    # create formatter and add it to the handlers
-    formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-    fh.setFormatter(formatter)
-    ch.setFormatter(formatter)
-    # add the handlers to the logger
-    logger.addHandler(fh)
-    logger.addHandler(ch)
-
 if __name__ == "__main__":
     ming_config = {'ming.document_store.uri': config.DATABASE_URL}
     ming.configure(**ming_config)
 
+    from interpreter import init_logging
     init_logging()
     main()
