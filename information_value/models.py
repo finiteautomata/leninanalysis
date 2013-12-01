@@ -195,9 +195,10 @@ class DocumentList(object):
 
     def __init__(self, name = '', only_with_results = False, year = None):
         self.search_criterion = {
-            'name': {'$regex': '.*'+name+'.*'},
             'number_of_words': {'$gte': MIN_TOKENS}
         }
+        if name and name != '':
+            self.search_criterion['name'] = {'$regex': '.*'+name+'.*'},
 
         if year is not None:
             self.year = year
@@ -205,9 +206,6 @@ class DocumentList(object):
 
         self.only_with_results = only_with_results
 
-        if name == "":
-            name = "All docs"
-        self.name = name
         self.base_load()
 
 
