@@ -64,11 +64,10 @@ class WordNetAnalyzer:
             return None
         all_docs_with_values = [(doc, self.judge_doc(doc))  for doc in doc_list ]
 
-        filtered_with_values = [(d, v)  for (d,v) in all_docs_with_values if v > 0.4]
-        if len(filtered_with_values) == 0:
+        if len(all_docs_with_values) == 0:
             return 0
 
-        return (sum([v for (d, v) in filtered_with_values]) / len(all_docs_with_values))   
+        return (sum(v for (d, v) in all_docs_with_values) / len(all_docs_with_values))   
 
 
     def judge_doc(self, document):
@@ -118,7 +117,7 @@ class WordNetAnalyzer:
 
 def similarity_synsets_to_synset(list_of_synsets, synset):
     similarities = [synset.path_similarity(_synset) for _synset in list_of_synsets]
-    return max(similarities)
+    return max(similarities) if len(similarities) != 0 else 0.0
 
  
 def wna_for(word):
