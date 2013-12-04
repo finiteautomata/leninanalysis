@@ -16,9 +16,12 @@ class WordNetAnalyzer:
 
   #synsets is a list((synset, ponderation))
   #sum(ponderation) must be 1
-  def __init__(self, word, use_similarity = config.analyzer['SIMILARITY_FUNCTION']):
+  def __init__(self, word, use_similarity = None):
 
     self.word = word
+    if use_similarity == None:
+        use_similarity = config.analyzer['SIMILARITY_FUNCTION']
+
     self.synsets = WordNetAnalyzer.get_init_synsets_for_word(word)
     self.use_similarity = use_similarity
 
@@ -85,7 +88,7 @@ class WordNetAnalyzer:
       log.info("{2:.2f} =  doc('{1}', '{0}')".format(document.short_name.encode('utf-8'), self.word, doc_value))
     
     for (word, ponderation, result) in top_words_with_results:
-       if result > config.analyzer["DOC_SIMILARITY_THRESHOLD"]:
+       if result > config.analyzer["WORD_SIMILARITY_THRESHOLD"]:
           log.info("{2:.2f} = word('{1}', '{0}') word-iv: {3:.2f} ".format(word, self.word, result, ponderation))
     
     
@@ -106,11 +109,10 @@ class WordNetAnalyzer:
       calls judge_synset
       @returns double a value between 1.0 and 0.0
     '''
+
     synsets_results = [self.judge_synset(synset) for synset in self.get_word_synsets(word, only_first_synset)]
     if len(synsets_results) != 0: 
       res = config.analyzer["SYNSETS_TO_WORD_PONDERATION"](synsets_results)
-      #res =  sum(synsets_results)
-      #res =  sum(synsets_results) / len(synsets_results) 
     else: 
       res= 0
 
