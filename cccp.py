@@ -3,6 +3,7 @@
 import sys
 import config
 import logging
+import analyzers
 import argparse
 import subprocess
 from commands.year_analysis import calculate_year_analysis
@@ -33,8 +34,16 @@ def drop_iv():
     db = client.lenin
     db.drop_collection('information_value_result')
 
+def add_commands(parser):
+    import analyzers.commands
+
+    analyzers.commands.load_commands(parser)
+
 def main():
     parser = argparse.ArgumentParser(description='Central de Control de Comandos y Procesos para el TP de Analisis de Lenin.')
+
+    
+
     # Parameter to scrap all the works before or not
     parser.add_argument('--shell', action='store_true', default=False, help="Opens an ipython console with db configured")
     parser.add_argument('--scrap', action='store_true', default=False, help='Scraps all the Lenin Works')
@@ -54,6 +63,7 @@ def main():
     parser.add_argument('--max', metavar=('year'), help='year to end plot (works with --plot, default=1923)')
     parser.add_argument('--notebook-server', action='store_true', default=False, help='Starts notebook server')
     parser.add_argument('--set-number-of-tokens', action='store_true', default=False, help='Calculate number of words for each work')
+    parser.add_argument('--analyze-documents', action='store_true', default=False, help="Do Document Analysis for given concepts (pass with --concepts)")
     if len(sys.argv)==1:
         parser.print_help()
         sys.exit(1)
@@ -130,6 +140,12 @@ def main():
     if args.set_number_of_tokens:
         set_number_of_tokens()
 
+    if args.analyze_documents:
+        import analyzers.commands
+        concepts = ["war", "idealism", "revolution", "philosophy"]
+        if args.concepts:
+            concepts = args.concepts
+        analyzers.commands.analyze_documents(concepts)
 
 if __name__ == "__main__":
     ming_config = {'ming.document_store.uri': config.DATABASE_URL}

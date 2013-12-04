@@ -97,8 +97,8 @@ class Document(MappedClass):
         iv_words = self.get_iv_by_window_size(window_size)
         iv_words = [(t[0], t[1]) for t in iv_words if t[0] not in stop_words and (not greater_than_zero or t[1] > 0.0)][:total_words]
 
-        iv_sum = sum([iv_value for (word, iv_value) in iv_words])
-        return [(word, 1) for (word, iv_value) in iv_words]
+        effective_total_words = max(total_words, len(iv_words))
+        return [(word, 1.0/effective_total_words) for (word, iv_value) in iv_words]
 
     # calculator_class is poor man's dependency injection :)
     def get_iv_by_window_size(self, window_size, calculator_class=InformationValueCalculator):
@@ -197,7 +197,7 @@ class DocumentList(object):
         self.search_criterion = {
             'number_of_words': {'$gte': MIN_TOKENS}
         }
-        if name and name != '':
+        if name and name != '': 
             self.search_criterion['name'] = {'$regex': '.*'+name+'.*'},
 
         if year is not None:
@@ -210,6 +210,7 @@ class DocumentList(object):
 
 
     def base_load(self):
+        print self.search_criterion
         self.documents_query = Document.query.find(self.search_criterion)
 
     def __iter__(self):
