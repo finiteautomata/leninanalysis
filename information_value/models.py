@@ -44,14 +44,15 @@ class InformationValueResult(MappedClass):
     def __init__(self, iv_words, sum_threshold=config.SUM_THRESHOLD, *args, **kwargs):
         if type(iv_words) is dict:
             iv_words = list(iv_words.iteritems())
+        self.sum_threshold = sum_threshold
         super(InformationValueResult, self).__init__(*args, iv_words=iv_words, **kwargs)
 
     @property
-    def iv_sum(self, sum_threshold=config.SUM_THRESHOLD):
+    def iv_sum(self):
         # Todo: improve performance of this...
         sorted_ivs = sorted(map(operator.itemgetter(1), self.iv_words), reverse=True)
         self.max_iv = sorted_ivs[0]
-        amount_to_be_taken = int(len(sorted_ivs) * sum_threshold) or 10
+        amount_to_be_taken = int(len(sorted_ivs) * self.sum_threshold) or 10
         sorted_ivs = sorted_ivs[:amount_to_be_taken]
         # Sum the reverse of sorted_words to improve numerical stability
         return reduce(lambda x, y: x + y, reversed(sorted_ivs), 0)

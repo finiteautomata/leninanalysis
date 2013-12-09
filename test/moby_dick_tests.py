@@ -3,7 +3,6 @@ from __future__ import division
 from test import LeninTestCase
 import logging
 import config
-from cccp import init_logging
 from pymongo import MongoClient
 from nose.plugins.attrib import attr
 import unittest
@@ -24,7 +23,6 @@ class MobyDickTests(LeninTestCase):
     sum_threshold = 0.01
 
     def setUp(self):
-        init_logging()
         client = MongoClient()
         print config.DATABASE_NAME
         client.drop_database(config.DATABASE_NAME)

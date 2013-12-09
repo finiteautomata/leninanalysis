@@ -9,7 +9,7 @@ class DocumentFactory(BaseFactory):
     text="sarasa sarasa sarasa sarasa sarasa!"
     name="test02"
     month="Mar"
-    year='2013'
+    year=2013
 
 
 class InformationValueResultFactory(BaseFactory):
