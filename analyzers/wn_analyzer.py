@@ -80,9 +80,8 @@ class WordNetAnalyzer:
         for word, ponderation in top_words_with_ivs:
             word_similarity = self.judge_word(word)
 
-            if word_similarity > 0.4:
-                ret+= ponderation * word_similarity
-                log.info("{2:.2f} = word('{1}', '{0}') word-iv: {3:.2f} ".format(word, self.word, ret, ponderation))
+            ret+= ponderation * word_similarity
+            log.info("{2:.2f} = word('{1}', '{0}') word-iv: {3:.2f} ".format(word, self.word, ret, ponderation))
             
         if ret > 0.4:
           log.info("{2:.2f} =  doc('{1}', '{0}')".format(document.short_name.encode('utf-8'), self.word, ret))
