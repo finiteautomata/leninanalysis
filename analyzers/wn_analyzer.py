@@ -2,7 +2,7 @@
 from __future__ import division
 import nltk
 import logging
-
+from similarity import path_similarity
 from nltk.corpus import wordnet as wn
 from information_value.models import *
 
@@ -89,30 +89,13 @@ class WordNetAnalyzer:
         return ret
 
 
-    def judge_word(self, word, only_first_synset = False):
+    def judge_word(self, word):
         '''
           calls judge_synset
           @returns double a value between 1.0 and 0.0
         '''
-        synsets_results = [self.judge_synset(synset) for synset in self.get_word_synsets(word, only_first_synset)]
-        if len(synsets_results) != 0: 
-          res = max(synsets_results)
-        else: 
-          res= 0
+        return path_similarity(self.word, word) 
 
-        return res 
-
-    def judge_synset(self, synset):
-        if self.use_similarity == 'lch':
-            lchs = (syn.lch_similarity(synset) for (syn, ponderacion) in self.synsets)
-            return max(lchs)
-        elif self.use_similarity == 'wup':
-            wups = (syn.wup_similarity(synset) for (syn, ponderacion) in self.synsets)
-            return max(wups)
-        else:
-            synsets = (s[0] for s in self.synsets)
-            return similarity_synsets_to_synset(synsets, synset)
-  
 
 def similarity_synsets_to_synset(list_of_synsets, synset):
     similarities = [synset.path_similarity(_synset) for _synset in list_of_synsets]

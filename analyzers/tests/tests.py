@@ -25,28 +25,13 @@ class TestAnalyzers(TestCase):
     self.assertEqual((wn.synset("war.n.04"), 0.25), all_war_synset_list[3])
     
     all_war_analyzer =  WordNetAnalyzer("war")
-
-    self.assertEqual(1.0, all_war_analyzer.judge_synset(all_war_synset_list[0][0]), "la logica es tomar la mayor similaridad entre synsets")
-
     
     self.assertEqual(1.0, all_war_analyzer.judge_word("war"))
 
     #self.assertEqual(1.0, one_war_analyzer.judge_word("warrior"))
-    self.assertEqual(0.5, all_war_analyzer.judge_synset( wn.synset('civil_war.n.01'))) #un hiponimo, da 0.5
     self.assertEqual(0.125, all_war_analyzer.judge_word('bomb')) #un hipernimo, da 0.5
     self.assertEqual(0.125, all_war_analyzer.judge_word('bomb')) #un hipernimo, da 0.5
     
-    #lch: return a score denoting how similar two word senses are, based on the shortest path that connects the senses (as above) 
-    # and the maximum depth of the taxonomy in which the senses occur. 
-    #The relationship is given as -log(p/2d) where p is the shortest path length and d is the taxonomy depth.
-    all_war_analyzer.set_similarity("lch")      
-    
-    self.assertAlmostEqual(1.558, all_war_analyzer.judge_word('bomb'), 3)
-    self.assertAlmostEqual(1.335, all_war_analyzer.judge_word('warrior'), 3)
-    self.assertAlmostEqual(0.998, all_war_analyzer.judge_word('kitchen'), 2)
-    self.assertAlmostEqual(1.440, all_war_analyzer.judge_word('hypothesis'), 3)
-
-    #self.assertEqual(0.125,) #un hipernimo, da 0.5
 
   @skip
   def test_simple_wn_analyzers(self):

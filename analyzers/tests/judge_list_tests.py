@@ -1,5 +1,6 @@
 #! coding:utf-8
 from unittest import TestCase, skip
+from analyzers.similarity import path_similarity
 from analyzers.wn_analyzer import WordNetAnalyzer 
 from utils import document_returning_top_words, create_document_list
 
@@ -17,13 +18,12 @@ class JudgeListTests(TestCase):
 
         self.assertAlmostEqual(wna.judge_list(doc_list), 1.0)
 
-    @skip
     def test_returns_0_for_document_with_one_distinct_top_word(self):
         wna = WordNetAnalyzer("war")
         doc_list = create_document_list(
             document_returning_top_words(("music", 1.0))
         )
-        self.assertAlmostEqual(wna.judge_list(doc_list), .0)
+        self.assertAlmostEqual(wna.judge_list(doc_list), path_similarity("war", "music"))
 
     @skip
     def test_returns_the_distance_ponderated_with_the_top_word_value(self):
@@ -33,7 +33,6 @@ class JudgeListTests(TestCase):
         )
         self.assertAlmostEqual(wna.judge_list(doc_list), .5)
 
-    @skip
     def test_with_two_documents(self):
         wna = WordNetAnalyzer("war")
         doc_list = create_document_list(
@@ -41,7 +40,7 @@ class JudgeListTests(TestCase):
             document_returning_top_words(("music", 1.0))
         )
 
-        self.assertGreaterEqual(wna.judge_list(doc_list), 0.5)
+        self.assertGreaterEqual(wna.judge_list(doc_list), 0.5 + 0.5 * path_similarity("war", "music"))
 
     @skip
     def test_with_two_documents_with_several_top_words(self):
