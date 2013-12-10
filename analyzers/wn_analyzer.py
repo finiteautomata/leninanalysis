@@ -15,49 +15,10 @@ reload(config)
 # Similarity definitions:
 # http://nltk.googlecode.com/svn/trunk/doc/api/nltk.corpus.reader.wordnet.Synset-class.html#path_similarity
 class WordNetAnalyzer:
-  #synsets is a list((synset, ponderation))
-  #sum(ponderation) must be 1
-    def __init__(self, word, use_similarity = 'path'):
+    def __init__(self, word, similarity_function = path_similarity ):
 
         self.word = word
-        self.synsets = WordNetAnalyzer.get_init_synsets_for_word(word)
-        self.use_similarity = use_similarity
-
-    def set_similarity(self, use_similarity):
-        '''
-        synset similarity measume
-        '''
-        self.use_similarity = use_similarity
-
-
-    @staticmethod
-    def get_init_synsets_for_word(word, only_first = False):
-        '''
-        creates the trivial synsets set for a given word
-        '''
-
-        synsets = WordNetAnalyzer.get_word_synsets(word, only_first)
-        return [(synset, 1.0/ len(synsets)) for synset in synsets]
-
-  #get all synsets for a given word
-    @staticmethod
-    def get_word_synsets(word, only_first = False):
-        lemmas = wn.lemmas(word)
-
-        #si no me da lemmas, intento algo
-        if len(lemmas) == 0:
-            wnl = nltk.WordNetLemmatizer()
-            lemmatized_word = wnl.lemmatize(word)
-            lemmas = wn.lemmas(lemmatized_word)
-            if len(lemmas) == 0:
-                return []
-
-        #some distances doesn't handle not-noun words
-        synsets =  [lemma.synset for lemma in lemmas if lemma.synset.name.split('.')[1] == 'n']
-        if only_first:
-          return synsets[:1]
-
-        return synsets
+        self.similarity_function = similarity_function
 
     def judge_list(self, doc_list):
         if doc_list.total_docs == 0:
@@ -94,12 +55,7 @@ class WordNetAnalyzer:
           calls judge_synset
           @returns double a value between 1.0 and 0.0
         '''
-        return path_similarity(self.word, word) 
-
-
-def similarity_synsets_to_synset(list_of_synsets, synset):
-    similarities = [synset.path_similarity(_synset) for _synset in list_of_synsets]
-    return max(similarities) if len(similarities) != 0 else 0.0
+        return self.similarity_function(self.word, word) 
 
  
 def wna_for(word):

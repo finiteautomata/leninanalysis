@@ -1,6 +1,7 @@
 #! coding:utf-8
 from unittest import TestCase
 from analyzers.similarity import path_similarity
+from synsets import get_word_synsets
 from nltk.corpus import wordnet as wn
 
 class PathSimilarityTest(TestCase):    
@@ -13,3 +14,11 @@ class PathSimilarityTest(TestCase):
         anus_synset = wn.lemmas("vagina")[0].synset
 
         self.assertAlmostEqual(path_similarity("penis", "vagina"), wn.path_similarity(penis_synset, anus_synset))
+
+
+
+class GetWordSynsetsTest(TestCase):
+    def test_get_synsets_for_a_word_return_the_correct_amount_of_synsets(self):
+        word = "war"
+
+        self.assertEqual(len(get_word_synsets(word)), 4)
