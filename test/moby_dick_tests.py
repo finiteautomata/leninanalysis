@@ -54,7 +54,7 @@ def get_moby_dick_document():
         name = 'Moby dick',
         text = moby_dick,
         month = 'Oct',
-        year = '1851'
+        year = 1851
     )
     # document uses tokenizer func for create tokens, since we need to enforce
     # only_alphanum and clean_punct we need a wrapper
