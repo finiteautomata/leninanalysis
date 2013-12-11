@@ -17,6 +17,10 @@ class DocumentAnalyzer(object):
         self.prefix = similarity_function.func_name
         self.analyzers = dict((concept, WordNetAnalyzer(concept, similarity_function=similarity_function, judge_function=maximum_judge_function)) for concept in concepts)
  
+    @property
+    def name(self):
+        print self.similarity_function.func_name
+
     def analyze_document(self, document):
         document_analysis = self.__get_analysis_for(document)
 
