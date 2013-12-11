@@ -1,10 +1,8 @@
 # This Python file uses the following encoding: utf-8
 from __future__ import division
-import nltk
 import logging
 from similarity import path_similarity
-from nltk.corpus import wordnet as wn
-from information_value.models import *
+from information_value.models import DocumentList
 
 log = logging.getLogger('lenin')
 
@@ -12,12 +10,18 @@ import config
 reload(config)
 
 
+def ponderated_judge_function(partial_results):
+    return sum(ponderation * similarity for (word, ponderation, similarity) in partial_results)
+
+def maximum_judge_function(partial_results):
+    return max(similarity for (_, _, similarity) in partial_results)
+
 # Similarity definitions:
 # http://nltk.googlecode.com/svn/trunk/doc/api/nltk.corpus.reader.wordnet.Synset-class.html#path_similarity
 class WordNetAnalyzer:
-    def __init__(self, word, similarity_function = path_similarity ):
-
+    def __init__(self, word, similarity_function = path_similarity, judge_function=ponderated_judge_function ):
         self.word = word
+        self.judge_function = judge_function
         self.similarity_function = similarity_function
 
     def judge_list(self, doc_list):
@@ -37,18 +41,13 @@ class WordNetAnalyzer:
         '''
         top_words_with_ivs = document.top_words(20)
 
-        ret = 0
-        for word, ponderation in top_words_with_ivs:
-            word_similarity = self.judge_word(word)
-
-            ret+= ponderation * word_similarity
-            log.info("{2:.2f} = word('{1}', '{0}') word-iv: {3:.2f} ".format(word, self.word, ret, ponderation))
-            
-        if ret > 0.4:
-          log.info("{2:.2f} =  doc('{1}', '{0}')".format(document.short_name.encode('utf-8'), self.word, ret))
-
-        return ret
-
+        """
+        Here we have in partial_results
+        [(word, word_ponderation, similarity) for word in document.top_words]
+        We pass this to the judge function
+        """
+        partial_results = [(word, ponderation, self.judge_word(word)) for (word, ponderation) in top_words_with_ivs]
+        return self.judge_function(partial_results)
 
     def judge_word(self, word):
         '''

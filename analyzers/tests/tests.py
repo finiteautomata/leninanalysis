@@ -1,13 +1,12 @@
 #! coding: utf-8
 # THIS IMPORT MUST BE THE FIRST IN EVERY tests.py FILE
 #from test import LeninTestCaseNoDrop
-from test import LeninTestCase
 from unittest import TestCase
 from unittest import skip
 
-
+from nltk.corpus import wordnet as wn
 from analyzers.wn_analyzer import WordNetAnalyzer
-from analyzers.wn_analyzer import wn
+
 
 
 class TestAnalyzers(TestCase):

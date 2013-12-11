@@ -1,5 +1,5 @@
 #! encoding:utf-8
-from wn_analyzer import WordNetAnalyzer
+from wn_analyzer import WordNetAnalyzer, maximum_judge_function
 import logging
 from similarity import path_similarity
 from interpreter import db
@@ -15,7 +15,7 @@ class DocumentAnalyzer(object):
         self.concepts = concepts
         self.similarity_function = similarity_function
         self.prefix = similarity_function.func_name
-        self.analyzers = dict((concept, WordNetAnalyzer(concept, similarity_function=similarity_function)) for concept in concepts)
+        self.analyzers = dict((concept, WordNetAnalyzer(concept, similarity_function=similarity_function, judge_function=maximum_judge_function)) for concept in concepts)
  
     def analyze_document(self, document):
         document_analysis = self.__get_analysis_for(document)

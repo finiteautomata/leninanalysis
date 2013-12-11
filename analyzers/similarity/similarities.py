@@ -1,8 +1,6 @@
 #! coding:utf-8
 from nltk.corpus import wordnet as wn
 from synsets import get_word_synsets
-    
-
 
 
 def path_similarity(word1, word2):
