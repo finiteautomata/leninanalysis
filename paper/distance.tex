@@ -73,9 +73,11 @@ The information value of $w$ in $T$ is
 \end{equation}
 
 where $f_w$ is the frequency of appearance of $w$ in $T$. This value captures, in some way, whether a word
-has a distribution in text that is not exactly uniform; an order of the word in the text that brings some sense to it.
+has a distribution in text that is not exactly uniform; an order of the word in the text that brings some sense to it. Ordering the words by their information value results in a list of the text's most representative words.
 
-Having these value, we can pull the most representative words out of a text by selecting those of greater information value. Now our question arises: how distant is a word from a text? We use here the notion of distance between a point and a set defined as:
+In order to measure the distance/similarity between two words, we use Wordnet (see \cite{WORDNET}), a lexical database in English. Using a subset of all the possible ``senses'' of both words , we test several similarity notions between them.
+
+Having a similarity notion between words, and the most valuable words from a text, our question arises: how distant is a word from a text? We use here the notion of distance between a point and a set defined as:
 
 \begin{equation}
   d(a, S) = min_{x \in S} d(a, x) 
@@ -83,14 +85,13 @@ Having these value, we can pull the most representative words out of a text by s
 
 being $S$ the set of most representative words. Hence, we are ``projecting'' a text into the set of their top words. 
 
-
-
 \section{Method}
 \subsection{Text Corpus}
 We selected some starred works from Lenin from the "Marxists Internet Archive". Those works are very different in topic, some of them being strictly phylosophical essays (such as ``Materialism and Empiriocriticism'') and other being more political, such as ``State and Revolution'', and finally an economy essay called ``Imperialism, the highest stage of capitalism''
 
 \begin{itemize}
   \item What is to be done(1901)
+  \item The Agrarian Programme of Social-Democracy in the First Russian Revolution, 1905-1907 (1907)
   \item Materialism and Empiriocriticism (1908)
   \item Imperialism, the highest stage of capitalism (1916)
   \item State and Revolution (1917)
@@ -116,6 +117,150 @@ The chosen approach is a tradeoff between both. We take the average not of all t
 
 
 The threshold value we used is $ST=0.001$, so it would consider only the $\frac{n}{1000}$ most significant words. The reason behind this was that it fitted the results from \cite{DARWIN} for the texts The origin of the species, Moby Dick, and  The Analysis of the mind.
+
+\subsection{Top words for given works}
+
+\begin{center}
+  \begin{tabular}{ | l | l | }
+    \hline
+    \multicolumn{2}{|c|}{State and Revolution} \\ \hline
+    \# & Word  \\ \hline
+1 & kautsky \\ \hline
+2 & marx \\ \hline
+3 & revolution \\ \hline
+4 & works \\ \hline
+5 & engels \\ \hline
+6 & society \\ \hline
+7 & power \\ \hline
+8 & party \\ \hline
+9 & social \\ \hline
+10 & experience \\ \hline
+11 & bernstein \\ \hline
+12 & question \\ \hline
+13 & equality \\ \hline
+14 & phase \\ \hline
+15 & 1917 \\ \hline
+16 & commune \\ \hline
+17 & one \\ \hline
+18 & republic \\ \hline
+19 & class \\ \hline
+20 & law \\ \hline
+  \end{tabular}
+\end{center}
+
+\begin{center}
+  \begin{tabular}{ | l | l | }
+    \hline
+    \multicolumn{2}{|c|}{Imperialism, the Highest ...} \\ \hline
+    \# & Word  \\ \hline
+1 & enterprises \\ \hline
+2 & bank \\ \hline
+3 & imperialism \\ \hline
+4 & world \\ \hline
+5 & million \\ \hline
+6 & colonies \\ \hline
+7 & kautsky \\ \hline
+8 & colonial \\ \hline
+9 & production \\ \hline
+10 & cent \\ \hline
+11 & economic \\ \hline
+12 & company \\ \hline
+13 & capitalist \\ \hline
+14 & monopoly \\ \hline
+15 & big \\ \hline
+16 & countries \\ \hline
+17 & policy \\ \hline
+18 & powers \\ \hline
+19 & 000 \\ \hline
+20 & banks \\ \hline
+  \end{tabular}
+\end{center}
+
+\begin{center}
+  \begin{tabular}{ | l | l | }
+    \hline
+\multicolumn{2}{|c|}{Materialism and Empirio-criticism} \\ \hline
+\# & Word  \\ \hline
+1 & physics \\ \hline
+2 & social \\ \hline
+3 & avenarius \\ \hline
+4 & space \\ \hline
+5 & time \\ \hline
+6 & dietzgen \\ \hline
+7 & berkeley \\ \hline
+8 & truth \\ \hline
+9 & rey \\ \hline
+10 & objective \\ \hline
+11 & sensation \\ \hline
+12 & experience \\ \hline
+13 & pp \\ \hline
+14 & engels \\ \hline
+15 & motion \\ \hline
+16 & marx \\ \hline
+17 & book \\ \hline
+18 & works \\ \hline
+19 & vol \\ \hline
+20 & general \\ \hline
+  \end{tabular}
+\end{center}
+
+\begin{center}
+  \begin{tabular}{ | l | l | }
+    \hline
+\multicolumn{2}{|c|}{What Is To Be Done?} \\ \hline
+\# & Word  \\ \hline
+1 & local \\ \hline
+2 & organisation \\ \hline
+3 & abroad \\ \hline
+4 & union \\ \hline
+5 & criticism \\ \hline
+6 & economic \\ \hline
+7 & political \\ \hline
+8 & revolutionaries \\ \hline
+9 & freedom \\ \hline
+10 & newspapers \\ \hline
+11 & workers \\ \hline
+12 & nadezhdin \\ \hline
+13 & consciousness \\ \hline
+14 & newspaper \\ \hline
+15 & bourgeois \\ \hline
+16 & masses \\ \hline
+17 & martynov \\ \hline
+18 & would \\ \hline
+19 & movement \\ \hline
+20 & german \\ \hline
+  \end{tabular}
+\end{center}
+
+\begin{center}
+  \begin{tabular}{ | l | l | }
+    \hline
+\multicolumn{2}{|c|}{The Agrarian Programme of ...} \\ \hline
+\# & Word  \\ \hline
+1 & rent \\ \hline
+2 & dessiatins \\ \hline
+3 & 000 \\ \hline
+4 & land \\ \hline
+5 & maslov \\ \hline
+6 & peasants \\ \hline
+7 & capital \\ \hline
+8 & revolution \\ \hline
+9 & marx \\ \hline
+10 & people \\ \hline
+11 & nationalisation \\ \hline
+12 & plekhanov \\ \hline
+13 & restoration \\ \hline
+14 & right \\ \hline
+15 & latifundia \\ \hline
+16 & private \\ \hline
+17 & farming \\ \hline
+18 & free \\ \hline
+19 & central \\ \hline
+20 & lands \\ \hline
+  \end{tabular}
+\end{center}
+
+
 
 \subsection{Wordnet analyzer}
 Consideremos el siguiente problema:
@@ -162,65 +307,6 @@ Los resultados que presentaremos a continuaci\'on est\'an apoyados en distintas 
 % *judge_year
 % Dado un conjunto de palabras, definimos la distancia de una palabra a este conjunto como 
 % 
-
-\section{Results}
-\subsection{Resultados sobre obras}
-* Tabla de top words de Estado y Revolución
-\begin{center}
-  \begin{tabular}{ | l | l | l |}
-    \hline
-    \multicolumn{3}{|c|}{Top words for `State and Revolution'} \\ \hline
-    \# & Word & Information Value \\ \hline
-
-    1 & kautsky & 0.10 \\ \hline
-    2 &  marx & 0.09 \\ \hline
-    3 &  revolution & 0.09 \\ \hline
-    4 &  works & 0.06 \\ \hline 
-    5 & engels & 0.06 \\ \hline
-    6 &  society & 0.06 \\ \hline
-    7 & power & 0.05 \\ \hline
-    8 &  party & 0.04 \\ \hline
-    9 &  social & 0.04 \\ \hline
-    10 &  experience & 0.03 \\ \hline 
-    11 & bernstein & 0.03 \\ \hline
-    12 &  question & 0.03 \\ \hline 
-    13 & equality & 0.03 \\ \hline
-    14 &  phase & 0.03 \\ \hline
-    15 & 1917 & 0.03 \\ \hline
-    16 & commune & 0.03 \\ \hline
-    17 & one & 0.03 \\ \hline
-    18 & republic & 0.03 \\ \hline
-    19 & class & 0.02 \\ \hline
-    20 & law & 0.02 \\ \hline
-  \end{tabular}
-\end{center}
-
-
-\begin{center}
-  \begin{tabular}{ | r |l |}
-    \hline
-    \multicolumn{2}{|c|}{$S_{dw}($`State and Revolution'$, w)$} \\ \hline
-      $w$ & $S_{dw}(d, w)$ \\ \hline
-      revolution &  0.177  \\ \hline
-      power &  0.169  \\ \hline
-      state &  0.154  \\ \hline
-      commune &  0.133  \\ \hline
-      republic &  0.123  \\ \hline
-      politics &  0.118  \\ \hline
-      music &  0.114  \\ \hline
-      war &  0.110  \\ \hline
-      philosophy &  0.094  \\ \hline
-      idealism &  0.084  \\ \hline
-      chicken &  0.092  \\ \hline
-      computer &  0.082  \\ \hline
-      mosquito &  0.044  \\ \hline
-      lion &  0.059  \\ \hline
-      alcohol &  0.067  \\ \hline
-      toilette &  0.069  \\ \hline
-  \end{tabular}
-\end{center}
-
-
 
 
 
@@ -292,6 +378,9 @@ J.L.R.) and by National Science Foundation Grand DMS-0245242 (to C.F.).
 M.A. Montemurro and D. H. Zanette, {\em The statistics of meaning: Darwin, Gibbon and Moby Dick}, Significance, Dec. 2009, 165-169.
 \bibitem{ENTROPIC}
 M.A. Montemurro and D. H. Zanette, {\em Entropic analysis of the role of words in literary texts}, Adv. Complex Systems 5, September 27th 2001
+\bibitem{WORDNET}
+George A. Miller, {\em WordNet: A Lexical Database for English }, COMMUNICATIONS OF THE ACM November 1995/Vol. 38, No. 11
+
 \end{thebibliography}
 \end{article}
 
