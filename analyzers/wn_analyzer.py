@@ -1,6 +1,7 @@
 # This Python file uses the following encoding: utf-8
 from __future__ import division
 import logging
+from nltk.corpus import wordnet as wn
 from similarity import path_similarity
 from information_value.models import DocumentList
 
@@ -14,13 +15,15 @@ def ponderated_judge_function(partial_results):
     return sum(ponderation * similarity for (word, ponderation, similarity) in partial_results)
 
 def maximum_judge_function(partial_results):
-    return max(similarity for (_, _, similarity) in partial_results)
+    word, _, max_similarity  = max(partial_results, key=lambda x: x[2])
+    print word
+    return max_similarity
 
 # Similarity definitions:
 # http://nltk.googlecode.com/svn/trunk/doc/api/nltk.corpus.reader.wordnet.Synset-class.html#path_similarity
 class WordNetAnalyzer:
-    def __init__(self, word, similarity_function = path_similarity, judge_function=ponderated_judge_function ):
-        self.word = word
+    def __init__(self, synsets, similarity_function = path_similarity, judge_function=ponderated_judge_function ):
+        self.synsets = synsets
         self.judge_function = judge_function
         self.similarity_function = similarity_function
 
@@ -54,7 +57,7 @@ class WordNetAnalyzer:
           calls judge_synset
           @returns double a value between 1.0 and 0.0
         '''
-        return self.similarity_function(self.word, word) 
+        return self.similarity_function(self.synsets, wn.synsets(word)) 
 
  
 def wna_for(word):

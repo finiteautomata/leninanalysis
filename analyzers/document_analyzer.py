@@ -11,11 +11,11 @@ class DocumentAnalyzer(object):
     @concepts = The words that are going to be analyzed 
     @similarity_function = A similarity function from similarity module
     """
-    def __init__(self, concepts, similarity_function=path_similarity):
-        self.concepts = concepts
+    def __init__(self, synsets, similarity_function=path_similarity):
+        self.synsets = synsets
         self.similarity_function = similarity_function
         self.prefix = similarity_function.func_name
-        self.analyzers = dict((concept, WordNetAnalyzer(concept, similarity_function=similarity_function, judge_function=maximum_judge_function)) for concept in concepts)
+        self.analyzers = dict((concept, WordNetAnalyzer(synsets=synsets, similarity_function=similarity_function, judge_function=maximum_judge_function)) for concept in concepts)
  
     @property
     def name(self):

@@ -12,7 +12,7 @@ from analyzers.wn_analyzer import WordNetAnalyzer
 class TestAnalyzers(TestCase):
 
   def test_war_analyzer(self):    
-    all_war_analyzer =  WordNetAnalyzer("war")
+    all_war_analyzer =  WordNetAnalyzer(synsets=[wn.synset("war.n.01")])
     
     self.assertEqual(1.0, all_war_analyzer.judge_word("war"))
 
