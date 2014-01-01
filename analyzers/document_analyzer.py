@@ -8,14 +8,17 @@ log = logging.getLogger('lenin')
 
 class DocumentAnalyzer(object):
     """
-    @concepts = The words that are going to be analyzed 
+    @concepts = A dict mapping words to synsets
     @similarity_function = A similarity function from similarity module
     """
     def __init__(self, synsets, similarity_function=path_similarity):
-        self.synsets = synsets
+        self.word_to_synsets = synsets
         self.similarity_function = similarity_function
         self.prefix = similarity_function.func_name
-        self.analyzers = dict((concept, WordNetAnalyzer(synsets=synsets, similarity_function=similarity_function, judge_function=maximum_judge_function)) for concept in concepts)
+        self.analyzers = dict((word, WordNetAnalyzer(synsets=synsets, 
+                similarity_function=similarity_function, 
+                judge_function=maximum_judge_function))
+            for word, synsets in self.word_to_synsets.iteritems())
  
     @property
     def name(self):
@@ -24,9 +27,11 @@ class DocumentAnalyzer(object):
     def analyze_document(self, document):
         document_analysis = self.__get_analysis_for(document)
 
-        for concept in self.concepts:
-            document_analysis[self.prefix][concept] = self.__analyze_document_against_concept(concept=concept,
-                document=document, document_analysis=document_analysis)
+        for word, synsets in self.word_to_synsets.iteritems():
+            document_analysis[self.prefix][word] = self.__analyze_document_against_synsets(
+                word=word, synsets=synsets,
+                document=document, 
+                document_analysis=document_analysis)
         
         db.document_analysis.save(document_analysis)
         return document_analysis[self.prefix]
@@ -37,10 +42,10 @@ class DocumentAnalyzer(object):
             document_analysis[self.prefix] = {}
         return document_analysis
 
-    def __analyze_document_against_concept(self, document, concept, document_analysis):
+    def __analyze_document_against_synsets(self, document, word, synsets, document_analysis):
         # Only calculate in case there's no analysis done
-        if concept in document_analysis[self.prefix].keys():
-            return document_analysis[self.prefix][concept]
-        analyzer = self.analyzers[concept]
+        if word in document_analysis[self.prefix].keys():
+            return document_analysis[self.prefix][word]
+        analyzer = self.analyzers[word]
         return analyzer.judge_doc(document)
     
