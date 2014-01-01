@@ -7,6 +7,7 @@ nosetests.xml
 *.dvi
 *.ps
 *.fls
+*synctex.gz
 .env
 lenin.log
 config.py
