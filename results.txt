@@ -1,0 +1,520 @@
+*****************
+The State and Revolution
+*****************
+kautsky
+marx
+revolution
+works
+engels
+society
+power
+party
+social
+experience
+bernstein
+question
+equality
+phase
+1917
+commune
+one
+republic
+class
+law
+---------------
+==============================
+path_similarity
+None
+               revolution                       1.0  --                 revolution 
+               philosophy                       0.5  --                        law 
+              proletarian                      0.25  --                      party 
+                      war                      0.25  --                 revolution 
+                 practice                       0.2  --                 revolution 
+                 idealism            0.166666666667  --                 experience 
+                   toilet            0.166666666667  --                      works 
+              materialism            0.166666666667  --                 experience 
+                 strategy            0.166666666667  --                 experience 
+              imperialism            0.166666666667  --                      power 
+                   theory            0.142857142857  --                      power 
+                    money            0.142857142857  --                      phase 
+               capitalism            0.142857142857  --                    society 
+                     hair            0.111111111111  --                      works 
+      television_receiver            0.111111111111  --                      works 
+                      car            0.111111111111  --                      works 
+                    sugar           0.0909090909091  --                      power 
+                     lion           0.0833333333333  --                      party 
+==============================
+lch_similarity
+None
+               revolution             3.63758615973  --                 revolution 
+               philosophy             2.94443897917  --                        law 
+              proletarian             2.25129179861  --                      party 
+                      war             2.25129179861  --                 revolution 
+                 practice             2.02814824729  --                 revolution 
+                 idealism              1.8458266905  --                 experience 
+                   toilet              1.8458266905  --                      works 
+              materialism              1.8458266905  --                 experience 
+                 strategy              1.8458266905  --                 experience 
+              imperialism              1.8458266905  --                      power 
+                   theory             1.69167601067  --                      power 
+                    money             1.69167601067  --                      phase 
+               capitalism             1.69167601067  --                    society 
+                     hair             1.44036158239  --                      works 
+      television_receiver             1.44036158239  --                      works 
+                      car             1.44036158239  --                      works 
+                    sugar             1.23969088693  --                      power 
+                     lion             1.15267950994  --                      party 
+==============================
+lin_similarity
+None
+               revolution                       1.0  --                 revolution 
+               philosophy            0.976848075428  --                        law 
+                 strategy             0.55722227875  --                        law 
+                      war            0.490875072994  --                 revolution 
+                    money            0.381214020012  --                        one 
+                      car            0.379032002399  --                      works 
+                   theory            0.371919946823  --                      power 
+              materialism            0.349363567448  --                        one 
+                 idealism            0.334333310589  --                        one 
+      television_receiver            0.332454268431  --                      works 
+                   toilet            0.318321536281  --                      class 
+               capitalism            0.317825134317  --                      class 
+              imperialism            0.283842614195  --                      power 
+                 practice             0.26395984401  --                      class 
+              proletarian            0.262319261106  --                      power 
+                     lion            0.230276741502  --                      power 
+                     hair            0.201884948371  --                      works 
+                    sugar           0.0866106005639  --                      works 
+==============================
+jcn_similarity
+None
+               revolution                    1e+300  --                 revolution 
+               philosophy             2.54425354975  --                        law 
+                    money            0.114463788126  --                        one 
+                 strategy            0.112589010036  --                        law 
+                   theory            0.111958604892  --                      power 
+                      war            0.106563401763  --                 revolution 
+                      car           0.0968611991406  --                      works 
+                 practice           0.0890575424118  --                      power 
+              materialism            0.082699934766  --                      power 
+                     hair           0.0825651572344  --                      works 
+               capitalism           0.0815852680019  --                      class 
+      television_receiver           0.0785401473185  --                      works 
+              proletarian           0.0778920065792  --                      power 
+                 idealism           0.0772844959268  --                      power 
+                   toilet            0.075141999107  --                      power 
+              imperialism           0.0749362801747  --                      power 
+                     lion           0.0672544932413  --                      power 
+                    sugar           0.0623790510818  --                      power 
+==============================
+res_similarity
+None
+               revolution             10.3880624692  --                 revolution 
+               philosophy             8.29181380916  --                        law 
+                 strategy             5.58877614988  --                        law 
+                      war             4.52385364841  --                 revolution 
+                 idealism             3.29228159341  --                 experience 
+              materialism             3.29228159341  --                 experience 
+      television_receiver             3.25767902589  --                      works 
+                      car             3.25767902589  --                      works 
+                   toilet             3.14352023311  --                      works 
+               capitalism             2.85529368615  --                    society 
+                    money             2.69110280536  --                      phase 
+                   theory             2.64452085446  --                      power 
+              imperialism             2.64452085446  --                      power 
+              proletarian             2.33354524374  --                      power 
+                 practice             2.33223775508  --                 revolution 
+                     lion             2.22415047123  --                      power 
+                     hair             1.53183374322  --                      works 
+                    sugar            0.801759114954  --                      works 
+*****************
+Lenin: Imperialism, the Highest Stage of Capitalism
+*****************
+enterprises
+bank
+imperialism
+world
+million
+colonies
+kautsky
+colonial
+production
+cent
+economic
+company
+capitalist
+monopoly
+big
+countries
+policy
+powers
+000
+banks
+---------------
+==============================
+path_similarity
+None
+              imperialism                       1.0  --                imperialism 
+                 practice                      0.25  --                 production 
+              proletarian                      0.25  --                 capitalist 
+                     hair                       0.2  --                      world 
+                      war                       0.2  --                 production 
+               revolution            0.166666666667  --                 production 
+                   theory            0.166666666667  --                     policy 
+                    money            0.166666666667  --                       cent 
+               capitalism            0.166666666667  --                      world 
+                      car            0.166666666667  --                       bank 
+                 idealism            0.142857142857  --                      world 
+                   toilet            0.142857142857  --                imperialism 
+              materialism            0.142857142857  --                      world 
+                 strategy            0.142857142857  --                      world 
+               philosophy            0.142857142857  --                      world 
+      television_receiver                     0.125  --                       bank 
+                     lion            0.111111111111  --                      world 
+                    sugar           0.0909090909091  --                     powers 
+==============================
+lch_similarity
+None
+              imperialism             3.63758615973  --                imperialism 
+                 practice             2.25129179861  --                 production 
+              proletarian             2.25129179861  --                 capitalist 
+                     hair             2.02814824729  --                      world 
+                      war             2.02814824729  --                 production 
+               revolution              1.8458266905  --                 production 
+                   theory              1.8458266905  --                     policy 
+                    money              1.8458266905  --                       cent 
+               capitalism              1.8458266905  --                      world 
+                      car              1.8458266905  --                       bank 
+                 idealism             1.69167601067  --                      world 
+                   toilet             1.69167601067  --                imperialism 
+              materialism             1.69167601067  --                      world 
+                 strategy             1.69167601067  --                      world 
+               philosophy             1.69167601067  --                      world 
+      television_receiver             1.55814461805  --                       bank 
+                     lion             1.44036158239  --                      world 
+                    sugar             1.23969088693  --                     powers 
+==============================
+lin_similarity
+None
+              imperialism                       1.0  --                imperialism 
+                    money            0.733969426851  --                       cent 
+                   theory            0.673087888911  --                     policy 
+                     hair            0.646495819603  --                      world 
+                     lion            0.616573220457  --                      world 
+                      car            0.599529711525  --                       bank 
+                      war            0.557969064406  --                 production 
+               philosophy             0.40983001317  --                      world 
+                 strategy            0.343853717693  --                      world 
+      television_receiver            0.329492088647  --                       bank 
+                   toilet            0.324686891115  --                enterprises 
+              materialism            0.324451464834  --                      world 
+               capitalism            0.318309463186  --                enterprises 
+                 idealism            0.311448421397  --                      world 
+              proletarian            0.290977859878  --                 capitalist 
+                 practice            0.269873184363  --                enterprises 
+               revolution            0.224771761091  --                enterprises 
+                    sugar           0.0970549647175  --                  countries 
+==============================
+jcn_similarity
+None
+              imperialism                    1e+300  --                imperialism 
+                    money            0.220543285308  --                       cent 
+                     hair            0.185089245333  --                      world 
+                   theory            0.181275716945  --                     policy 
+                     lion            0.148512052197  --                      world 
+                      car            0.143793273094  --                       bank 
+                      war            0.139514360943  --                 production 
+               philosophy            0.127161232121  --                     powers 
+      television_receiver           0.0922281130906  --                 production 
+                 strategy           0.0913511001676  --                     powers 
+                 practice           0.0890575424118  --                     powers 
+              proletarian           0.0879334124634  --                 capitalist 
+               revolution           0.0828925339577  --                     powers 
+              materialism            0.082699934766  --                     powers 
+               capitalism           0.0817676477438  --                enterprises 
+                 idealism           0.0772844959268  --                     powers 
+                   toilet           0.0764739141189  --                enterprises 
+                    sugar           0.0670320559584  --                  countries 
+==============================
+res_similarity
+None
+              imperialism             13.7724527325  --                imperialism 
+                    money              6.2549318819  --                       cent 
+                   theory               5.678990458  --                imperialism 
+                     lion             5.41390363453  --                      world 
+                      car              5.2056126012  --                       bank 
+                     hair             4.94037581121  --                      world 
+                      war             4.52385364841  --                 production 
+                 idealism             3.29228159341  --                      world 
+              materialism             3.29228159341  --                      world 
+                 strategy             3.29228159341  --                      world 
+               philosophy             3.29228159341  --                      world 
+      television_receiver             3.25767902589  --                       bank 
+                   toilet             3.14352023311  --                enterprises 
+               capitalism             2.85529368615  --                enterprises 
+              proletarian             2.33354524374  --                   colonial 
+                 practice             2.33223775508  --                enterprises 
+               revolution             2.03632771779  --                enterprises 
+                    sugar            0.801759114954  --                       bank 
+*****************
+Lenin: MATERIALISM and EMPIRIO-CRITICISM
+*****************
+physics
+social
+avenarius
+space
+time
+dietzgen
+berkeley
+truth
+rey
+objective
+sensation
+experience
+pp
+engels
+motion
+marx
+book
+works
+vol
+general
+---------------
+==============================
+path_similarity
+None
+               revolution                      0.25  --                 experience 
+                 practice                       0.2  --                      works 
+              proletarian                       0.2  --                  sensation 
+                 idealism            0.166666666667  --                 experience 
+                   toilet            0.166666666667  --                      works 
+              materialism            0.166666666667  --                 experience 
+                 strategy            0.166666666667  --                    physics 
+                      war            0.166666666667  --                 experience 
+               philosophy            0.166666666667  --                    physics 
+                    money            0.142857142857  --                      space 
+              imperialism            0.142857142857  --                 experience 
+               capitalism            0.142857142857  --                       book 
+                   theory                     0.125  --                  sensation 
+                     hair                     0.125  --                      space 
+      television_receiver            0.111111111111  --                      works 
+                      car            0.111111111111  --                      works 
+                    sugar           0.0833333333333  --                      space 
+                     lion           0.0769230769231  --                  sensation 
+==============================
+lch_similarity
+None
+               revolution             2.25129179861  --                 experience 
+                 practice             2.02814824729  --                      works 
+              proletarian             2.02814824729  --                  sensation 
+                 idealism              1.8458266905  --                 experience 
+                   toilet              1.8458266905  --                      works 
+              materialism              1.8458266905  --                 experience 
+                 strategy              1.8458266905  --                    physics 
+                      war              1.8458266905  --                 experience 
+               philosophy              1.8458266905  --                    physics 
+                    money             1.69167601067  --                      space 
+              imperialism             1.69167601067  --                 experience 
+               capitalism             1.69167601067  --                       book 
+                   theory             1.55814461805  --                  sensation 
+                     hair             1.55814461805  --                      space 
+      television_receiver             1.44036158239  --                      works 
+                      car             1.44036158239  --                      works 
+                    sugar             1.15267950994  --                      space 
+                     lion             1.07263680226  --                  sensation 
+==============================
+lin_similarity
+None
+               philosophy            0.619941000616  --                    physics 
+                 strategy            0.529421413479  --                    physics 
+                   theory            0.529419405948  --                  sensation 
+               revolution            0.501528714411  --                     motion 
+                      car            0.379201045998  --                  objective 
+                    money            0.378850360998  --                       time 
+                      war            0.352309191252  --                     motion 
+              materialism            0.340082790393  --                 experience 
+      television_receiver            0.332584311437  --                  objective 
+                 idealism            0.325824183018  --                 experience 
+                 practice            0.319651726399  --                     motion 
+                   toilet            0.296346253722  --                      works 
+               capitalism             0.27940619133  --                     social 
+              proletarian            0.275623403177  --                    general 
+              imperialism            0.260526055611  --                       time 
+                     lion            0.243481690164  --                    general 
+                     hair            0.203310572065  --                    general 
+                    sugar           0.0931898726307  --                      space 
+==============================
+jcn_similarity
+None
+               philosophy            0.145932703696  --                    physics 
+                   theory            0.128286683846  --                  sensation 
+               revolution             0.12410710513  --                     motion 
+                      war            0.116614732958  --                     motion 
+                    money            0.113321204917  --                       time 
+                 practice            0.100726315955  --                     motion 
+                 strategy            0.100652051627  --                    physics 
+                      car           0.0968611991406  --                      works 
+                     hair            0.088588450972  --                      space 
+                   toilet           0.0832824361253  --                     motion 
+              proletarian             0.08152775037  --                    general 
+      television_receiver           0.0785401473185  --                      works 
+              materialism           0.0782651156903  --                 experience 
+                 idealism           0.0733978223994  --                 experience 
+                     lion           0.0723523602638  --                    general 
+               capitalism           0.0678992095349  --                     social 
+              imperialism           0.0666118194652  --                       time 
+                    sugar           0.0640882561837  --                      space 
+==============================
+res_similarity
+None
+                 strategy             5.58877614988  --                    physics 
+               philosophy             5.58877614988  --                    physics 
+                   theory             4.38484522248  --                  sensation 
+               revolution             4.05348916032  --                       time 
+                 idealism             3.29228159341  --                    physics 
+              materialism             3.29228159341  --                    physics 
+      television_receiver             3.25767902589  --                  objective 
+                      car             3.25767902589  --                  objective 
+                   toilet             3.14352023311  --                      works 
+               capitalism             2.85529368615  --                     social 
+                    money             2.69110280536  --                      space 
+              imperialism             2.64452085446  --                    physics 
+              proletarian             2.33354524374  --                  sensation 
+                 practice             2.33223775508  --                     motion 
+                      war             2.33223775508  --                     motion 
+                     lion             2.22415047123  --                  sensation 
+                     hair             1.53183374322  --                      space 
+                    sugar            0.801759114954  --                      space 
+*****************
+Lenin: What Is To Be Done?
+*****************
+local
+organisation
+abroad
+union
+criticism
+economic
+political
+revolutionaries
+freedom
+newspapers
+workers
+nadezhdin
+consciousness
+newspaper
+bourgeois
+masses
+martynov
+would
+movement
+german
+---------------
+==============================
+path_similarity
+None
+              proletarian                       1.0  --                    workers 
+               revolution                      0.25  --                      union 
+                 practice                       0.2  --               organisation 
+                   toilet            0.166666666667  --               organisation 
+                   theory            0.166666666667  --              consciousness 
+              imperialism            0.166666666667  --                   movement 
+               capitalism            0.166666666667  --                     masses 
+                      war            0.166666666667  --               organisation 
+                 idealism                     0.125  --               organisation 
+                    money                     0.125  --                     masses 
+              materialism                     0.125  --               organisation 
+                 strategy                     0.125  --               organisation 
+               philosophy                     0.125  --               organisation 
+                      car                     0.125  --                      local 
+                     hair            0.111111111111  --                 newspapers 
+      television_receiver            0.111111111111  --                      local 
+                    sugar           0.0909090909091  --                      local 
+                     lion           0.0833333333333  --                    workers 
+==============================
+lch_similarity
+None
+              proletarian             3.63758615973  --                    workers 
+               revolution             2.25129179861  --                      union 
+                 practice             2.02814824729  --               organisation 
+                   toilet              1.8458266905  --               organisation 
+                   theory              1.8458266905  --              consciousness 
+              imperialism              1.8458266905  --                   movement 
+               capitalism              1.8458266905  --                     masses 
+                      war              1.8458266905  --               organisation 
+                 idealism             1.55814461805  --               organisation 
+                    money             1.55814461805  --                     masses 
+              materialism             1.55814461805  --               organisation 
+                 strategy             1.55814461805  --               organisation 
+               philosophy             1.55814461805  --               organisation 
+                      car             1.55814461805  --                      local 
+                     hair             1.44036158239  --                 newspapers 
+      television_receiver             1.44036158239  --                      local 
+                    sugar             1.23969088693  --                      local 
+                     lion             1.15267950994  --                    workers 
+==============================
+lin_similarity
+None
+              proletarian                       1.0  --                    workers 
+                      car            0.702880218461  --                      local 
+                   theory            0.576851690261  --              consciousness 
+              imperialism             0.53254850484  --                   movement 
+                      war            0.522421412305  --               organisation 
+               revolution            0.501528714411  --                   movement 
+                     lion            0.491490657562  --                    workers 
+                    sugar            0.461833980698  --                      local 
+               capitalism            0.366071452787  --               organisation 
+      television_receiver            0.356914166707  --                 newspapers 
+               philosophy             0.34298820812  --               organisation 
+                   toilet            0.331203589827  --                   movement 
+                 practice            0.319651726399  --                   movement 
+                 strategy             0.28584438696  --               organisation 
+              materialism            0.269184993399  --               organisation 
+                 idealism             0.25805678512  --               organisation 
+                     hair            0.248092928538  --                    workers 
+                    money           0.0997957160373  --               organisation 
+==============================
+jcn_similarity
+None
+              proletarian                    1e+300  --                    workers 
+                      car            0.205033607022  --                      local 
+                   theory            0.135687824974  --              consciousness 
+               revolution             0.12410710513  --                   movement 
+                      war             0.12090313989  --               organisation 
+                     hair            0.107698235698  --                    workers 
+               capitalism            0.101121795595  --               organisation 
+                 practice            0.100726315955  --                   movement 
+               philosophy           0.0987027000784  --               organisation 
+                     lion            0.097708241356  --                    workers 
+              imperialism           0.0943185135905  --                   movement 
+                    sugar           0.0929714058017  --                      local 
+                    money           0.0929667353193  --               organisation 
+      television_receiver           0.0873062903722  --                    workers 
+                   toilet           0.0832824361253  --                   movement 
+                 strategy           0.0756762882437  --               organisation 
+              materialism           0.0696412241652  --               organisation 
+                 idealism           0.0657608810485  --               organisation 
+==============================
+res_similarity
+None
+              proletarian              9.6949152886  --                    workers 
+              imperialism             6.03942612003  --                   movement 
+                      car             5.76892251967  --                      local 
+                   theory             5.02343378939  --              consciousness 
+                     lion             4.94601169072  --                    workers 
+                    sugar             4.61519673162  --                      local 
+                      war             4.52385364841  --               organisation 
+               revolution             4.05348916032  --                      union 
+      television_receiver             3.25767902589  --                      local 
+                   toilet             3.14352023311  --               organisation 
+               capitalism             2.85529368615  --               organisation 
+                 idealism             2.64452085446  --               organisation 
+              materialism             2.64452085446  --               organisation 
+                 strategy             2.64452085446  --               organisation 
+               philosophy             2.64452085446  --               organisation 
+                 practice             2.33223775508  --               organisation 
+                     hair             1.53183374322  --                      local 
+                    money            0.596229207898  --               organisation 
+*****************
+Lenin: The Agrarian Programme of Social-Democracy in the First Russian Revolution, 1905-1907
+*****************
+rent

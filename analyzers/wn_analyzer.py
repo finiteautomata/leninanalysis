@@ -13,9 +13,12 @@ reload(config)
 def ponderated_judge_function(partial_results):
     return sum(ponderation * similarity for (word, ponderation, similarity) in partial_results)
 
+#this is horrible
+best_word = None
 def maximum_judge_function(partial_results):
-    word, _, max_similarity  = max(partial_results, key=lambda x: x[2])
-    print word
+    global best_word
+    max_word, _, max_similarity  = max(partial_results, key=lambda x: x[2])
+    best_word = max_word
     return max_similarity
 
 # Similarity definitions:
@@ -53,7 +56,6 @@ class WordNetAnalyzer:
 
     def judge_word(self, word):
         '''
-          calls judge_synset
           @returns double a value between 1.0 and 0.0
         '''
         return self.similarity_function(self.synsets, get_word_synsets(word)) 
