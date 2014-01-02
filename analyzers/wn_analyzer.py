@@ -1,8 +1,7 @@
 # This Python file uses the following encoding: utf-8
 from __future__ import division
 import logging
-from nltk.corpus import wordnet as wn
-from similarity import path_similarity
+from similarity import path_similarity, get_word_synsets
 from information_value.models import DocumentList
 
 log = logging.getLogger('lenin')
@@ -57,7 +56,7 @@ class WordNetAnalyzer:
           calls judge_synset
           @returns double a value between 1.0 and 0.0
         '''
-        return self.similarity_function(self.synsets, wn.synsets(word)) 
+        return self.similarity_function(self.synsets, get_word_synsets(word)) 
 
  
 def wna_for(word):
