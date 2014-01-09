@@ -1,29 +1,13 @@
 #! coding: utf-8
 # THIS IMPORT MUST BE THE FIRST IN EVERY tests.py FILE
-from test import LeninTestCase
 from unittest import skip
 import types
-import operator
-import pymongo
+from nltk.corpus import wordnet as wn
 from mock import Mock
-from pymongo.errors import DuplicateKeyError
-from information_value.models import odm_session
-from information_value.models import Document
-from information_value.models import InformationValueResult
-from factories import DocumentFactory, InformationValueResultFactory
+from test import LeninTestCase
+from factories import DocumentFactory
     
 class DocumentTest(LeninTestCase):
-    @skip
-    def test_top_words_returns_words_in_same_order_of_iv_top_words_for_best_window_size(self):
-        top_words = [
-            ("bar", 0.2),
-            ("foo", 0.01),
-            ("john", 0.001),
-            ("sarasa", 0.0005),
-        ]
-        document = get_document_with_top_words(top_words=top_words)
-
-        self.assertEquals(top_words, document.top_words(window_size=100))
 
     def test_information_value_result_is_created_if_it_didnt_exists(self):
         document = DocumentFactory()
@@ -38,10 +22,22 @@ class DocumentTest(LeninTestCase):
 
         calculator_class.assert_called_with(document.tokens)
 
-def get_document_with_top_words(top_words):
-    document = DocumentFactory()
-    document.get_iv_by_window_size = types.MethodType(lambda self, window_size: top_words, document)
+    def test_top_senses_for_empty_top_words_is_empty(self):
+        document = get_document_with_top_words([])
+
+        self.assertEquals([], document.top_senses())
+
+    def test_top_senses_for_one_top_word_returns_correct_sense(self):
+        document = get_document_with_top_words([('bank', 1.0)], text='I went to the bank to deposit my money')       
+
+        self.assertEqual([wn.synset('depository_financial_institution.n.01')],  document.top_senses()) 
+
+
+def get_document_with_top_words(top_words, **kwargs):
+    document = DocumentFactory(**kwargs)
+    document.top_words = types.MethodType(lambda self: top_words, document)
     return document
+
 
 def mock_calculator_class_returning(iv_words):
     calculator_mock = Mock()

@@ -2,22 +2,23 @@
 import logging
 import hashlib
 
+from nltk.corpus import stopwords
+from nltk import sent_tokenize
+
 from pymongo.errors import DuplicateKeyError
 
-from ming import Session
-from ming import schema
 import operator
-from ming.odm import ODMSession
-from ming.odm import Mapper
+import wisdom
+from ming import Session, schema
+from ming.odm import ODMSession, Mapper
 from ming.odm.mapper import MapperExtension
-from ming.odm.property import ForeignIdProperty
-from ming.odm.property import FieldProperty, RelationProperty
+from ming.odm.property import ForeignIdProperty, FieldProperty, RelationProperty
 from ming.odm.declarative import MappedClass
 
 import config
 from includes.tokenizer import tokenize
 from information_value.calculator import InformationValueCalculator
-from nltk.corpus import stopwords
+
 
 MIN_TOKENS = 2000
 
@@ -101,6 +102,14 @@ class Document(MappedClass):
         effective_total_words = max(total_words, len(iv_words))
         return [(word, 1.0/effective_total_words) for (word, iv_value) in iv_words]
 
+
+    def top_senses(self, total_senses=20):
+        top_words = self.top_words()
+        sentences = self.sentences
+
+        senses = [wisdom.multi_sentence(sentences, word) for (word, _) in top_words]
+        return senses
+
     # calculator_class is poor man's dependency injection :)
     def get_iv_by_window_size(self, window_size, calculator_class=InformationValueCalculator):
         sort = lambda iv_words: sorted(iv_words, key=operator.itemgetter(1), reverse=True)
@@ -153,6 +162,10 @@ class Document(MappedClass):
     @property
     def total_tokens(self):
         return len(self.tokens)
+
+    @property
+    def sentences(self):
+        return sent_tokenize(self.text)
 
     def __str__(self):
         return self.__repr__()
