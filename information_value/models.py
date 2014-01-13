@@ -105,9 +105,13 @@ class Document(MappedClass):
 
     def top_senses(self, total_senses=20):
         top_words = self.top_words()
-        sentences = self.sentences
-
-        senses = [wisdom.multi_sentence(sentences, word) for (word, _) in top_words]
+        senses = []
+        #import ipdb; ipdb.set_trace()
+        for (word, _) in top_words:
+            try:
+                senses.append(wisdom.lesk(self.text, word))
+            except wisdom.NoSenseFound:
+                pass
         return senses
 
     # calculator_class is poor man's dependency injection :)
