@@ -29,13 +29,12 @@ class DocumentTest(LeninTestCase):
 
     def test_top_senses_for_one_top_word_returns_correct_sense(self):
         document = get_document_with_top_words([('bank', 1.0)], text='I went to the bank to deposit my money')       
-
         self.assertEqual([wn.synset('depository_financial_institution.n.01')],  document.top_senses()) 
 
 
 def get_document_with_top_words(top_words, **kwargs):
     document = DocumentFactory(**kwargs)
-    document.top_words = types.MethodType(lambda self: top_words, document)
+    document.top_words = types.MethodType(lambda self, num=20: top_words, document)
     return document
 
 

@@ -2,7 +2,7 @@
 import logging
 import hashlib
 
-from nltk.corpus import stopwords
+from nltk.corpus import stopwords, wordnet as wn
 from nltk import sent_tokenize
 
 from pymongo.errors import DuplicateKeyError
@@ -90,6 +90,7 @@ class Document(MappedClass):
     text = FieldProperty(schema.String)
     month = FieldProperty(schema.String)
     year = FieldProperty(schema.Int)
+    related_sense = FieldProperty(schema.Object)
     number_of_words = FieldProperty(schema.Int)
     results = RelationProperty(InformationValueResult)
 
@@ -104,15 +105,24 @@ class Document(MappedClass):
 
 
     def top_senses(self, total_senses=20):
-        top_words = self.top_words()
+        top_words = self.top_words(total_senses*2)
         senses = []
-        #import ipdb; ipdb.set_trace()
         for (word, _) in top_words:
             try:
-                senses.append(wisdom.lesk(self.text, word))
+                sense = self.__get_sense_for(word)
+                senses.append(sense)
+                if len(senses) >= total_senses:
+                    break
             except wisdom.NoSenseFound:
                 pass
-        return senses
+        odm_session.flush()
+        return senses        
+
+    def __get_sense_for(self, word):
+        if not self.related_sense.has_key(word):
+            sense = wisdom.lesk(self.text, word)
+            self.related_sense[word] = sense.name
+        return wn.synset(self.related_sense[word])
 
     # calculator_class is poor man's dependency injection :)
     def get_iv_by_window_size(self, window_size, calculator_class=InformationValueCalculator):
