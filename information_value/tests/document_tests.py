@@ -35,6 +35,7 @@ class DocumentTest(LeninTestCase):
 def get_document_with_top_words(top_words, **kwargs):
     document = DocumentFactory(**kwargs)
     document.top_words = types.MethodType(lambda self, num=20: top_words, document)
+    document.related_sense = {}
     return document
 
 
