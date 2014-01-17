@@ -54,6 +54,8 @@ class SynsetAnalyzer:
         partial_results = [(word, ponderation, self.judge_word(word)) for (word, ponderation) in top_senses]
         return self.judge_function(partial_results)
 
+    def judge_synset(self, synset):
+        return self.similarity_function(self.synsets, [synset])
 
     def judge_word(self, word):
         '''
