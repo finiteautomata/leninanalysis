@@ -1,6 +1,6 @@
 #! encoding:utf-8
-import wn_analyzer
-from wn_analyzer import WordNetAnalyzer, maximum_judge_function
+import synset_analyzer
+from synset_analyzer import SynsetAnalyzer, maximum_judge_function
 import logging
 from similarity import path_similarity
 from interpreter import db
@@ -16,7 +16,7 @@ class DocumentAnalyzer(object):
         self.word_to_synsets = synsets
         self.similarity_function = similarity_function
         self.prefix = similarity_function.func_name
-        self.analyzers = dict((word, WordNetAnalyzer(synsets=synsets, 
+        self.analyzers = dict((word, SynsetAnalyzer(synsets=synsets, 
                 similarity_function=similarity_function, 
                 judge_function=maximum_judge_function))
             for word, synsets in self.word_to_synsets.iteritems())
@@ -49,6 +49,6 @@ class DocumentAnalyzer(object):
             return document_analysis[self.prefix][word]
         analyzer = self.analyzers[word]
         doc_analysis = analyzer.judge_doc(document)
-        self.best_word_for[word] = wn_analyzer.best_word
+        self.best_word_for[word] = synset_analyzer.best_word
         return doc_analysis
     

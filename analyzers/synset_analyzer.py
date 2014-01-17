@@ -23,7 +23,7 @@ def maximum_judge_function(partial_results):
 
 # Similarity definitions:
 # http://nltk.googlecode.com/svn/trunk/doc/api/nltk.corpus.reader.wordnet.Synset-class.html#path_similarity
-class WordNetAnalyzer:
+class SynsetAnalyzer:
     def __init__(self, synsets, similarity_function = path_similarity, judge_function=ponderated_judge_function ):
         self.synsets = synsets
         self.judge_function = judge_function
@@ -40,19 +40,20 @@ class WordNetAnalyzer:
         return (sum(v for (d, v) in all_docs_with_values) / len(all_docs_with_values))   
 
 
-    def judge_doc(self, document):
+    def judge_doc(self, document, number_of_senses=20):
         '''
           returns a value between 0 and 1
         '''
-        top_words_with_ivs = document.top_words(20)
+        top_senses = document.top_words(number_of_senses)
 
         """
         Here we have in partial_results
         [(word, word_ponderation, similarity) for word in document.top_words]
         We pass this to the judge function
         """
-        partial_results = [(word, ponderation, self.judge_word(word)) for (word, ponderation) in top_words_with_ivs]
+        partial_results = [(word, ponderation, self.judge_word(word)) for (word, ponderation) in top_senses]
         return self.judge_function(partial_results)
+
 
     def judge_word(self, word):
         '''
@@ -62,7 +63,7 @@ class WordNetAnalyzer:
 
  
 def wna_for(word):
-    return WordNetAnalyzer(word)
+    return SynsetAnalyzer(word)
 
 
 

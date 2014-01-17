@@ -105,9 +105,9 @@ class Document(MappedClass):
 
 
     def top_senses(self, total_senses=20):
-        top_words = self.top_words(total_senses*2)
+        top_words = (word for word, _ in self.top_words(total_senses*2))
         senses = []
-        for (word, _) in top_words:
+        for word in top_words:
             try:
                 sense = self.__get_sense_for(word)
                 senses.append(sense)
@@ -119,6 +119,7 @@ class Document(MappedClass):
         return senses        
 
     def __get_sense_for(self, word):
+        
         if not self.related_sense.has_key(word):
             sense = wisdom.lesk(self.text, word)
             self.related_sense[word] = sense.name

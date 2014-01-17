@@ -110,7 +110,7 @@ def main():
    
     if args.plot:
         from plot import wn_plots
-        import analyzers.wn_analyzer as wa
+        import analyzers.synset_analyzer as wa
         
         concepts = None
         if args.concepts:

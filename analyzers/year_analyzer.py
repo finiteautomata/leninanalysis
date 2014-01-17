@@ -1,6 +1,6 @@
 #! coding: utf-8
 from information_value.models import DocumentList
-from wn_analyzer import wna_for
+from synset_analyzer import wna_for
 import logging
 from interpreter import db
 
