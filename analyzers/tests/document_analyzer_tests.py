@@ -26,3 +26,10 @@ class DocumentAnalyzerTests(TestCase):
         doc = document_returning_top_senses(wn.synset("war.n.01"))
 
         self.assertEquals({"war.n.01": 1.0}, analyzer.analyze_document(doc))
+
+    def test_analyze_multiple_concepts(self):
+        analyzer = DocumentAnalyzer(synsets=[wn.synset("war.n.01"), wn.synset("music.n.01")])
+
+        doc = document_returning_top_senses(wn.synset("war.n.01"), wn.synset("music.n.01"))
+
+        self.assertEquals({"war.n.01": 1.0, "music.n.01": 1.0}, analyzer.analyze_document(doc))

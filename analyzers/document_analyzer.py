@@ -18,7 +18,7 @@ class DocumentAnalyzer(object):
         self.prefix = similarity_function.func_name
         self.analyzers = dict(
             (synset, SynsetAnalyzer(
-                synsets=synsets, 
+                synsets=[synset], 
                 similarity_function=similarity_function, 
                 judge_function=maximum_judge_function)
             ) for synset in self.synsets)
