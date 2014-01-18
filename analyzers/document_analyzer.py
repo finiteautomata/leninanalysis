@@ -12,7 +12,7 @@ class DocumentAnalyzer(object):
     @concepts = A dict mapping words to synsets
     @similarity_function = A similarity function from similarity module
     """
-    def __init__(self, synsets, similarity_function=path_similarity):
+    def __init__(self, synsets, similarity_function=path_similarity, judge_function=maximum_judge_function):
         self.synsets = synsets
         self.similarity_function = similarity_function
         self.prefix = similarity_function.func_name
@@ -20,7 +20,7 @@ class DocumentAnalyzer(object):
             (synset, SynsetAnalyzer(
                 synsets=[synset], 
                 similarity_function=similarity_function, 
-                judge_function=maximum_judge_function)
+                judge_function=judge_function)
             ) for synset in self.synsets)
  
     @property

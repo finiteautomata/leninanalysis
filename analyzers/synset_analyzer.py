@@ -17,6 +17,9 @@ def maximum_judge_function(partial_results):
     best_word = max_synset
     return max_similarity
 
+def average_judge_function(partial_results):
+    return sum(similarity for (synset, similarity) in partial_results) / len(partial_results)
+
 # Similarity definitions:
 # http://nltk.googlecode.com/svn/trunk/doc/api/nltk.corpus.reader.wordnet.Synset-class.html#path_similarity
 class SynsetAnalyzer:
