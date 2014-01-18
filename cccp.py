@@ -6,6 +6,7 @@ import logging
 import analyzers
 import argparse
 import subprocess
+from commands.database import reset_senses
 from commands.year_analysis import calculate_year_analysis
 import ming
 
@@ -64,6 +65,7 @@ def main():
     parser.add_argument('--notebook-server', action='store_true', default=False, help='Starts notebook server')
     parser.add_argument('--set-number-of-tokens', action='store_true', default=False, help='Calculate number of words for each work')
     parser.add_argument('--analyze-documents', action='store_true', default=False, help="Do Document Analysis for given concepts (pass with --concepts)")
+    parser.add_argument('--reset-senses', action='store_true', default=False, help="Reset all senses calculated")
     if len(sys.argv)==1:
         parser.print_help()
         sys.exit(1)
@@ -136,6 +138,8 @@ def main():
         subprocess.call("PYTHONPATH=$PYTHONPATH:$PWD; ipython notebook --notebook-dir=.", shell=True)
     if args.shell:
         subprocess.call("ipython -i interpreter.py", shell=True)
+    if args.reset_senses:
+        reset_senses()
 
     if args.set_number_of_tokens:
         set_number_of_tokens()

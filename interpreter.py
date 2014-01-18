@@ -2,6 +2,8 @@
 """
   Run this before opening a console
 """
+from ming import Session
+from ming.odm import ODMSession
 import ming
 import config
 import logging
@@ -11,8 +13,9 @@ ming_config = {'ming.document_store.uri': config.DATABASE_URL}
 ming.configure(**ming_config)
 
 from information_value.models import Document, DocumentList, InformationValueResult, doc_for
-from analyzers.synset_analyzer import SynsetAnalyzer, year_vs_concept_data, wnas_for, wna_for
+from analyzers.synset_analyzer import SynsetAnalyzer
 from nltk.corpus import wordnet as wn
+from analyzers import similarity
 
 from pymongo import MongoClient
 
@@ -37,3 +40,6 @@ init_logging()
 
 client = MongoClient()
 db = client[config.DATABASE_NAME]
+
+session = Session.by_name('document_store')
+odm_session = ODMSession(doc_session=session)

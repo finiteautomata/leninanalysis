@@ -1,3 +1,4 @@
+#! coding: utf-8
 import sys
 import json
 import inspect
@@ -73,3 +74,8 @@ def _delete_non_best_analysis(document, window_sizes):
   log.info("Flushing")
   odm_session.flush()
 
+def reset_senses():
+  log.info("Resetting all senses")
+  for doc in Document.query.find():
+    doc.related_sense = {}
+  odm_session.flush()

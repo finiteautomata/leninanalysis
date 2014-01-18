@@ -107,6 +107,7 @@ class Document(MappedClass):
     def top_senses(self, total_senses=20):
         top_words = (word for word, _ in self.top_words(total_senses*2))
         senses = []
+        import ipdb; ipdb.set_trace()
         for word in top_words:
             try:
                 sense = self.__get_sense_for(word)
