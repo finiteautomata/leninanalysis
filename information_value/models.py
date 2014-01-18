@@ -121,7 +121,7 @@ class Document(MappedClass):
     def __get_sense_for(self, word):
         
         if not self.related_sense.has_key(word):
-            sense = wisdom.lesk(self.text, word)
+            sense = wisdom.lesk(self.text, word, pos='n')
             self.related_sense[word] = sense.name
         return wn.synset(self.related_sense[word])
 
