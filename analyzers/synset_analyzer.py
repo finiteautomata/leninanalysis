@@ -9,49 +9,34 @@ log = logging.getLogger('lenin')
 import config
 reload(config)
 
-
-def ponderated_judge_function(partial_results):
-    return sum(ponderation * similarity for (word, ponderation, similarity) in partial_results)
-
 #this is horrible
 best_word = None
 def maximum_judge_function(partial_results):
     global best_word
-    max_word, _, max_similarity  = max(partial_results, key=lambda x: x[2])
-    best_word = max_word
+    max_synset, max_similarity  = max(partial_results, key=lambda x: x[1])
+    best_word = max_synset
     return max_similarity
 
 # Similarity definitions:
 # http://nltk.googlecode.com/svn/trunk/doc/api/nltk.corpus.reader.wordnet.Synset-class.html#path_similarity
 class SynsetAnalyzer:
-    def __init__(self, synsets, similarity_function = path_similarity, judge_function=ponderated_judge_function ):
+    def __init__(self, synsets, similarity_function = path_similarity, judge_function=maximum_judge_function):
         self.synsets = synsets
         self.judge_function = judge_function
         self.similarity_function = similarity_function
-
-    def judge_list(self, doc_list):
-        if doc_list.total_docs == 0:
-            return None
-        all_docs_with_values = [(doc, self.judge_doc(doc))  for doc in doc_list ]
-
-        if len(all_docs_with_values) == 0:
-            return 0
-
-        return (sum(v for (d, v) in all_docs_with_values) / len(all_docs_with_values))   
-
 
     def judge_doc(self, document, number_of_senses=20):
         '''
           returns a value between 0 and 1
         '''
-        top_senses = document.top_words(number_of_senses)
+        top_senses = document.top_senses(number_of_senses)
 
         """
         Here we have in partial_results
         [(word, word_ponderation, similarity) for word in document.top_words]
         We pass this to the judge function
         """
-        partial_results = [(word, ponderation, self.judge_word(word)) for (word, ponderation) in top_senses]
+        partial_results = [(synset, self.judge_synset(synset)) for synset in top_senses]
         return self.judge_function(partial_results)
 
     def judge_synset(self, synset):

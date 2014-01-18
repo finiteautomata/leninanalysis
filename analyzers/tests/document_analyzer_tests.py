@@ -3,7 +3,7 @@ from mock import patch
 from nltk.corpus import wordnet as wn
 from analyzers.document_analyzer import DocumentAnalyzer
 from unittest import TestCase
-from utils import document_returning_top_words
+from utils import document_returning_top_senses
 
 class DocumentAnalyzerTests(TestCase):
     def setUp(self):
@@ -16,13 +16,13 @@ class DocumentAnalyzerTests(TestCase):
 
     def test_creating_analyzer_with_no_concepts_return_empty_analysis(self):
         analyzer = DocumentAnalyzer(synsets={})
-        doc = document_returning_top_words(("war",1.0))
+        doc = document_returning_top_senses(wn.synset("war.n.01"))
 
         self.assertEquals({}, analyzer.analyze_document(doc))
 
     def test_analyze_a_concept(self):
         analyzer = DocumentAnalyzer(synsets={"war": [wn.synset("war.n.01")]})
 
-        doc = document_returning_top_words(("war", 1.0))
+        doc = document_returning_top_senses(wn.synset("war.n.01"))
 
         self.assertEquals({"war": 1.0}, analyzer.analyze_document(doc))
