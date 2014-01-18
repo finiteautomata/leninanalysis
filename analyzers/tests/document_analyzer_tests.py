@@ -21,8 +21,8 @@ class DocumentAnalyzerTests(TestCase):
         self.assertEquals({}, analyzer.analyze_document(doc))
 
     def test_analyze_a_concept(self):
-        analyzer = DocumentAnalyzer(synsets={"war": [wn.synset("war.n.01")]})
+        analyzer = DocumentAnalyzer(synsets=[wn.synset("war.n.01")])
 
         doc = document_returning_top_senses(wn.synset("war.n.01"))
 
-        self.assertEquals({"war": 1.0}, analyzer.analyze_document(doc))
+        self.assertEquals({"war.n.01": 1.0}, analyzer.analyze_document(doc))

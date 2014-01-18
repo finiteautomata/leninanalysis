@@ -13,42 +13,40 @@ class DocumentAnalyzer(object):
     @similarity_function = A similarity function from similarity module
     """
     def __init__(self, synsets, similarity_function=path_similarity):
-        self.word_to_synsets = synsets
+        self.synsets = synsets
         self.similarity_function = similarity_function
         self.prefix = similarity_function.func_name
-        self.analyzers = dict((word, SynsetAnalyzer(synsets=synsets, 
+        self.analyzers = dict(
+            (synset, SynsetAnalyzer(
+                synsets=synsets, 
                 similarity_function=similarity_function, 
-                judge_function=maximum_judge_function))
-            for word, synsets in self.word_to_synsets.iteritems())
+                judge_function=maximum_judge_function)
+            ) for synset in self.synsets)
  
     @property
     def name(self):
-        print self.similarity_function.func_name
+        print self.similarity_function.func_name + " document analyzer"
 
     def analyze_document(self, document):
-        document_analysis = self.__get_analysis_for(document)
+        document_analysis = {} #self.__get_analysis_for(document)[self.prefix]
         self.best_word_for = {}
-        for word, synsets in self.word_to_synsets.iteritems():
-            document_analysis[self.prefix][word] = self.__analyze_document_against_synsets(
-                word=word, synsets=synsets,
-                document=document, 
-                document_analysis=document_analysis)
-        
-        db.document_analysis.save(document_analysis)
-        return document_analysis[self.prefix]
 
+        for synset in self.synsets:
+            document_analysis[synset.name] = self.analyze_synset(synset=synset, document=document)
+        
+        #db.document_analysis.save(document_analysis)
+        return document_analysis
+
+   
+    def analyze_synset(self, document, synset):
+        # Only calculate in case there's no analysis done
+        analyzer = self.analyzers[synset]
+        doc_analysis = analyzer.judge_doc(document)
+        self.best_word_for[synset.name] = synset_analyzer.best_word
+        return doc_analysis
+    
     def __get_analysis_for(self, document):
         document_analysis = db.document_analysis.find_one({"document_id": document._id}) or {"document_id": document._id}
         if not self.prefix in document_analysis.keys():
             document_analysis[self.prefix] = {}
         return document_analysis
-
-    def __analyze_document_against_synsets(self, document, word, synsets, document_analysis):
-        # Only calculate in case there's no analysis done
-        if word in document_analysis[self.prefix].keys():
-            return document_analysis[self.prefix][word]
-        analyzer = self.analyzers[word]
-        doc_analysis = analyzer.judge_doc(document)
-        self.best_word_for[word] = synset_analyzer.best_word
-        return doc_analysis
-    
