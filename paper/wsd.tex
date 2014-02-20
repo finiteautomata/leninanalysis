@@ -1,0 +1,17 @@
+Word sense disambiguation involves the association of a given word in a text or discourse with a definition or meaning.
+On the other side by polysemy we refer to the fact that in different contexts or when used by different people the same term takes on varying referential significance.
+We found that sense disambiguation was necessary to solve in one or another level the problem of polysemy.
+
+
+Our approach for WSD was a classical Lesk implementation that uses wordnet as a definition source with some tweaks.
+Basically Lesk is based on the idea that words that co–occur in a sentence are being used to refer to the same topic.
+The Lesk alghorithm{11} takes the word definition or gloss that we want to disambiguate and it compares it gloss against the glosses of the other words in the context.
+Then a word is assigned that sense whose gloss shares the largest number of words in common with the glosses of the other words.
+This algorhitm suffers the problem that relies on the word definition and definitions usually uses as less words as possible.
+Not only that sometimes two different words, but related ones, uses no words in common in their definitions.
+As we use the nltk wordnet we immediately notice an improvement using the rich set of relationships that Wordnet gives to us.
+
+
+
+BIO
+M. Lesk. Automatic sense disambiguation using machine readable dictionaries: How to tell a pine cone from a ice cream cone. In Proceedings of SIGDOC ’86, 1986.
