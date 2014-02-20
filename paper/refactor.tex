@@ -1,0 +1,478 @@
+%% PNAStwoS.tex
+%% Sample file to use for PNAS articles prepared in LaTeX
+%% For two column PNAS articles
+%% Version: Apr 15, 2008 
+ 
+
+%% BASIC CLASS FILE
+\documentclass{pnastwo}
+
+%% ADDITIONAL OPTIONAL STYLE FILES
+%\usepackage[dvips]{graphicx}
+%\usepackage{pnastwof}
+\usepackage{amssymb,amsfonts,amsmath}
+\usepackage[utf8]{inputenc}
+\usepackage[activeacute, spanish]{babel}
+\usepackage[dvips]{graphicx}
+\usepackage{bookmark}
+\usepackage{color}
+\selectlanguage{spanish}
+
+
+\newcommand\dq[1]{\textquotedblleft #1\textquotedblright}
+\newcommand\sq[1]{\textquoteleft #1\textquoteright}
+\newcommand*{\allref}[1]{\ref{#1} \nameref{#1}}
+
+%% OPTIONAL MACRO DEFINITIONS
+\def\s{\sigma}
+
+
+%%%%%%%%%%%%
+%% For PNAS Only:
+%\url{www.pnas.org/cgi/doi/10.1073/pnas.0709640104}
+\copyrightyear{2008}
+\issuedate{Issue Date}
+\volume{Volume}
+\issuenumber{Issue Number}
+%\setcounter{page}{2687} %Set page number here if desired
+%%%%%%%%%%%%
+
+\begin{document}
+
+\title{A word-sense representation for documents based on information value and word sense disambiguation}
+
+\author{Leonardo Lázzaro,\affil{1}{Universidad de Buenos Aires, Buenos Aires, Argentina},
+Julián Peller,\affil{1}{Universidad de Buenos Aires, Buenos Aires, Argentina},
+Juan Manuel Pérez,\affil{1}{Universidad de Buenos Aires, Buenos Aires, Argentina},
+}
+
+%&\contributor{Submitted to Proceedings of the National Academy of Sciences
+%of the United States of America}
+
+\maketitle
+
+\begin{article}
+\begin{abstract}
+In this project we analyzed some Lenin works in order to identify the presence of some well known topics of his biography. To achieve this, we defined and implemented a simple distance metric between a word-sense and a document and confronted this metric using a evaluation set of word-senses against a reduced set of  documents with well known topics. During this work, we generated an indexed database of Lenin's complete works from a web site\cite{LENIN} and we applied a serie of well known syntactic, semantic and lexicographic tools in order to model the similarity between a document and a word-sense. We applied information value\cite{DARWIN} and a simple algorithm of word sense disambiguation\cite{LESK} based on wordnet\cite{WORDNET} in order to generate the \textit{top senses} (or principal senses) of a document. We compare this \textit{top senses} for some documents of well known topics agains some senses of interest (for example: revolution, war, government) and observed the shape of the results. 
+\end{abstract}
+
+\keywords{information value | word sense disambiguation | natural language processing | information retrieval | polysemy }
+
+%\abbreviations{NLP}
+
+\section{Introduction}
+
+\dropcap{I}n this article we propose a simple distance metric between a word-sense and a text document using different well known tools from natural language processing. To achieve this, we extract a hierarchy of the most representative words of a document (\textit{top words}) using the concept of \textit{information value}, a statistical linguistic model based on Shannon's information theory and proposed by Zanette et al. in\cite{DARWIN}. Briefly, information value allows us to represent a document like a ranked set of words. 
+
+But this ponderated set of top words has the problem of polysemy, tipical in the field of nlp. Polysemy occurs when a term has more than one sense or meaning, for example: the term 'bank' can refer to a financial institution or to a {\color{red}banco de plaza}, thus, it is polysemic. In order to resolve this limitation, we implement a basic algorithm of word-sense disambiguation based on wordnet's synsets and we apply it over the top words, using as disambiguation context the whole document. We obtain, then, the \textit{top senses} of a document, this is, a ranked set of wordnet synsets that work like a representation of the given document. 
+
+Finally, we utilize different wordnet predefined metrics of similarity between synsets to define our own similarities between the top-sense representation of a document and any given word-sense (wordnet synset). In order to evaluate the behaviour of this metrics, we test the distances of the top-senses representation of some well known documents with very specific topics against a bounded set of relevant evaluation word-senses. 
+
+
+\section{Method}
+Text Corpus.  Scrapping. Total de documentos. Total de documentos por año. Total de tokens promedio. Filtros (esto está!)
+\subsection{Text Corpus}
+
+We selected some starred works from Lenin from the "Marxists Internet Archive"\cite{LENIN}. Those works are very different in topic, some of them being strictly phylosophical essays (such as ``Materialism and Empiriocriticism'') and other being more political, such as ``State and Revolution'', and finally an economy essay called ``Imperialism, the highest stage of capitalism''. 
+
+\begin{itemize}
+  \item What is to be done(1901)
+  \item The Agrarian Programme of Social-Democracy in the First Russian Revolution, 1905-1907 (1907)
+  \item Materialism and Empiriocriticism (1908)
+  \item Imperialism, the highest stage of capitalism (1916)
+  \item State and Revolution (1917)
+\end{itemize}
+
+%*Números (obras totales obtenidas, promedio tokens)
+\subsection{Semantic Analysis}
+\medskip
+\subsubsection{Information value}
+
+Having a similarity notion between words, and the most valuable words from a text, our question arises: how distant is a word from a text? We use here the notion of distance between a point and a set defined as:
+
+\begin{equation}
+  d(a, S) = min_{x \in S} d(a, x) 
+\end{equation}
+
+being $S$ the set of most representative words. Hence, we are ``projecting'' a text into the set of their top words. 
+
+
+In \cite{DARWIN}, Zanette and Montemurro defined the information value of a word in a text. This is
+a real value that quantifies how much information that word carries according to the text. Let $T$ be a 
+text, and $T'$ a random shuffled version of $T$, and $w$ a word appearing in $T$. 
+By $S_T(w)$ we denote the Shannon Entropy of $w$ with respect to $T$ (See appendix for more info). 
+
+The information value of $w$ in $T$ is 
+
+\begin{equation}
+  IV_T(w) = f_w* | S_T(w) - S_{T'}(w) | 
+\end{equation}
+
+where $f_w$ is the frequency of appearance of $w$ in $T$. This value captures, in some way, whether a word
+has a distribution in text that is not exactly uniform; an order of the word in the text that brings some sense to it. Ordering the words by their information value results in a list of the text's most representative words.
+
+
+
+\subsubsection{Wordnet synsets \& similarities}
+
+In order to measure the distance/similarity between two words, we use Wordnet (see \cite{WORDNET}), a lexical database in English. Using a subset of all the possible ``senses'' of both words , we test several similarity notions between them.
+
+
+\textbf{Old title: Wordnet analyzer}
+Consideremos el siguiente problema:
+\newline
+¿Cómo calcular la similaridad o distancia de un documento a un cierto concepto? 
+\newline
+El enfoque que utilizamos en este trabajo es el de realizar una representación del documento como un conjunto de palabras, y en base a esto usar una noción topológica de similaridad/distancia. La proyección del documento al espacio de palabras la realizamos utilizando la t\'ecnica de Information Value reci\'en descripta.
+En este espacio, utilizamos Wordnet para definir una noción de distancia entre el conjunto de palabras que representan al texto y diferentes conjuntos representando conceptos.
+\newline
+Para un documento dado, el módulo de information value genera una lista con lo $n$ términos más importantes y su iv. Estos valores se normalizan -dividiendo por la suma de los valores-, obteniendo así uno de los inputs del proceso siguiente. Recordemos, nuestro objetivo es asignar una distancia entre un documento y un concepto. Digamos, decidir cuán presente está o cuán importante es un concepto en un documento.
+\newline
+Wordnet es una base de datos de palabras, agrupadas en conjuntos de sinónimos (synsets), cada uno de los cuales posee una definición y diferentes relaciones semánticas con otros synsets (por ejemplo: hipernimia, hiponimia, meronimia, etc). Sobre estas relaciones semánticas es posible definir distintas métricas de distancia y similaridad entre synsets (Ver [1])
+\newline
+Utilizando las métricas disponibles en el módulo nltk de python para wordnet definimos la similaridad entre dos palabras como la máxima similaridad entre todos los synsets de ambas. (**NOTA Parametrizable: puede ser sólo el primer synset de ambos y puede no ser la máxima similaridad sino un promedio. También para algunas métricas quedan afuera los synsets que no son sustantivos). 
+\begin{multline}
+S_w(w_1, w_2) = max \{ S_s(s_1, s_2) \}: s_1 \in synsets(w_1),\\ s_2 \in synsets(w_2)
+\end{multline}
+
+Para path similarity vale que $0 \leq S_w \leq 1$. 
+
+Sobre $S_w$ (de word similarity) definimos la similaridad de un documento a un término como:
+
+\begin{equation}
+S_{dw}(d, w) = sum \{ S_w(d_i, w) \times p(d_i)  \} 
+\end{equation}
+
+donde las tuplas $(d_i , p(d_i))$ representan las palabras más importantes del documento $d$, y sus respectivos pesos normalizados. Vale que $0 \leq p(d_i) \leq 1$ pues está normalizado.
+
+Por ejemplo $S_{dw}$(“Estado y Revolución”, “guerra”) = 0.110. $S_{dw}$ es una noción de cercanía entre un documento y una palabra.
+
+Finalmente, definimos la noción de similaridad entre un año y una palabra como el promedio de las similaridades ($S_{dw}$) 
+de los distintos documentos producidos durante ese año con la palabra en cuestión:
+\begin{equation}
+  S_{yw}(y, w) = mean \{ S_dw(y_i, w) \} : y_i \in docs(y) 
+\end{equation}
+
+Los resultados que presentaremos a continuaci\'on est\'an apoyados en distintas configuraciones de estas tres m\'etricas ($S_w$, $S_dw$ y $S_{yw}$).
+
+% *SynsetAnalyzer
+%   *Synset
+%   *path, lch, wup
+% *judge_word
+% *judge_doc
+% *judge_year
+% Dado un conjunto de palabras, definimos la distancia de una palabra a este conjunto como 
+% 
+
+
+\subsubsection{Word sense disambiguation}
+
+\subsubsection{Top-sense definition}
+
+
+
+\section{Results}
+* Distancia a algunos conceptos de estado y revolución
+
+\subsection{Top senses for selected works}
+
+\subsection{Distances to evaluation sets}
+*
+* x = {años}, y = {concept value}
+
+\subsubsection{Observations}
+
+\section{Discussion}
+
+
+\subsection{Lesk for wsd: results and limitations}
+* Zanette diferia en valores absolutos con los resultados nuestros. Moby Dick. 
+
+\subsection{Wordnet's synset distances}
+
+\section{Conclussion \& Future work}
+The original scope of this investigation was the definition of a measure of distance between the works of a whole year but we find a lot of complexities in the definition of that model. While we decide to reduce the scope of this work for mental health, we consider the metric defined in this article as a step into the concretion of the original goal.
+
+\appendix[All tables]
+
+\begin{center}
+  \begin{tabular}{ | l | l | }
+    \hline
+    \multicolumn{2}{|c|}{State and Revolution} \\ \hline
+    \# & Word  \\ \hline
+1 & kautsky \\ \hline
+2 & marx \\ \hline
+3 & revolution \\ \hline
+4 & works \\ \hline
+5 & engels \\ \hline
+6 & society \\ \hline
+7 & power \\ \hline
+8 & party \\ \hline
+9 & social \\ \hline
+10 & experience \\ \hline
+11 & bernstein \\ \hline
+12 & question \\ \hline
+13 & equality \\ \hline
+14 & phase \\ \hline
+15 & 1917 \\ \hline
+16 & commune \\ \hline
+17 & one \\ \hline
+18 & republic \\ \hline
+19 & class \\ \hline
+20 & law \\ \hline
+  \end{tabular}
+\end{center}
+
+\begin{center}
+  \begin{tabular}{ | l | l | }
+    \hline
+    \multicolumn{2}{|c|}{Imperialism, the Highest ...} \\ \hline
+    \# & Word  \\ \hline
+1 & enterprises \\ \hline
+2 & bank \\ \hline
+3 & imperialism \\ \hline
+4 & world \\ \hline
+5 & million \\ \hline
+6 & colonies \\ \hline
+7 & kautsky \\ \hline
+8 & colonial \\ \hline
+9 & production \\ \hline
+10 & cent \\ \hline
+11 & economic \\ \hline
+12 & company \\ \hline
+13 & capitalist \\ \hline
+14 & monopoly \\ \hline
+15 & big \\ \hline
+16 & countries \\ \hline
+17 & policy \\ \hline
+18 & powers \\ \hline
+19 & 000 \\ \hline
+20 & banks \\ \hline
+  \end{tabular}
+\end{center}
+
+\begin{center}
+  \begin{tabular}{ | l | l | }
+    \hline
+\multicolumn{2}{|c|}{Materialism and Empirio-criticism} \\ \hline
+\# & Word  \\ \hline
+1 & physics \\ \hline
+2 & social \\ \hline
+3 & avenarius \\ \hline
+4 & space \\ \hline
+5 & time \\ \hline
+6 & dietzgen \\ \hline
+7 & berkeley \\ \hline
+8 & truth \\ \hline
+9 & rey \\ \hline
+10 & objective \\ \hline
+11 & sensation \\ \hline
+12 & experience \\ \hline
+13 & pp \\ \hline
+14 & engels \\ \hline
+15 & motion \\ \hline
+16 & marx \\ \hline
+17 & book \\ \hline
+18 & works \\ \hline
+19 & vol \\ \hline
+20 & general \\ \hline
+  \end{tabular}
+\end{center}
+
+\begin{center}
+  \begin{tabular}{ | l | l | }
+    \hline
+\multicolumn{2}{|c|}{What Is To Be Done?} \\ \hline
+\# & Word  \\ \hline
+1 & local \\ \hline
+2 & organisation \\ \hline
+3 & abroad \\ \hline
+4 & union \\ \hline
+5 & criticism \\ \hline
+6 & economic \\ \hline
+7 & political \\ \hline
+8 & revolutionaries \\ \hline
+9 & freedom \\ \hline
+10 & newspapers \\ \hline
+11 & workers \\ \hline
+12 & nadezhdin \\ \hline
+13 & consciousness \\ \hline
+14 & newspaper \\ \hline
+15 & bourgeois \\ \hline
+16 & masses \\ \hline
+17 & martynov \\ \hline
+18 & would \\ \hline
+19 & movement \\ \hline
+20 & german \\ \hline
+  \end{tabular}
+\end{center}
+
+\begin{center}
+  \begin{tabular}{ | l | l | }
+    \hline
+\multicolumn{2}{|c|}{The Agrarian Programme of ...} \\ \hline
+\# & Word  \\ \hline
+1 & rent \\ \hline
+2 & dessiatins \\ \hline
+3 & 000 \\ \hline
+4 & land \\ \hline
+5 & maslov \\ \hline
+6 & peasants \\ \hline
+7 & capital \\ \hline
+8 & revolution \\ \hline
+9 & marx \\ \hline
+10 & people \\ \hline
+11 & nationalisation \\ \hline
+12 & plekhanov \\ \hline
+13 & restoration \\ \hline
+14 & right \\ \hline
+15 & latifundia \\ \hline
+16 & private \\ \hline
+17 & farming \\ \hline
+18 & free \\ \hline
+19 & central \\ \hline
+20 & lands \\ \hline
+  \end{tabular}
+\end{center}
+
+\appendix[Entropy of a word in a text]
+\label{appendix1}
+Let's recall from \cite{DARWIN} and \cite{ENTROPIC} the concept of information value of a word. 
+Let $T$ be a text, which has been split into $P$ pieces $T_1, T_2, \dots, T_P$, $w$ be a word in $T$,
+and $f_i$ the frequency of appearance of $w$ in $T_i$.
+
+For each part $1 \leq i \leq P$, we could define:
+
+\begin{equation}
+  p_i = \frac{f_i}{\Sigma_{j=1}^{P}f_i}
+\end{equation}
+
+This quantity stands for probability of finding $w$ in $T_i$, given that it is present in the text. So, 
+we define the Shannon information entropy of $w$ in $T$ as
+
+\begin{equation}
+  S = -\frac{1}{ln P}\sum_{i=1}^{P}p_i ln p_i
+\end{equation}
+
+
+
+\appendix[Optimal window size selection]
+
+As \cite{DARWIN} mentions, we should consider the window size which maximizes the information value per word, for some sense of it.
+
+Let's suppose we have a document, and a window size $W_S$ for which the information value algorithm returns a list $\{(w_1, v_1), (w_2, v_2), \dots ,(w_n, v_n) \}$ of word-information value pairs, in decreasing order of information value so that $v_1 \geq v_2 \geq \dots \geq v_n$. How would we assign some value to this pair of document-window size so we can choose the optimal window size?
+
+One possibility would be to take the greater information value, in this case $v_1$. This approach, however, gives all the value just to a single word. Another chance would be to take the average of all the information values, but this leads to a lot of noise added because of words without any value.
+
+
+The chosen approach is a tradeoff between both. We take the average not of all the words, but of a percentage of the most significative words. We call this percentage the \emph{sum threshold}. If $n$ is the number of words in the document, and $0 \leq ST \leq 1$ is the sum threshold, we calculate
+
+\begin{equation}
+  \frac{\sum_{i=1}^{[ST n]}v_i}{n} 
+\end{equation}
+
+
+The threshold value we used is $ST=0.001$, so it would consider only the $\frac{n}{1000}$ most significant words. The reason behind this was that it fitted the results from \cite{DARWIN} for the texts The origin of the species, Moby Dick, and  The Analysis of the mind.
+
+
+\begin{thebibliography}{10}
+\bibitem{LENIN}
+Marxists Internet Archive, {\em www.marxists.org} %, No estaria pudiendo definir bien esta referencia
+\bibitem{DARWIN}
+M.A. Montemurro and D. H. Zanette, {\em The statistics of meaning: Darwin, Gibbon and Moby Dick}, Significance, Dec. 2009, 165-169.
+\bibitem{ENTROPIC}
+M.A. Montemurro and D. H. Zanette, {\em Entropic analysis of the role of words in literary texts}, Adv. Complex Systems 5, September 27th 2001
+\bibitem{MAS-ZANETTE}
+\bibitem{WORDNET}
+George A. Miller, {\em WordNet: A Lexical Database for English }, COMMUNICATIONS OF THE ACM November 1995/Vol. 38, No. 11
+\bibitem{LESK}
+Autor, {\em Nombre }, Publicación, No. %Buscar y poner
+\end{thebibliography}
+\end{article}
+\end{document}
+
+
+
+
+
+%\section{Acknowledgments}
+
+%\section{Literature cited}
+
+% \section{Analysis of almost sharp fronts}
+% We begin our analysis on almost sharp fronts for the
+% quasi-geostrophic equation recalling the notion of weak solution.
+
+% For these solutions we have the following
+
+% \appendix[Parallel calculus of information value]
+
+% \begin{table}[h]
+% \caption{Repeat length of longer allele by age of onset class.
+% This is what happens when the text continues.}
+% \begin{tabular}{@{\vrule height 10.5pt depth4pt  width0pt}lrcccc}
+% &\multicolumn5c{Repeat length}\\
+% \noalign{\vskip-11pt}
+% Age of onset,\\
+% \cline{2-6}
+% \vrule depth 6pt width 0pt years&\multicolumn1c{\it n}&Mean&SD&Range&Median\\
+% \hline
+% Juvenile, 2$-$20&40&60.15& 9.32&43$-$86&60\\
+% Typical, 21$-$50&377&45.72&2.97&40$-$58&45\\
+% Late, $>$50&26&41.85&1.56&40$-$45&42\tablenote{The no. of wells for all samples was 384. Genotypes were
+% determined by mass spectrometric assay. The $m_t$ value indicates the
+% average number of wells positive for the over represented allele.}
+% \\
+% \hline
+% \end{tabular}
+% \end{table}
+
+
+% \begin{table*}[ht]
+% \caption{Summary of the experimental results}
+% \begin{tabular*}{\hsize}
+% {@{\extracolsep{\fill}}rrrrrrrrrrrrr}
+% \multicolumn{3}{l}{Parameters}&
+% \multicolumn{5}{c}{Averaged Results}&
+% \multicolumn{5}{c}{Comparisons}\cr
+% \hline
+% \multicolumn1c{$n$}&\multicolumn1c{$S^*_{MAX}$}&
+% \multicolumn1c{$t_1$}&\multicolumn1c{\ $r_1$}&
+% \multicolumn1c{\ $m_1$}&\multicolumn1c{$t_2$}&
+% \multicolumn1c{$r_2$}&\multicolumn1c{$m_2$}
+% &\multicolumn1c{$t_{lb}$}&\multicolumn1c{\ \ $t_1/t_2$}&
+% $r_1/r_2$&$m_1/m_2$&
+% $t_1/t_{lb}$\cr
+% \hline
+% 10\tablenote{Stanford Synchrotron Radiation Laboratory (Stanford University,
+% Stanford, CA)}&1\quad &4&.0007&4&4&.0020&4&4&1.000&.333&1.000&1.000\cr
+% 10\tablenote{$R_{\rm FREE}=R$ factor for the $\sim 5$\% of the randomly
+% chosen unique ref\/lections not used in the ref\/inement.}&5\quad &50&.0008&8&50&.0020&12&49&.999&.417&.698&1.020\cr
+% 100\tablenote{Calculated for all observed data}&20\quad &2840975&.0423&95&2871117&.1083&521&---&
+% .990&.390&.182&---\ \ \cr
+% \hline
+% \end{tabular*}
+% \end{table*}
+
+% \appendix[Estimating the Spectral Norm of a Matrix]
+% In this appendix we describe a method for the estimation of the spectral norm
+% of matrix $A$. The method does not require access to the individual
+% entries of $A$; it requires only applications of $A$ and $A$* to vectors.
+% It is a version of the classical power method. Its probabilistic
+% analysis summarized below was introduced fairly recently in refs. 13
+% and 14. This appendix is included here for completeness.
+
+
+% \appendix
+% This is an example of an appendix without a title.
+
+% \begin{acknowledgments}
+% algo
+% This work was partially supported by 
+% Spanish Ministry of Science and Technology Grant BFM2002-02042 (to D.C. and
+% J.L.R.) and by National Science Foundation Grand DMS-0245242 (to C.F.).
+% \end{acknowledgments}
+
+
+
+
