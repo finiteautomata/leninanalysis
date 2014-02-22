@@ -2,12 +2,11 @@
 # coding: utf-8
 import sys
 import config
-import logging
-import analyzers
 import argparse
 import subprocess
 from commands.database import reset_senses
 from commands.year_analysis import calculate_year_analysis
+from commands.top_senses_tables import create_top_sense_tables
 import ming
 
 reload(config)
@@ -17,6 +16,7 @@ reload(config)
 def scrap_all_works():
     ret = subprocess.call("scrapy crawl lenin -o lenin_work.json -t json", shell=True)
     print "Scrapy has returned %s" % ret
+
 
 def set_number_of_tokens():
     from includes.tokenizer import tokenize
@@ -28,6 +28,7 @@ def set_number_of_tokens():
         document['number_of_words'] = len(tokenize(document['text']))
         db.document.save(document)
 
+
 def drop_iv():
     from pymongo import MongoClient
     client = MongoClient()
@@ -35,15 +36,15 @@ def drop_iv():
     db = client.lenin
     db.drop_collection('information_value_result')
 
+
 def add_commands(parser):
     import analyzers.commands
 
     analyzers.commands.load_commands(parser)
 
+
 def main():
     parser = argparse.ArgumentParser(description='Central de Control de Comandos y Procesos para el TP de Analisis de Lenin.')
-
-    
 
     # Parameter to scrap all the works before or not
     parser.add_argument('--shell', action='store_true', default=False, help="Opens an ipython console with db configured")
@@ -66,7 +67,8 @@ def main():
     parser.add_argument('--set-number-of-tokens', action='store_true', default=False, help='Calculate number of words for each work')
     parser.add_argument('--analyze-documents', action='store_true', default=False, help="Do Document Analysis for given concepts (pass with --concepts)")
     parser.add_argument('--reset-senses', action='store_true', default=False, help="Reset all senses calculated")
-    if len(sys.argv)==1:
+    parser.add_argument('--latex-info', action='store_true', default=False, help="Creates LaTex information for paper")
+    if len(sys.argv) == 1:
         parser.print_help()
         sys.exit(1)
     # Parse args
@@ -92,10 +94,10 @@ def main():
     if args.documents:
         from information_value.models import DocumentList
         doc_list = DocumentList(args.documents[0])
-    
+
     if args.drop_iv:
         drop_iv()
-    
+
     if args.analysis:
         from commands.database import calculate_results
         documents = None
@@ -103,33 +105,33 @@ def main():
             documents = doc_list.documents
         calculate_results(documents=documents, window_size_algorithm=args.window_size_generator, store_only_best=False)
     if args.analysis_store_only_best:
-        
+
         from commands.database import calculate_results
         documents = None
         if doc_list:
             documents = doc_list.documents
-        calculate_results(documents=documents, window_size_algorithm=args.window_size_generator, store_only_best=True)    
-   
+        calculate_results(documents=documents, window_size_algorithm=args.window_size_generator, store_only_best=True)
+
     if args.plot:
         from plot import wn_plots
         import analyzers.synset_analyzer as wa
-        
+
         concepts = None
         if args.concepts:
             concepts = args.concepts
-        
+
         year_min = int(args.min) if args.min else 1899
         year_max = int(args.max) if args.max else 1923
 
         data = wa.year_vs_concept_data(concepts, year_min, year_max)
         wn_plots.plot_year_vs_concept_value(data)
-    
+
     if args.year_analysis:
 
         concepts = ["war", "idealism", "revolution", "philosophy"]
         if args.concepts:
             concepts = args.concepts
-        
+
         min_year = int(args.min) if args.min else 1899
         max_year = int(args.max) if args.max else 1923
 
@@ -140,6 +142,8 @@ def main():
         subprocess.call("ipython -i interpreter.py", shell=True)
     if args.reset_senses:
         reset_senses()
+    if args.latex_info:
+        create_top_sense_tables()
 
     if args.set_number_of_tokens:
         set_number_of_tokens()

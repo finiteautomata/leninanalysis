@@ -36,7 +36,7 @@
 
 \title{An analysis of Lenin's work: Revolution, war, and fruta}
 
-\author{Leonardo Lázzaro,\affil{1}{Universidad de Buenos Aires, Buenos Aires, Argentina},
+\author{Leonardo Lazzaro,\affil{1}{Universidad de Buenos Aires, Buenos Aires, Argentina},
 Julián Peller,\affil{1}{Universidad de Buenos Aires, Buenos Aires, Argentina},
 Juan Manuel Pérez,\affil{1}{Universidad de Buenos Aires, Buenos Aires, Argentina},
 }
@@ -118,148 +118,16 @@ The chosen approach is a tradeoff between both. We take the average not of all t
 
 The threshold value we used is $ST=0.001$, so it would consider only the $\frac{n}{1000}$ most significant words. The reason behind this was that it fitted the results from \cite{DARWIN} for the texts The origin of the species, Moby Dick, and  The Analysis of the mind.
 
-\subsection{Top words for given works}
 
-\begin{center}
-  \begin{tabular}{ | l | l | }
-    \hline
-    \multicolumn{2}{|c|}{State and Revolution} \\ \hline
-    \# & Word  \\ \hline
-1 & kautsky \\ \hline
-2 & marx \\ \hline
-3 & revolution \\ \hline
-4 & works \\ \hline
-5 & engels \\ \hline
-6 & society \\ \hline
-7 & power \\ \hline
-8 & party \\ \hline
-9 & social \\ \hline
-10 & experience \\ \hline
-11 & bernstein \\ \hline
-12 & question \\ \hline
-13 & equality \\ \hline
-14 & phase \\ \hline
-15 & 1917 \\ \hline
-16 & commune \\ \hline
-17 & one \\ \hline
-18 & republic \\ \hline
-19 & class \\ \hline
-20 & law \\ \hline
-  \end{tabular}
-\end{center}
+\subsubsection{Word Sense Disambiguation}
+\input{wsd}
 
-\begin{center}
-  \begin{tabular}{ | l | l | }
-    \hline
-    \multicolumn{2}{|c|}{Imperialism, the Highest ...} \\ \hline
-    \# & Word  \\ \hline
-1 & enterprises \\ \hline
-2 & bank \\ \hline
-3 & imperialism \\ \hline
-4 & world \\ \hline
-5 & million \\ \hline
-6 & colonies \\ \hline
-7 & kautsky \\ \hline
-8 & colonial \\ \hline
-9 & production \\ \hline
-10 & cent \\ \hline
-11 & economic \\ \hline
-12 & company \\ \hline
-13 & capitalist \\ \hline
-14 & monopoly \\ \hline
-15 & big \\ \hline
-16 & countries \\ \hline
-17 & policy \\ \hline
-18 & powers \\ \hline
-19 & 000 \\ \hline
-20 & banks \\ \hline
-  \end{tabular}
-\end{center}
-
-\begin{center}
-  \begin{tabular}{ | l | l | }
-    \hline
-\multicolumn{2}{|c|}{Materialism and Empirio-criticism} \\ \hline
-\# & Word  \\ \hline
-1 & physics \\ \hline
-2 & social \\ \hline
-3 & avenarius \\ \hline
-4 & space \\ \hline
-5 & time \\ \hline
-6 & dietzgen \\ \hline
-7 & berkeley \\ \hline
-8 & truth \\ \hline
-9 & rey \\ \hline
-10 & objective \\ \hline
-11 & sensation \\ \hline
-12 & experience \\ \hline
-13 & pp \\ \hline
-14 & engels \\ \hline
-15 & motion \\ \hline
-16 & marx \\ \hline
-17 & book \\ \hline
-18 & works \\ \hline
-19 & vol \\ \hline
-20 & general \\ \hline
-  \end{tabular}
-\end{center}
-
-\begin{center}
-  \begin{tabular}{ | l | l | }
-    \hline
-\multicolumn{2}{|c|}{What Is To Be Done?} \\ \hline
-\# & Word  \\ \hline
-1 & local \\ \hline
-2 & organisation \\ \hline
-3 & abroad \\ \hline
-4 & union \\ \hline
-5 & criticism \\ \hline
-6 & economic \\ \hline
-7 & political \\ \hline
-8 & revolutionaries \\ \hline
-9 & freedom \\ \hline
-10 & newspapers \\ \hline
-11 & workers \\ \hline
-12 & nadezhdin \\ \hline
-13 & consciousness \\ \hline
-14 & newspaper \\ \hline
-15 & bourgeois \\ \hline
-16 & masses \\ \hline
-17 & martynov \\ \hline
-18 & would \\ \hline
-19 & movement \\ \hline
-20 & german \\ \hline
-  \end{tabular}
-\end{center}
-
-\begin{center}
-  \begin{tabular}{ | l | l | }
-    \hline
-\multicolumn{2}{|c|}{The Agrarian Programme of ...} \\ \hline
-\# & Word  \\ \hline
-1 & rent \\ \hline
-2 & dessiatins \\ \hline
-3 & 000 \\ \hline
-4 & land \\ \hline
-5 & maslov \\ \hline
-6 & peasants \\ \hline
-7 & capital \\ \hline
-8 & revolution \\ \hline
-9 & marx \\ \hline
-10 & people \\ \hline
-11 & nationalisation \\ \hline
-12 & plekhanov \\ \hline
-13 & restoration \\ \hline
-14 & right \\ \hline
-15 & latifundia \\ \hline
-16 & private \\ \hline
-17 & farming \\ \hline
-18 & free \\ \hline
-19 & central \\ \hline
-20 & lands \\ \hline
-  \end{tabular}
-\end{center}
-
+\subsection{Top senses for given works}
+\input{top_senses_the_state_and_revolution}
+\input{top_senses_lenin_imperialism_the_highest_stage_of_capitalism}
+\input{top_senses_lenin_materialism_and_empirio-criticism}
+\input{top_senses_lenin_the_agrarian_programme_of_social-democracy_in_the_first_russian_revolution_1905-1907}
+\input{top_senses_lenin_what_is_to_be_done?}
 
 
 \subsection{Wordnet analyzer}

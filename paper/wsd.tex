@@ -5,7 +5,7 @@ We found that sense disambiguation was necessary to solve in one or another leve
 
 Our approach for WSD was a classical Lesk implementation that uses wordnet as a definition source with some tweaks.
 Basically Lesk is based on the idea that words that co–occur in a sentence are being used to refer to the same topic.
-The Lesk alghorithm{BIO} takes the word definition or gloss that we want to disambiguate and it compares it gloss against the glosses of the other words in the context.
+The Lesk alghorithm (BIO) takes the word definition or gloss that we want to disambiguate and it compares it gloss against the glosses of the other words in the context.
 Then a word is assigned that sense whose gloss shares the largest number of words in common with the glosses of the other words.
 This algorhitm suffers the problem that relies on the word definition and definitions usually uses as less words as possible.
 Not only that sometimes two different words, but related ones, uses no words in common in their definitions.
