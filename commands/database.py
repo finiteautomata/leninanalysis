@@ -8,9 +8,8 @@ from pymongo.errors import DuplicateKeyError
 
 from information_value.models import odm_session
 from information_value.models import Document
-from information_value.models import DocumentList
 from includes.tokenizer import tokenize
-import includes.ws_generator
+from includes import ws_generator  # don't delete this line!
 from information_value.analysis import get_all_analysis
 
 
@@ -36,25 +35,24 @@ def populate_database():
                 log.info("Duplicate found skipping...")
         log.info("Done")
 
-def _get_windows_size_generators(class_name):
-  # used for search classes by name in ws_generator
-  res = []
-  for name, obj in inspect.getmembers(sys.modules['includes.ws_generator']):
-    if inspect.isclass(obj):
-        if name == class_name:
-            return obj
 
-def calculate_results(documents=None, window_size_algorithm='WindowsHardCodedSizeGenerator', store_only_best = False):
+def _get_windows_size_generators(class_name):
+    # used for search classes by name in ws_generator
+    for name, obj in inspect.getmembers(sys.modules['includes.ws_generator']):
+        if inspect.isclass(obj):
+            if name == class_name:
+                return obj
+
+
+def calculate_results(documents=None, window_size_algorithm='WindowsHardCodedSizeGenerator', store_only_best=False):
   algorithm_class = _get_windows_size_generators(window_size_algorithm)
   if documents is None:
       documents = Document.query.find().all()
-  log.info("Selected window size generator %s" % window_size_algorithm)
-  i = 1
-  for document in documents:
-    log.info("Calculating information values for document %s (%i/%i)" % (document.name, i,len(documents)))
-    i = i+1
 
-    
+  log.info("Selected window size generator %s" % window_size_algorithm)
+  for i, document in enumerate(documents):
+    log.info("Calculating information values for document %s (%i)" % (document.name, i ))
+
     if document.text:
         document.tokenizer = tokenize
         win_size_generator = algorithm_class(document)
@@ -63,16 +61,18 @@ def calculate_results(documents=None, window_size_algorithm='WindowsHardCodedSiz
         if store_only_best:
           _delete_non_best_analysis(document, window_sizes)
 
+
 def _delete_non_best_analysis(document, window_sizes):
   best_res = document.get_information_value_result()
   log.info("Best window size for %s: %s" % (document.name, best_res.window_size))
   log.info("Removing other results from mongo")
   for one_res in document.results:
-    if one_res.window_size !=  best_res.window_size:
+    if one_res.window_size!=best_res.window_size:
       log.info("Removing window size %s" % one_res.window_size)
       one_res.delete()
   log.info("Flushing")
   odm_session.flush()
+
 
 def reset_senses():
   log.info("Resetting all senses")

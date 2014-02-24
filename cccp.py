@@ -92,8 +92,10 @@ def main():
 
     doc_list = None
     if args.documents:
-        from information_value.models import DocumentList
-        doc_list = DocumentList(args.documents[0])
+        from interpreter import Document
+        doc_list = Document.query.find({"name": {"$regex": args.documents[0]}})
+        #from information_value.models import DocumentList
+        #doc_list = DocumentList(args.documents[0])
 
     if args.drop_iv:
         drop_iv()
@@ -101,8 +103,8 @@ def main():
     if args.analysis:
         from commands.database import calculate_results
         documents = None
-        if doc_list:
-            documents = doc_list.documents
+        if doc_list is not None:
+            documents = doc_list
         calculate_results(documents=documents, window_size_algorithm=args.window_size_generator, store_only_best=False)
     if args.analysis_store_only_best:
 

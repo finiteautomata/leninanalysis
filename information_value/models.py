@@ -95,6 +95,7 @@ class Document(MappedClass):
     results = RelationProperty(InformationValueResult)
 
     def top_words(self, total_words=20, stop_words=stopwords.words('english'), greater_than_zero=True, window_size=None):
+        log.info('Calculate top words. total %s' % total_words)
         if window_size is None:
             window_size = self.get_information_value_result().window_size
         iv_words = self.get_iv_by_window_size(window_size)
@@ -105,6 +106,7 @@ class Document(MappedClass):
 
 
     def top_senses(self, total_senses=20):
+        log.info('Calculate top senses. total %s' % total_senses)
         top_words = (word for word, _ in self.top_words(total_senses*2))
         senses = []
         for word in top_words:

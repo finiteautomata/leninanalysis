@@ -22,6 +22,7 @@ htmlcov/*
 dump/
 stats/
 *.out
+*.swp
 *.pdf
 *.aux
 *latexmk
