@@ -70,7 +70,6 @@ Finally, we utilize different wordnet predefined metrics of similarity between s
 
 
 \section{Method}
-Text Corpus.  Scrapping. Total de documentos. Total de documentos por año. Total de tokens promedio. Filtros (esto está!)
 \subsection{Text Corpus}
 
 We selected some starred works from Lenin from the "Marxists Internet Archive"\cite{LENIN}. Those works are very different in topic, some of them being strictly phylosophical essays (such as ``Materialism and Empiriocriticism'') and other being more political, such as ``State and Revolution'', and finally an economy essay called ``Imperialism, the highest stage of capitalism''. 
@@ -83,22 +82,19 @@ We selected some starred works from Lenin from the "Marxists Internet Archive"\c
   \item State and Revolution (1917)
 \end{itemize}
 
+\begin{itemize}
+  \item Mention the crawler for the complete lenin works, pointing that finally we didn't used it but that the scrapper is available in the project at github
+  \item May be, point out some numbers of the db generated. (total documents, mean tokens per document, etc). It's my opinion, I understand that it's not the main line of the project.
+\end{itemize}
+
+
 %*Números (obras totales obtenidas, promedio tokens)
 \subsection{Semantic Analysis}
 \medskip
 \subsubsection{Information value}
 
-Having a similarity notion between words, and the most valuable words from a text, our question arises: how distant is a word from a text? We use here the notion of distance between a point and a set defined as:
-
-\begin{equation}
-  d(a, S) = min_{x \in S} d(a, x) 
-\end{equation}
-
-being $S$ the set of most representative words. Hence, we are ``projecting'' a text into the set of their top words. 
-
-
-In \cite{DARWIN}, Zanette and Montemurro defined the information value of a word in a text. This is
-a real value that quantifies how much information that word carries according to the text. Let $T$ be a 
+The information value of a word for a given text is defined and tested by Zanette \textit{et al.} in \cite{DARWIN} and \cite{ENTROPIC}.
+It is a real value that quantifies how much information a word carries according to the text. Let $T$ be a 
 text, and $T'$ a random shuffled version of $T$, and $w$ a word appearing in $T$. 
 By $S_T(w)$ we denote the Shannon Entropy of $w$ with respect to $T$ (See appendix for more info). 
 
@@ -109,67 +105,45 @@ The information value of $w$ in $T$ is
 \end{equation}
 
 where $f_w$ is the frequency of appearance of $w$ in $T$. This value captures, in some way, whether a word
-has a distribution in text that is not exactly uniform; an order of the word in the text that brings some sense to it. Ordering the words by their information value results in a list of the text's most representative words.
+has a distribution in text that is not exactly uniform; an order of the word in the text that brings some sense to it. 
+Ordering the words by their information value results in a list of the text's most representative words. In the context of our research, we call the first $n$ words of a text -with $n$ fixed-, ordered by it's information value, the \textit{top words} of the document.
 
+\begin{equation}
+  top\_words_{n}(T) = \{w | max(IV_T(w))\}
+\end{equation}
 
 
 \subsubsection{Wordnet synsets \& similarities}
 
-In order to measure the distance/similarity between two words, we use Wordnet (see \cite{WORDNET}), a lexical database in English. Using a subset of all the possible ``senses'' of both words , we test several similarity notions between them.
+Having the \textit{top-words} representation of a document, we were interested in measuring the distance or similarity of that text to different words. In order to address this problem we used different similarity functions defined over wordnet in the python's library nltk\footnote{link a nltk}. Wordnet is a lexical resource known as thesaurus, i. e, a data base of terms grouped as sets of synonyms (synsets), each of which have a definition and different semantic relations with others synsets (for example: hypernymy, hyponymy, meronymy, etc). The similarity functions are defined over this network of semantic relations.
 
+This functions aren' t defined over words but over synsets. A synset, briefly, is an abstract notion of sense, meaning or concept that is independent from it's linguistic formulation or spelling. Using synsets instead of words, the wordnet thesaurus solves two problems of ambiguity limited to the linguistic domain: polisemy and synonymy. Polisemy occurs when a unique term may refer to more than one concept (for example, bank may refer to a financial institution or to a {\color{red}banco de plaza}. In the other hand, synonymy occurs when different terms refer to the same concept (for example \sq{car} and \sq{automobile} refers, both, to the same concept).
 
-\textbf{Old title: Wordnet analyzer}
-Consideremos el siguiente problema:
-\newline
-¿Cómo calcular la similaridad o distancia de un documento a un cierto concepto? 
-\newline
-El enfoque que utilizamos en este trabajo es el de realizar una representación del documento como un conjunto de palabras, y en base a esto usar una noción topológica de similaridad/distancia. La proyección del documento al espacio de palabras la realizamos utilizando la t\'ecnica de Information Value reci\'en descripta.
-En este espacio, utilizamos Wordnet para definir una noción de distancia entre el conjunto de palabras que representan al texto y diferentes conjuntos representando conceptos.
-\newline
-Para un documento dado, el módulo de information value genera una lista con lo $n$ términos más importantes y su iv. Estos valores se normalizan -dividiendo por la suma de los valores-, obteniendo así uno de los inputs del proceso siguiente. Recordemos, nuestro objetivo es asignar una distancia entre un documento y un concepto. Digamos, decidir cuán presente está o cuán importante es un concepto en un documento.
-\newline
-Wordnet es una base de datos de palabras, agrupadas en conjuntos de sinónimos (synsets), cada uno de los cuales posee una definición y diferentes relaciones semánticas con otros synsets (por ejemplo: hipernimia, hiponimia, meronimia, etc). Sobre estas relaciones semánticas es posible definir distintas métricas de distancia y similaridad entre synsets (Ver [1])
-\newline
-Utilizando las métricas disponibles en el módulo nltk de python para wordnet definimos la similaridad entre dos palabras como la máxima similaridad entre todos los synsets de ambas. (**NOTA Parametrizable: puede ser sólo el primer synset de ambos y puede no ser la máxima similaridad sino un promedio. También para algunas métricas quedan afuera los synsets que no son sustantivos). 
-\begin{multline}
-S_w(w_1, w_2) = max \{ S_s(s_1, s_2) \}: s_1 \in synsets(w_1),\\ s_2 \in synsets(w_2)
-\end{multline}
+The similarities defined in the nltk-api are the following:
 
-Para path similarity vale que $0 \leq S_w \leq 1$. 
-
-Sobre $S_w$ (de word similarity) definimos la similaridad de un documento a un término como:
-
-\begin{equation}
-S_{dw}(d, w) = sum \{ S_w(d_i, w) \times p(d_i)  \} 
-\end{equation}
-
-donde las tuplas $(d_i , p(d_i))$ representan las palabras más importantes del documento $d$, y sus respectivos pesos normalizados. Vale que $0 \leq p(d_i) \leq 1$ pues está normalizado.
-
-Por ejemplo $S_{dw}$(“Estado y Revolución”, “guerra”) = 0.110. $S_{dw}$ es una noción de cercanía entre un documento y una palabra.
-
-Finalmente, definimos la noción de similaridad entre un año y una palabra como el promedio de las similaridades ($S_{dw}$) 
-de los distintos documentos producidos durante ese año con la palabra en cuestión:
-\begin{equation}
-  S_{yw}(y, w) = mean \{ S_dw(y_i, w) \} : y_i \in docs(y) 
-\end{equation}
-
-Los resultados que presentaremos a continuaci\'on est\'an apoyados en distintas configuraciones de estas tres m\'etricas ($S_w$, $S_dw$ y $S_{yw}$).
-
-% *SynsetAnalyzer
-%   *Synset
-%   *path, lch, wup
-% *judge_word
-% *judge_doc
-% *judge_year
-% Dado un conjunto de palabras, definimos la distancia de una palabra a este conjunto como 
-% 
-
+\begin{itemize}
+  \item Path Similarity: based on the shortest path that connects the senses in the is-a (hypernym/hypnoym) taxonomy. 
+  \item Leacock-Chodorow Similarity: based on the shortest path that connects the senses (as above) and the maximum depth of the taxonomy in which the senses occur. The relationship is given as -log(p/2d) where p is the shortest path length and d the taxonomy depth.
+  \item Wu-Palmer Similarity: based on the depth of the two senses in the taxonomy and that of their Least Common Subsumer (most specific ancestor node). 
+  \item Resnik Similarity: based on the Information Content (IC) of the Least Common Subsumer. Note that for any similarity measure that uses information content, the result is dependent on the corpus used to generate the information content and the specifics of how the information content was created.
+  \item Jiang-Conrath Similarity Return a score denoting how similar two word senses are, based on the Information Content (IC) of the Least Common Subsumer and that of the two input Synsets. The relationship is given by the equation 1 / (IC(s1) + IC(s2) - 2 * IC(lcs)).
+  \item Lin Similarity: Return a score denoting how similar two word senses are, based on the Information Content (IC) of the Least Common Subsumer and that of the two input Synsets. The relationship is given by the equation 2 * IC(lcs) / (IC(s1) + IC(s2)).
+\end{itemize}
 
 \subsubsection{Word sense disambiguation}
 
 \subsubsection{Top-sense definition}
 
+In a first approach, we pretend to measure the distance between a document (represented by it's \textit{top words}) and different words. To address this problem using the wordnet distances between synsets described before, we modeled the notion of \sq{word} as the sum of all its synsets. The results were pretty demotivating, so we refocused our energy in order to define our problem in the space of word-senses (and no more in the space of words). 
 
+Using the WSD algorithm described in the previous section, we defined the notion of \textit{top senses} of a document as the word-senses resulting from the disambiguation of the \textit{top words} of the documents obtained with Zannete's information value approach.
+
+Given a document $T$ and an arbitrary integer $n$, the \textit{top senses} are defined as follow:
+\begin{equation}
+  top\_senses_{n}(T) = \{s | w \in top\_words_{n}(T) \wedge  s = wsd_T(w)\}
+\end{equation}
+
+Based on this definition, we evaluate the resultant \textit{top senses} of some texts and then check the results of the different similarities with well known concepts in the next sections.
 
 \section{Results}
 * Distancia a algunos conceptos de estado y revolución
@@ -375,6 +349,55 @@ The chosen approach is a tradeoff between both. We take the average not of all t
 The threshold value we used is $ST=0.001$, so it would consider only the $\frac{n}{1000}$ most significant words. The reason behind this was that it fitted the results from \cite{DARWIN} for the texts The origin of the species, Moby Dick, and  The Analysis of the mind.
 
 
+\appendix[Old stuff of wordnet in spanish]
+Consideremos el siguiente problema:
+\newline
+¿Cómo calcular la similaridad o distancia de un documento a un cierto concepto? 
+\newline
+El enfoque que utilizamos en este trabajo es el de realizar una representación del documento como un conjunto de palabras, y en base a esto usar una noción topológica de similaridad/distancia. La proyección del documento al espacio de palabras la realizamos utilizando la t\'ecnica de Information Value reci\'en descripta.
+En este espacio, utilizamos Wordnet para definir una noción de distancia entre el conjunto de palabras que representan al texto y diferentes conjuntos representando conceptos.
+\newline
+Para un documento dado, el módulo de information value genera una lista con lo $n$ términos más importantes y su iv. Estos valores se normalizan -dividiendo por la suma de los valores-, obteniendo así uno de los inputs del proceso siguiente. Recordemos, nuestro objetivo es asignar una distancia entre un documento y un concepto. Digamos, decidir cuán presente está o cuán importante es un concepto en un documento.
+\newline
+Wordnet es una base de datos de palabras, agrupadas en conjuntos de sinónimos (synsets), cada uno de los cuales posee una definición y diferentes relaciones semánticas con otros synsets (por ejemplo: hipernimia, hiponimia, meronimia, etc). Sobre estas relaciones semánticas es posible definir distintas métricas de distancia y similaridad entre synsets (Ver [1])
+\newline
+Utilizando las métricas disponibles en el módulo nltk de python para wordnet definimos la similaridad entre dos palabras como la máxima similaridad entre todos los synsets de ambas. (**NOTA Parametrizable: puede ser sólo el primer synset de ambos y puede no ser la máxima similaridad sino un promedio. También para algunas métricas quedan afuera los synsets que no son sustantivos). 
+\begin{multline}
+S_w(w_1, w_2) = max \{ S_s(s_1, s_2) \}: s_1 \in synsets(w_1),\\ s_2 \in synsets(w_2)
+\end{multline}
+
+Para path similarity vale que $0 \leq S_w \leq 1$. 
+
+Sobre $S_w$ (de word similarity) definimos la similaridad de un documento a un término como:
+
+\begin{equation}
+S_{dw}(d, w) = sum \{ S_w(d_i, w) \times p(d_i)  \} 
+\end{equation}
+
+donde las tuplas $(d_i , p(d_i))$ representan las palabras más importantes del documento $d$, y sus respectivos pesos normalizados. Vale que $0 \leq p(d_i) \leq 1$ pues está normalizado.
+
+Por ejemplo $S_{dw}$(“Estado y Revolución”, “guerra”) = 0.110. $S_{dw}$ es una noción de cercanía entre un documento y una palabra.
+
+Finalmente, definimos la noción de similaridad entre un año y una palabra como el promedio de las similaridades ($S_{dw}$) 
+de los distintos documentos producidos durante ese año con la palabra en cuestión:
+\begin{equation}
+  S_{yw}(y, w) = mean \{ S_dw(y_i, w) \} : y_i \in docs(y) 
+\end{equation}
+
+Los resultados que presentaremos a continuaci\'on est\'an apoyados en distintas configuraciones de estas tres m\'etricas ($S_w$, $S_dw$ y $S_{yw}$).
+
+% *SynsetAnalyzer
+%   *Synset
+%   *path, lch, wup
+% *judge_word
+% *judge_doc
+% *judge_year
+% Dado un conjunto de palabras, definimos la distancia de una palabra a este conjunto como 
+% 
+
+
+
+
 \begin{thebibliography}{10}
 \bibitem{LENIN}
 Marxists Internet Archive, {\em www.marxists.org} %, No estaria pudiendo definir bien esta referencia
@@ -472,7 +495,6 @@ Autor, {\em Nombre }, Publicación, No. %Buscar y poner
 % Spanish Ministry of Science and Technology Grant BFM2002-02042 (to D.C. and
 % J.L.R.) and by National Science Foundation Grand DMS-0245242 (to C.F.).
 % \end{acknowledgments}
-
 
 
 
