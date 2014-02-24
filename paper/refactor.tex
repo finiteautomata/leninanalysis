@@ -122,7 +122,7 @@ This functions aren' t defined over words but over synsets. A synset, briefly, i
 The similarities defined in the nltk-api are the following:
 
 \begin{itemize}
-  \item Path Similarity: based on the shortest path that connects the senses in the is-a (hypernym/hypnoym) taxonomy. 
+  \item Path Similarity: based on the shortest path that connects the senses in the is-a (hypernym/hypnoym) taxonomy.
   \item Leacock-Chodorow Similarity: based on the shortest path that connects the senses (as above) and the maximum depth of the taxonomy in which the senses occur. The relationship is given as -log(p/2d) where p is the shortest path length and d the taxonomy depth.
   \item Wu-Palmer Similarity: based on the depth of the two senses in the taxonomy and that of their Least Common Subsumer (most specific ancestor node). 
   \item Resnik Similarity: based on the Information Content (IC) of the Least Common Subsumer. Note that for any similarity measure that uses information content, the result is dependent on the corpus used to generate the information content and the specifics of how the information content was created.
@@ -131,7 +131,7 @@ The similarities defined in the nltk-api are the following:
 \end{itemize}
 
 \subsubsection{Word sense disambiguation}
-
+\input{wsd}
 \subsubsection{Top-sense definition}
 
 In a first approach, we pretend to measure the distance between a document (represented by it's \textit{top words}) and different words. To address this problem using the wordnet distances between synsets described before, we modeled the notion of \sq{word} as the sum of all its synsets. The results were pretty demotivating, so we refocused our energy in order to define our problem in the space of word-senses (and no more in the space of words). 
@@ -168,150 +168,10 @@ Based on this definition, we evaluate the resultant \textit{top senses} of some 
 The original scope of this investigation was the definition of a measure of distance between the works of a whole year but we find a lot of complexities in the definition of that model. While we decide to reduce the scope of this work for mental health, we consider the metric defined in this article as a step into the concretion of the original goal.
 
 \appendix[All tables]
-
-\begin{center}
-  \begin{tabular}{ | l | l | }
-    \hline
-    \multicolumn{2}{|c|}{State and Revolution} \\ \hline
-    \# & Word  \\ \hline
-1 & kautsky \\ \hline
-2 & marx \\ \hline
-3 & revolution \\ \hline
-4 & works \\ \hline
-5 & engels \\ \hline
-6 & society \\ \hline
-7 & power \\ \hline
-8 & party \\ \hline
-9 & social \\ \hline
-10 & experience \\ \hline
-11 & bernstein \\ \hline
-12 & question \\ \hline
-13 & equality \\ \hline
-14 & phase \\ \hline
-15 & 1917 \\ \hline
-16 & commune \\ \hline
-17 & one \\ \hline
-18 & republic \\ \hline
-19 & class \\ \hline
-20 & law \\ \hline
-  \end{tabular}
-\end{center}
-
-\begin{center}
-  \begin{tabular}{ | l | l | }
-    \hline
-    \multicolumn{2}{|c|}{Imperialism, the Highest ...} \\ \hline
-    \# & Word  \\ \hline
-1 & enterprises \\ \hline
-2 & bank \\ \hline
-3 & imperialism \\ \hline
-4 & world \\ \hline
-5 & million \\ \hline
-6 & colonies \\ \hline
-7 & kautsky \\ \hline
-8 & colonial \\ \hline
-9 & production \\ \hline
-10 & cent \\ \hline
-11 & economic \\ \hline
-12 & company \\ \hline
-13 & capitalist \\ \hline
-14 & monopoly \\ \hline
-15 & big \\ \hline
-16 & countries \\ \hline
-17 & policy \\ \hline
-18 & powers \\ \hline
-19 & 000 \\ \hline
-20 & banks \\ \hline
-  \end{tabular}
-\end{center}
-
-\begin{center}
-  \begin{tabular}{ | l | l | }
-    \hline
-\multicolumn{2}{|c|}{Materialism and Empirio-criticism} \\ \hline
-\# & Word  \\ \hline
-1 & physics \\ \hline
-2 & social \\ \hline
-3 & avenarius \\ \hline
-4 & space \\ \hline
-5 & time \\ \hline
-6 & dietzgen \\ \hline
-7 & berkeley \\ \hline
-8 & truth \\ \hline
-9 & rey \\ \hline
-10 & objective \\ \hline
-11 & sensation \\ \hline
-12 & experience \\ \hline
-13 & pp \\ \hline
-14 & engels \\ \hline
-15 & motion \\ \hline
-16 & marx \\ \hline
-17 & book \\ \hline
-18 & works \\ \hline
-19 & vol \\ \hline
-20 & general \\ \hline
-  \end{tabular}
-\end{center}
-
-\begin{center}
-  \begin{tabular}{ | l | l | }
-    \hline
-\multicolumn{2}{|c|}{What Is To Be Done?} \\ \hline
-\# & Word  \\ \hline
-1 & local \\ \hline
-2 & organisation \\ \hline
-3 & abroad \\ \hline
-4 & union \\ \hline
-5 & criticism \\ \hline
-6 & economic \\ \hline
-7 & political \\ \hline
-8 & revolutionaries \\ \hline
-9 & freedom \\ \hline
-10 & newspapers \\ \hline
-11 & workers \\ \hline
-12 & nadezhdin \\ \hline
-13 & consciousness \\ \hline
-14 & newspaper \\ \hline
-15 & bourgeois \\ \hline
-16 & masses \\ \hline
-17 & martynov \\ \hline
-18 & would \\ \hline
-19 & movement \\ \hline
-20 & german \\ \hline
-  \end{tabular}
-\end{center}
-
-\begin{center}
-  \begin{tabular}{ | l | l | }
-    \hline
-\multicolumn{2}{|c|}{The Agrarian Programme of ...} \\ \hline
-\# & Word  \\ \hline
-1 & rent \\ \hline
-2 & dessiatins \\ \hline
-3 & 000 \\ \hline
-4 & land \\ \hline
-5 & maslov \\ \hline
-6 & peasants \\ \hline
-7 & capital \\ \hline
-8 & revolution \\ \hline
-9 & marx \\ \hline
-10 & people \\ \hline
-11 & nationalisation \\ \hline
-12 & plekhanov \\ \hline
-13 & restoration \\ \hline
-14 & right \\ \hline
-15 & latifundia \\ \hline
-16 & private \\ \hline
-17 & farming \\ \hline
-18 & free \\ \hline
-19 & central \\ \hline
-20 & lands \\ \hline
-  \end{tabular}
-\end{center}
-
+\input{top_senses_the_state_and_revolution}
 \appendix[Entropy of a word in a text]
 \label{appendix1}
-Let's recall from \cite{DARWIN} and \cite{ENTROPIC} the concept of information value of a word. 
+Let's recall from \cite{DARWIN} and \cite{ENTROPIC} the concept of information value of a word.
 Let $T$ be a text, which has been split into $P$ pieces $T_1, T_2, \dots, T_P$, $w$ be a word in $T$,
 and $f_i$ the frequency of appearance of $w$ in $T_i$.
 
@@ -409,7 +269,7 @@ M.A. Montemurro and D. H. Zanette, {\em Entropic analysis of the role of words i
 \bibitem{WORDNET}
 George A. Miller, {\em WordNet: A Lexical Database for English }, COMMUNICATIONS OF THE ACM November 1995/Vol. 38, No. 11
 \bibitem{LESK}
-Autor, {\em Nombre }, Publicación, No. %Buscar y poner
+M. Lesk. Automatic sense disambiguation using machine readable dictionaries: How to tell a pine cone from a ice cream cone. In Proceedings of SIGDOC ’86, 1986.
 \end{thebibliography}
 \end{article}
 \end{document}
