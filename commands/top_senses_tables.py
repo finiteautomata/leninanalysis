@@ -1,10 +1,9 @@
 import string
 import logging
 
-from interpreter import *
+from interpreter import Document
 
 log = logging.getLogger('lenin')
-
 
 
 def create_top_sense_tables():
@@ -33,13 +32,14 @@ def create_top_sense_tables():
       \\begin{tabular}{ | l | l | }
         \hline
         \multicolumn{2}{|c|}{%s} \\\\ \hline
-        \# & Word  \\\\ \hline\n""" % document.name)
-            for index, sense in enumerate(document.top_senses(), start=1):
+        \# & Word  \\\\ \hline\n""" % document.name[:30])
+            top_senses = document.top_senses()
+            last = len(top_senses)
+            for index, sense in enumerate(top_senses, start=1):
                 log.info("Sense %s --  %s " % (string.rjust(sense.name, 35),
                     string.rjust(sense.definition, 55)))
-                tex_table.write("%s & %s \\\\ \hline \n" % (index, string.rjust(sense.name, 35).split('.')[0].strip()))
+                tex_table.write("%s & %s \\\\ \hline" % (index, string.rjust(sense.name, 35).split('.')[0].strip().replace('_', '\_')))
+                if index != last:
+                    tex_table.write("\n")
 
-            tex_table.write("""
-      \end{tabular}
-    \end{center}
-            """)
+            tex_table.write("""\end{tabular}\n\end{center}""")
