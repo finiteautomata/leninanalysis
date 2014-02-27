@@ -25,7 +25,9 @@ class DocumentAnalyzer(object):
  
     @property
     def name(self):
-        print self.similarity_function.func_name + " document analyzer"
+        name = self.similarity_function.func_name + "| document analyzer"
+        log.info(name)
+        return name
 
     def analyze_document(self, document):
         document_analysis = {} #self.__get_analysis_for(document)[self.prefix]

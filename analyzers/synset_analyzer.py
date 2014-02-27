@@ -74,7 +74,7 @@ def year_vs_concept_data(concepts = None, year_min = 1899, year_max = 1923):
 
     analyzers = dict((concept, wna_for(concept)) for concept in concepts)
 
-    print "years {0} - {1} vs concepts: {2}. working...".format(year_min, year_max, concepts)
+    log.info("years {0} - {1} vs concepts: {2}. working...".format(year_min, year_max, concepts))
     for year in range(year_min, year_max):
         analyze_year(concepts, analyzers)
 
@@ -84,11 +84,11 @@ def analyze_year(concepts, analyzers):
     year_res = {}
     for concept in concepts:
       year_res[concept] = _year_vs_concept_analysis(concept, year, analyzers)
-    
+
     log.info("{2:.2f} = year-distance('{1}', '{0}') ".format(year, concept, res[year][concept]))
     output += "{0}: {1:.2f} ".format(concept, res[year][concept])
-  
-    print "year: {0}, #doc: {1}, res: {2}".format(year, doc_list.total_docs, output)
+
+    log.info("year: {0}, #doc: {1}, res: {2}".format(year, doc_list.total_docs, output))
 
 def _year_vs_concept_analysis(concept, year, analyzers):
     doc_list = DocumentList("", False, year)
