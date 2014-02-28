@@ -4,10 +4,13 @@ import sys
 import config
 import argparse
 import subprocess
+
+import ming
+
 from commands.database import reset_senses
 from commands.year_analysis import calculate_year_analysis
 from commands.top_senses_tables import create_tables
-import ming
+from commands.wget import wget
 
 reload(config)
 
@@ -68,6 +71,8 @@ def main():
     parser.add_argument('--analyze-documents', action='store_true', default=False, help="Do Document Analysis for given concepts (pass with --concepts)")
     parser.add_argument('--reset-senses', action='store_true', default=False, help="Reset all senses calculated")
     parser.add_argument('--latex-info', action='store_true', default=False, help="Creates LaTex information for paper")
+    parser.add_argument('--wget', metavar=('url'), help="Fetches the url and creates a Document")
+
     if len(sys.argv) == 1:
         parser.print_help()
         sys.exit(1)
@@ -145,7 +150,9 @@ def main():
     if args.reset_senses:
         reset_senses()
     if args.latex_info:
-        create_tables()
+        create_tables(doc_list)
+    if args.wget:
+        wget(args.wget)
 
     if args.set_number_of_tokens:
         set_number_of_tokens()

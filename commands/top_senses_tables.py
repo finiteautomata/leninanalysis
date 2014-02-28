@@ -30,7 +30,7 @@ synsets = [wn.synset(word) for word in [
            "car.n.01"]]
 
 
-def document_list():
+def default_document_list():
     state_and_revolution = Document.query.find({"name": {"$regex": "State and Revolution"}}).next()
     imperialism_capitalism = Document.query.find({"name": {"$regex": "Imperialism.*Capitalism.*"}}).next()
     materialism_criticism = Document.query.find({"name": "Lenin: MATERIALISM and EMPIRIO-CRITICISM"}).next()
@@ -39,8 +39,11 @@ def document_list():
     return [state_and_revolution, imperialism_capitalism, materialism_criticism, what_is_to_be_done, agrarian_programme]
 
 
-def create_top_sense_tables():
-    documents = document_list()
+def create_top_sense_tables(doc_list):
+    documents = doc_list
+    if documents is None:
+        documents = default_document_list()
+
     log.info("Top words")
     log.info("=" * 80)
     for document in documents:
@@ -70,11 +73,13 @@ def create_top_sense_tables():
             tex_table.write("""\end{tabular}\n\end{center}""")
 
 
-def create_analysis_tables():
+def create_analysis_tables(doc_list):
+
+    documents = doc_list
+    if documents is None:
+        documents = default_document_list()
 
     analyzers = [DocumentAnalyzer(synsets=synsets, similarity_function=sim_fun) for sim_fun in SIMILARITY_FUNCS]
-
-    documents = document_list()
 
     for doc in documents:
         full_analysis = {}
@@ -106,6 +111,6 @@ def create_analysis_tables():
             analysis_output.write("""\end{tabular}\n\end{center}""")
 
 
-def create_tables():
-    create_top_sense_tables()
-    create_analysis_tables()
+def create_tables(doc_list):
+    create_top_sense_tables(doc_list)
+    create_analysis_tables(doc_list)
