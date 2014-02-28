@@ -93,7 +93,7 @@ def create_analysis_tables():
                                                     analyzer.best_word_for[synset].name))
 
         doc_name = doc.name.replace(' ', '_').replace(':', '').replace(',', '').lower()[:30]
-        with open('paper/analysis_%s' % (doc_name), 'w') as analysis_output:
+        with open('paper/analysis_%s.tex' % (doc_name), 'w') as analysis_output:
             analysis_output.write("""
     \\begin{center}
       \\begin{tabular}{ | l | l | l |}
