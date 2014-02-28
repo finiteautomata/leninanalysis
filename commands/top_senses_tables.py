@@ -38,6 +38,9 @@ def default_document_list():
     agrarian_programme = Document.query.find({"name": u'Lenin: The Agrarian Programme of Social-Democracy in the First Russian Revolution, 1905-1907'}).next()
     return [state_and_revolution, imperialism_capitalism, materialism_criticism, what_is_to_be_done, agrarian_programme]
 
+def clean_name(name):
+    name.replace(' ', '_').replace(':', '').replace(',', '').replace('.','_').replace('/','_').lower()
+    return name
 
 def create_top_sense_tables(doc_list):
     documents = doc_list
@@ -55,7 +58,7 @@ def create_top_sense_tables(doc_list):
         except AttributeError:
             log.exception("No top words found. Trying to calculate them.")
 
-        with open("paper/top_senses_%s.tex" % document.name.replace(' ', '_').replace(':', '').replace(',', '').lower(), "w") as tex_table:
+        with open("paper/top_senses_%s.tex" % clean_name(document.name), "w") as tex_table:
             tex_table.write("""
     \\begin{center}
       \\begin{tabular}{ | l | l | }
@@ -98,7 +101,7 @@ def create_analysis_tables(doc_list):
                                                     analyzer.best_word_for[synset].name))
 
         doc_name = doc.name.replace(' ', '_').replace(':', '').replace(',', '').lower()[:30]
-        with open('paper/analysis_%s.tex' % (doc_name), 'w') as analysis_output:
+        with open('paper/analysis_%s.tex' % (clean_name(doc_name)), 'w') as analysis_output:
             analysis_output.write("""
     \\begin{center}
       \\begin{tabular}{ | l | l | l |}
