@@ -6,7 +6,7 @@ import argparse
 import subprocess
 from commands.database import reset_senses
 from commands.year_analysis import calculate_year_analysis
-from commands.top_senses_tables import create_top_sense_tables
+from commands.top_senses_tables import create_tables
 import ming
 
 reload(config)
@@ -145,7 +145,7 @@ def main():
     if args.reset_senses:
         reset_senses()
     if args.latex_info:
-        create_top_sense_tables()
+        create_tables()
 
     if args.set_number_of_tokens:
         set_number_of_tokens()
