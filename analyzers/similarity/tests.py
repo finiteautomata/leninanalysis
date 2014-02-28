@@ -4,7 +4,8 @@ from unittest import TestCase
 from analyzers.similarity import path_similarity
 from synsets import get_word_synsets
 
-class PathSimilarityTest(TestCase):    
+
+class PathSimilarityTest(TestCase):
     def test_similarity_between_the_same_word_should_return_1(self):
         war_ss = [wn.synset("war.n.01")]
         self.assertAlmostEqual(path_similarity(war_ss, war_ss), 1.0)

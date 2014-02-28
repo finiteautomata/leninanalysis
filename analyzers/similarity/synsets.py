@@ -6,6 +6,7 @@ from nltk.corpus import wordnet as wn
 Get all the synsets for a word
 """
 
+
 def get_word_synsets(word, only_nouns=True):
     lemmas = wn.lemmas(word)
 
@@ -18,7 +19,7 @@ def get_word_synsets(word, only_nouns=True):
             return []
 
     #some distances doesn't handle not-noun words
-    synsets =  [lemma.synset for lemma in lemmas]
+    synsets = [lemma.synset for lemma in lemmas]
 
     if only_nouns:
         return [synset for synset in synsets if synset.name.split('.')[1] == 'n']

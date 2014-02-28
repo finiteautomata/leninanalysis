@@ -49,9 +49,9 @@ class SynsetAnalyzer:
         '''
           @returns double a value between 1.0 and 0.0
         '''
-        return self.similarity_function(self.synsets, get_word_synsets(word)) 
+        return self.similarity_function(self.synsets, get_word_synsets(word))
 
- 
+
 def wna_for(word):
     return SynsetAnalyzer(word)
 
@@ -66,7 +66,7 @@ def wnas_for(words):
 
 
 def year_vs_concept_data(concepts = None, year_min = 1899, year_max = 1923):
-  
+
     if not concepts:
         concepts = ["war", "idealism", "revolution", "philosophy"]
 

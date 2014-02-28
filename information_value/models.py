@@ -118,10 +118,10 @@ class Document(MappedClass):
             except wisdom.NoSenseFound:
                 pass
         odm_session.flush()
-        return senses        
+        return senses
 
     def __get_sense_for(self, word):
-        
+
         if not self.related_sense.has_key(word):
             sense = wisdom.lesk(self.text, word, pos='n')
             self.related_sense[word] = sense.name
@@ -228,7 +228,7 @@ class DocumentList(object):
         self.search_criterion = {
             'number_of_words': {'$gte': MIN_TOKENS}
         }
-        if name and name != '': 
+        if name and name != '':
             self.search_criterion['name'] = {'$regex': '.*'+name+'.*'},
 
         if year is not None:
@@ -246,7 +246,7 @@ class DocumentList(object):
 
     def __iter__(self):
         return self.documents_query
-        
+
     @property
     def total_docs(self):
         return self.documents_query.count()

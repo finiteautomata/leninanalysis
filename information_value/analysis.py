@@ -85,18 +85,18 @@ def _get_window_size_analysis(window_size):
 def get_all_analysis(document, window_sizes, number_of_words=20):
     global __information_value_calculator
     global __number_of_words
-    global __document 
+    global __document
     __document = document
     __number_of_words = number_of_words
     __information_value_calculator = InformationValueCalculator(document.tokens)
-    
+
     pool = multiprocessing.Pool(processes=config.NUMBER_OF_THREADS)
     analysis = pool.map(_get_window_size_analysis, window_sizes)
     pool.close()
     pool.join()
 
     return filter(None, analysis)
-    
+
 def _get_all_analysis_single_threaded(document, window_sizes, number_of_words=20):
     global __information_value_calculator
     global __number_of_words
@@ -105,7 +105,7 @@ def _get_all_analysis_single_threaded(document, window_sizes, number_of_words=20
     __document = document
     __number_of_words = number_of_words
     __information_value_calculator = InformationValueCalculator(document.tokens)
-    
+
     analysis = map(_get_window_size_analysis, window_sizes)
 
     return filter(None, analysis)

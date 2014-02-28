@@ -18,11 +18,11 @@ class DocumentAnalyzer(object):
         self.prefix = similarity_function.func_name
         self.analyzers = dict(
             (synset, SynsetAnalyzer(
-                synsets=[synset], 
-                similarity_function=similarity_function, 
+                synsets=[synset],
+                similarity_function=similarity_function,
                 judge_function=judge_function)
             ) for synset in self.synsets)
- 
+
     @property
     def name(self):
         name = self.similarity_function.func_name
@@ -35,18 +35,18 @@ class DocumentAnalyzer(object):
 
         for synset in self.synsets:
             document_analysis[synset.name] = self.analyze_synset(synset=synset, document=document)
-        
+
         #db.document_analysis.save(document_analysis)
         return document_analysis
 
-   
+
     def analyze_synset(self, document, synset):
         # Only calculate in case there's no analysis done
         analyzer = self.analyzers[synset]
         doc_analysis = analyzer.judge_doc(document)
         self.best_word_for[synset.name] = synset_analyzer.best_word
         return doc_analysis
-    
+
     def __get_analysis_for(self, document):
         document_analysis = db.document_analysis.find_one({"document_id": document._id}) or {"document_id": document._id}
         if not self.prefix in document_analysis.keys():
