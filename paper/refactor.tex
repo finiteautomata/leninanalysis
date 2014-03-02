@@ -17,6 +17,8 @@
 \usepackage{bookmark}
 \usepackage{color}
 \selectlanguage{spanish}
+\usepackage{array}
+\newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
 
 
 \newcommand\dq[1]{\textquotedblleft #1\textquotedblright}
@@ -146,8 +148,7 @@ Given a document $T$ and an arbitrary integer $n$, the \textit{top senses} are d
 Based on this definition, we evaluate the resultant \textit{top senses} of some texts and then check the results of the different similarities with well known concepts in the next sections.
 
 \section{Results}
-* Distancia a algunos conceptos de estado y revolución
-
+\input{results}
 \subsection{Top senses for selected works}
 
 \subsection{Distances to evaluation sets}
@@ -168,11 +169,11 @@ Based on this definition, we evaluate the resultant \textit{top senses} of some 
 The original scope of this investigation was the definition of a measure of distance between the works of a whole year but we find a lot of complexities in the definition of that model. While we decide to reduce the scope of this work for mental health, we consider the metric defined in this article as a step into the concretion of the original goal.
 
 \appendix[All tables]
-\input{top_senses_the_state_and_revolution}
-\input{top_senses_lenin_imperialism_the_highest_stage_of_capitalism}
-\input{top_senses_lenin_materialism_and_empirio-criticism}
-\input{top_senses_lenin_the_agrarian_programme_of_social-democracy_in_the_first_russian_revolution_1905-1907}
-\input{top_senses_lenin_what_is_to_be_done?}
+% \input{top_senses_the_state_and_revolution}
+% \input{top_senses_lenin_imperialism_the_highest_stage_of_capitalism}
+% \input{top_senses_lenin_materialism_and_empirio-criticism}
+% \input{top_senses_lenin_the_agrarian_programme_of_social-democracy_in_the_first_russian_revolution_1905-1907}
+% \input{top_senses_lenin_what_is_to_be_done?}
 
 \appendix[Entropy of a word in a text]
 \label{appendix1}

@@ -116,13 +116,14 @@ def create_analysis_tables(doc_list):
         with open('paper/analysis_%s.tex' % (clean_name(doc_name)), 'w') as analysis_output:
             analysis_output.write("""
     \\begin{center}
-      \\begin{tabular}{ | l | l | l | l |}
+      \\begin{tabular}{ | l | l | l |}
         \hline
-        Choosen Sensens & Closest Top Sense & similarity & Top Sense Gloss \\\\ \hline\n""")
+        Choosen Sensens & Closest Top Sense & similarity  \\\\ \hline\n""")
             for key in full_analysis.keys():
-                analysis_output.write("\multicolumn{4}{|c|}{%s - %s} \\\\ \hline\n" % (doc.name[:30], key.replace('_', ' ')))
+                analysis_output.write("\multicolumn{3}{|c|}{%s - %s} \\\\ \hline\n" % (doc.name[:30], key.replace('_', ' ')))
                 for value in full_analysis[key]:
-                    analysis_output.write("%s & %s & %s & %s\\\\ \hline\n" % (value[0].replace('_', ' '), value[2].replace('_', ' '), value[1].replace('_', ' '), value[3].replace('_', ' ')))
+                    analysis_output.write("%s & %s & %s\\\\ \hline\n" % (value[0].replace('_', ' '), value[2].replace('_', ' '), value[1].replace('_', ' ')))
+                    #analysis_output.write("%s & %s & %s & %s\\\\ \hline\n" % (value[0].replace('_', ' '), value[2].replace('_', ' '), value[1].replace('_', ' '), value[3].replace('_', ' ')))
             analysis_output.write("""\end{tabular}\n\end{center}""")
 
 
@@ -218,5 +219,5 @@ def create_graph_top_senses(documents, all_senses, distance_functions):
 
 def create_tables(doc_list):
 #    create_top_sense_tables(doc_list)
-#    create_analysis_tables(doc_list)
-    create_graphs(doc_list)
+    create_analysis_tables(doc_list)
+#    create_graphs(doc_list)
