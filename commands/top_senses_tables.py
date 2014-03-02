@@ -132,11 +132,11 @@ def create_graphs(doc_list):
         documents = default_document_list()
 
     distance_functions = [
-        ('lch', lambda sense_1, sense_2: wn.lch_similarity(sense_1, sense_2)),
-        ('lin', lambda sense_1, sense_2: wn.lin_similarity(sense_1, sense_2, CORPUS)),
-        ('res', lambda sense_1, sense_2: wn.res_similarity(sense_1, sense_2, CORPUS)),
-        ('jcn', lambda sense_1, sense_2: wn.jcn_similarity(sense_1, sense_2, CORPUS)),
-        ('path', lambda sense_1, sense_2: wn.path_similarity(sense_1, sense_2)),
+        (wn.lch_similarity(SYNSETS[0], SYNSETS[0]), 'lch', lambda sense_1, sense_2: wn.lch_similarity(sense_1, sense_2)),
+        (1.0, 'lin', lambda sense_1, sense_2: wn.lin_similarity(sense_1, sense_2, CORPUS)),
+        (10.636958516573292, 'res', lambda sense_1, sense_2: wn.res_similarity(sense_1, sense_2, CORPUS)),
+        (wn.jcn_similarity(SYNSETS[0], SYNSETS[0], CORPUS), 'jcn', lambda sense_1, sense_2: wn.jcn_similarity(sense_1, sense_2, CORPUS)),
+        (1.0, 'path', lambda sense_1, sense_2: wn.path_similarity(sense_1, sense_2)),
     ]
     all_senses = []
     for doc in documents:
@@ -162,7 +162,7 @@ def create_against_graph(file_prefix, documents, all_senses, against_to, distanc
         #this is used for give colors that corresponds to each document
         doc_senses[doc_name].append(sense.name)
 
-    for function_name, distance_function in distance_functions:
+    for max_value, function_name, distance_function in distance_functions:
         G = nx.Graph()
         for sense, doc_name in all_senses:
             G.add_node(sense.name)
@@ -172,7 +172,7 @@ def create_against_graph(file_prefix, documents, all_senses, against_to, distanc
         for sense_1, doc_name in all_senses:
             for sense_2 in against_to:
                 if sense_1 != sense_2:
-                    G.add_edge(sense_1.name, sense_2.name, weight=distance_function(sense_1, sense_2))
+                    G.add_edge(sense_1.name, sense_2.name, weight=max_value - distance_function(sense_1, sense_2))
 
         pos = nx.spring_layout(G, iterations=50)
         # lets put the colors for each doc
@@ -195,7 +195,7 @@ def create_graph_top_senses(documents, all_senses, distance_functions):
     for sense, doc_name in all_senses:
         doc_senses[doc_name].append(sense.name)
 
-    for function_name, distance_function in distance_functions:
+    for max_value, function_name, distance_function in distance_functions:
         G = nx.Graph()
         for sense, doc_name in all_senses:
             G.add_node(sense.name)
@@ -204,7 +204,7 @@ def create_graph_top_senses(documents, all_senses, distance_functions):
         for sense_1, doc_name in all_senses:
             for sense_2, doc_name in all_senses:
                 if sense_1 != sense_2:
-                    G.add_edge(sense_1.name, sense_2.name, weight=distance_function(sense_1, sense_2))
+                    G.add_edge(sense_1.name, sense_2.name, weight=max_value - distance_function(sense_1, sense_2))
 
         pos = nx.spring_layout(G, iterations=50)
         colors = [(random(), random(), random()) for _i in range(0, len(doc_senses.keys()))]
