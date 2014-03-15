@@ -12,7 +12,6 @@
 %\usepackage{pnastwof}
 \usepackage{amssymb,amsfonts,amsmath}
 \usepackage[utf8]{inputenc}
-\usepackage[activeacute, spanish]{babel}
 \usepackage[dvips]{graphicx}
 \usepackage{bookmark}
 \usepackage{color}
@@ -163,9 +162,12 @@ Based on this definition, we evaluate the resultant \textit{top senses} of some 
 \section{Discussion}
 
 
-\subsection{Lesk for wsd: results and limitations}
-* Zanette diferia en valores absolutos con los resultados nuestros. Moby Dick. 
+\subsection{Top senses of a text}
+The method used here, as explained before, was intended just to present the model of creating a list of top senses out of a list of top words. In spite of being quite elemental, the method worked fairly well with most texts, having some expected problems.
 
+The main issues concern about Lesk Algorithm's flaws. One of these is the sensitivity of the context, for which the appearance or not of a single word in the gloss/context can radically change the selected sense for the word. Moreover, we strongly depend on glosses defined by Wordnet, which tend to be short.
+
+Another issue is Wordnet itself. While it has overwhelming information for nouns and their relationships, the resources for verbs and adjectives are not as extensive. This fact was a problem not only for the construction of the glosses for Lesk, but also for measuring distances between synsets and works.   
 \subsection{Wordnet's synset distances}
 
 \section{Conclussion \& Future work}
@@ -364,6 +366,5 @@ M. Lesk. Automatic sense disambiguation using machine readable dictionaries: How
 % Spanish Ministry of Science and Technology Grant BFM2002-02042 (to D.C. and
 % J.L.R.) and by National Science Foundation Grand DMS-0245242 (to C.F.).
 % \end{acknowledgments}
-
 
 
