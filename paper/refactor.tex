@@ -16,10 +16,15 @@
 \usepackage[dvips]{graphicx}
 \usepackage{bookmark}
 \usepackage{color}
-\selectlanguage{spanish}
 \usepackage{array}
+\usepackage{setspace}
+\usepackage{longtable}
+\usepackage[hmargin=2cm,vmargin=2.5cm]{geometry}
+\usepackage{booktabs}
+\usepackage{colortbl}
 \newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
-
+\newcommand{\myrowcolour}{\rowcolor[gray]{0.925}}
+  \newcommand{\cheading}[2]{\textbf{#1\hfill #2}}
 
 \newcommand\dq[1]{\textquotedblleft #1\textquotedblright}
 \newcommand\sq[1]{\textquoteleft #1\textquoteright}
@@ -146,14 +151,12 @@ Given a document $T$ and an arbitrary integer $n$, the \textit{top senses} are d
 \end{equation}
 
 Based on this definition, we evaluate the resultant \textit{top senses} of some texts and then check the results of the different similarities with well known concepts in the next sections.
-
+\input{handpicked_table}
 \section{Results}
-\input{results}
-\subsection{Top senses for selected works}
 
-\subsection{Distances to evaluation sets}
-*
-* x = {años}, y = {concept value}
+% \subsubsection{Top senses for selected works}
+
+\input{results}
 
 \subsubsection{Observations}
 

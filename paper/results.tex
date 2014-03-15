@@ -1,129 +1,46 @@
-* Distancia a algunos conceptos de estado y revolución
-% \input{analysis_the_state_and_revolution}
-
-For each work we executed the algorithm and then we obtained five different similarities for the top senses.
-We compared the similarity of top sense against each other and against a list handpicked synsets \ref{handpicked_synsets}
-
-First we show the results obtained after the execution for some works , then we analyze the results of similarity.
-
-\begin{table}[h!]
-    \begin{center}
-        \begin{tabular}{ | L{2cm} | L{5cm} |}
-            \hline
-            Synset & Gloss \\ \hline
-            \multicolumn{2}{|c|}{Human handpicked concepts to compare against top senses} \\ \hline
-war & the waging of armed conflict against an enemy \\ \hline
-capitalism & an economic system based on private ownership of capital\\ \hline
-theory & a well-substantiated explanation of some aspect of the natural world \\ \hline
-toilet & the act of dressing and preparing yourself \\ \hline
-imperialism & a political orientation that advocates imperial interests \\ \hline
-proletarian & a member of the working class (not necessarily employed) \\ \hline
-practice & translating an idea into action \\ \hline
-revolution & a drastic and far-reaching change in ways of thinking and behaving \\ \hline
-money & the most common medium of exchange; functions as legal tender \\ \hline
-philosophy & the rational investigation of questions about existence and knowledge and ethics \\ \hline
-idealism & (philosophy) the philosophical theory that ideas are the only reality \\ \hline
-strategy & the branch of military science dealing with military command and the planning and conduct of a war \\ \hline
-materialism & (philosophy) the philosophical theory that matter is the only reality \\ \hline
-lion & large gregarious predatory feline of Africa and India having a tawny coat with a shaggy mane in the male \\ \hline
-television_receiver. & an electronic device that receives television signals and displays them on a screen \\ \hline
-hair & a covering for the body (or parts of it) consisting of a dense growth of threadlike structures (as on the human head); helps to prevent heat loss \\ \hline
-sugar & a white crystalline carbohydrate used as a sweetener and preservative \\ \hline
-car & a motor vehicle with four wheels; usually propelled by an internal combustion engine \\ \hline
-            \multicolumn{2}{|c|}{Categories} \\ \hline
-economy & the system of production and distribution and consumption \\ \hline
-philosophy & the rational investigation of questions about existence and knowledge and ethics \\ \hline
-politics & social relations involving intrigue to gain authority or power \\ \hline
-        \end{tabular}
-    \end{center}
-    \label{table:handpicked_synsets}
-    \caption{Caption test}
-\end{table}
+\begin{tabular}{p{1.1cm} p{1.1cm} p{1.1cm} p{1.5cm} p{1.5cm}}
+        \toprule
+        Work 1 & Work 2 & Work 3 & Work 4 & Work 5 \\
+%        \multicolumn{2}{c}{Work 1} & \multicolumn{2}{c}{Work 2} & \multicolumn{2}{c}{Work 3} & \multicolumn{2}{c}{Work 4} & \multicolumn{2}{c}{Work 5} \\
+        \midrule
+        marx & enterprise & physics & local\_anesthetic & rent \\
+        revolution & depository\_financial\_institution & sociable & organization  & land \\
+        plant & imperialism & space & marriage & peasant \\
+        engels & universe & time  & criticism & capital \\
+        club & million & berkeley & revolutionist & revolution \\
+        power & colony & truth & freedom & marx \\
+        party & colonial &  aim & newspaper & people \\
+        sociable &  product & sensation & worker & nationalization \\
+        experience & penny & experience & consciousness & restoration \\
+        bernstein & company  & engels & newspaper & right \\
+        question & capitalist & motion & businessperson & private  \\
+        equality & monopoly & marx & mass & farming \\
+        phase & area &  book & motion & free \\
+        commune & policy &  plant & german  & central \\
+        one &  power & general & goverment & land \\
+        democracy & banks &  helmholtz & political\_orientation & capitalism \\
+        class &  worker & neccesity & party & democracy \\
+        law &  imperialist & law & secret & landlord \\
+        communism & company & sensation & working & farming \\
+        peer & boards & energy & class & agency \\
+        \bottomrule
+    \end{tabular}
+\newline
+%aWork1 : The State and Revolution
+%work2: Lenin: Imperialism, the Highest Stage of Capitalism
+%Work3: Lenin: MATERIALISM and EMPIRIO-CRITICISM
+%Work4: Lenin: What Is To Be Done?
+%wotk5: Lenin: The Agrarian Programme of Social-Democracy in the First Russian Revolution, 1905-1907
 
 
-\begin{table}[h!]
-    \begin{center}
-        \begin{tabular}{ | L{2cm} | L{5cm} |}
-            \hline
-            Top Sense & Sense Detected \\ \hline
-            \multicolumn{2}{|c|}{The State and Revolution} \\ \hline
-    engels & socialist who wrote the Communist Manifesto with Karl Marx in 1848 (1820-1895) \\ \hline
-    work & activity directed toward making or doing something \\ \hline
-    club & a formal association of people with similar interests \\ \hline
-    democracy & a political system in which the supreme power lies in a body of citizens who can elect people to represent them \\ \hline
-            \multicolumn{2}{|c|}{MATERIALISM and EMPIRIO} \\ \hline
-    physics & the science of matter and energy and their interactions \\ \hline
-    sociable & a party of people assembled to promote sociability and communal activity \\ \hline
-    kant & influential German idealist philosopher (1724-1804) \\ \hline
-    time & the continuum of experience in which events pass from the future through the present to the past \\ \hline
-    space & an empty area (usually bounded in some way between things) \\ \hline
-            \multicolumn{2}{|c|}{Imperialism, the highest stage of capitalism} \\ \hline
- enterprise & an organization created for business ventures \\ \hline
- depository\_financial\_institution & a financial institution that accepts deposits and channels the money into lending activities \\ \hline
- depository\_financial\_institution & a financial institution that accepts deposits and channels the money into lending activities \\ \hline
- imperialism & a policy of extending your rule over foreign countries \\ \hline
- universe & everything that exists anywhere \\ \hline
-        \end{tabular}
-    \end{center}
-    \label{table:top_senses}
-    \caption{Caption test}
-\end{table}
+    \begin{tabular}{ p{2cm} p{2cm} p{3cm}}
+    \toprule
+    Text &  Top Sense & Sense Detected \\
+    \midrule
+The Agrarian Programme & marx & United States comedian; one of four brothers who made motion pictures together (1901-1979) \\
+    \midrule
+The State and Revolution & bernstein & United States conductor and composer (1918-1990) \\
+    \bottomrule
+\end{tabular}
 
-In the next Table we can observe the best top sense matches for our handpicked synsets.
-\input{analysis_the_state_and_revolution}
-
-After a careful analysis of out results we found some problems with pronouns that we show in \ref{table:pronouns}
-We think that this mismatch could be a cause of our Lesk algorithm modification to check against to context words directly.
-
-\begin{table}[h!]
-    \begin{center}
-        \begin{tabular}{ | L{3cm} | L{1cm} | L{3cm} |}
-            \hline
-            Text &  Top Sense & Sense Detected \\ \hline
-            \multicolumn{3}{|c|}{Strange detections} \\ \hline
-    The Agrarian Programme & marx & United States comedian; one of four brothers who made motion pictures together (1901-1979) \\ \hline
-
-    The State and Revolution & bernstein & United States conductor and composer (1918-1990) \\ \hline
-        \end{tabular}
-    \end{center}
-    \caption{Caption test}
-    \label{table:pronouns}
-\end{table}
-
-
-One interesting thing to observe is the distance between the all the top senses of all texts.
-
-\begin{figure}[h!]
-    \caption{Top senses lch distance of all Lenin works.}
-    \centering
-    \includegraphics[width=0.5\textwidth]{lch_sim_graph.png}
-    \label{fig:lch_sim_graph}
-\end{figure}
-
-
-
-Now our question is. how far are the top senses from the concepts we wanted to compare to?
-To answer that question we find interesting to study what happens if we add pylosophical, political and economic senses in out graph and calculate form those synsets the similarity to top senses.
-
-
-
-\begin{figure}[h!]
-    \caption{Top senses against economy philosophy and politics using LCH similarity}
-    \centering
-    \includegraphics[width=0.5\textwidth]{phyl_eco_pol_lch_sim_graph.png}
-    \label{fig:phyl_eco_pol_lch_sim_graph}
-\end{figure}
-
-At ~\ref{fig:phyl_eco_pol_lch_sim_graph} we notw that the synsets phylosophy, economic and politics are very close to each other
-
-We tried several similarity measures and most of them gave that phylosophy, economic and politics are similar synsets.
-However when we tried JCN similarity we found that those synsets were far enough from each other \ref{fig:phyl_eco_pol_jcn_sim_graph}. We can\'t get any concise results since nodes in \ref{fig:phyl_eco_pol_jcn_sim_graph} seems to be very dispersed.
-
-\begin{figure}[h!]
-    \caption{Top senses against economy philosophy and politics using JCN similarity}
-    \centering
-    \includegraphics[width=0.5\textwidth]{phyl_eco_pol_jcn_sim_graph.png}
-    \label{fig:phyl_eco_pol_jcn_sim_graph}
-\end{figure}
-
-FALTAN LOS GRAFICOS DE LOS HANDPICKED
+\input{top_senses_definitions}
