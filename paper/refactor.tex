@@ -175,9 +175,10 @@ As in the WSD problem, we also here just present a simple model to the problem o
 
 For ``State and Revolution'', the distance worked as expected, matching with a high similarity those concepts highly related to the topics of the text, and putting down those unrelated. However, we must note that many synsets were extremely close of ``law.n.04'', which is a problem carried by a wrong disambiguation (the definition for it has to do with ``natural laws'', nothing to do with the text).
 
-For ``Imperialism ... '', we suffered the appearance of a very general sense (universe.n.01) which made a nonrelated sense as hair to appear second in the ranking. Also, a very characteristic concept of the  as \textbf{capitalism} appears unrelated, because it is not very close (in the hypernyms/hyponyms taxonomy) to the top senses of this work.
-
+For ``Imperialism ... '', we suffered the appearance of a very general sense (universe.n.01) which made a nonrelated sense as hair to appear second in the ranking. Also, a very characteristic concept of the  as \textbf{capitalism} appears unrelated, because it is not very close (in the hypernyms/hyponyms taxonomy) to the top senses of this work. ``Materialism ... '' had the same problem but the other way around: \textbf{revolution} was just very close to \textbf{experience}, but had nothing to do with the text in general.
  
+Notice that, in order to use the path similarity, we had to select only noun senses for the top words. This is because verbs, adjectives and nouns are in different taxonomies in Wordnet, and hence are not comparable with this similarity. 
+
 
 
 
