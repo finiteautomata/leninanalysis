@@ -149,10 +149,11 @@ Given a document $T$ and an arbitrary integer $n$, the \textit{top senses} are d
   top\_senses_{n}(T) = \{s | w \in top\_words_{n}(T) \wedge  s = wsd_T(w)\}
 \end{equation}
 
+\subsubsection{Word-senses evaluation set}
+
 Based on this definition, we evaluate the resultant \textit{top senses} of some texts and then check the results of the different similarities with well known concepts in the next sections.
 
-
-The selected concepts are shown in the table below. We can distinguish three subsets in this selection: concepts related to practical situations like geopolitics and state management (like ...), concepts more related to the theoretical world (like...) and finally, concepts not related to Lenin works (like...). The motivation behind the selection of the two first groups is to check some easy hipotheses (such as "State and Revolution" talk a lot about "state" and "revolution", the motivation behind the third group is to chenk our methods for false positives, i.e., a high ranking in our metrics for a concept assumed not related to the works.
+The selected concepts are shown in the table below. We can distinguish three subsets in this selection: concepts related to practical situations like geopolitics and state management (like 'war', 'strategy', 'money'), concepts more related to the theoretical world (like 'philosophy', 'idealism', 'theory') and finally, concepts not related to Lenin's works (like 'sugar', 'car', 'television\_receiver'). The motivation behind the selection of the two first groups is to check some easy hipotheses (such as "State and Revolution" talks a lot about "state" and "revolution", the motivation behind the third group is to check our methods looking for false positives, i.e., a high ranking in the metrics for a concept assumed not related to the works. The distinction between the two first groups and the third in pretty taxative, while the distinction between first and second group is more smooth.
 
 \input{handpicked_table}
 \section{Results}
