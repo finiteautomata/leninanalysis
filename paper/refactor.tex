@@ -179,7 +179,9 @@ As in the WSD problem, we also here just present a simple model to the problem o
 
 For ``State and Revolution'', the distance worked as expected, matching with a high similarity those concepts highly related to the topics of the text, and putting down those unrelated. However, we must note that many synsets were extremely close of ``law.n.04'', which is a problem carried by a wrong disambiguation (the definition for it has to do with ``natural laws'', nothing to do with the text).
 
-For ``Imperialism ... '', we suffered the appearance of a very general sense (universe.n.01) which made a nonrelated sense as hair to appear second in the ranking. Also, a very characteristic concept of the  as \textbf{capitalism} appears unrelated, because it is not very close (in the hypernyms/hyponyms taxonomy) to the top senses of this work. ``Materialism ... '' had the same problem but the other way around: \textbf{revolution} was just very close to \textbf{experience}, but had nothing to do with the text in general.
+In ``Imperialism ... '', we suffered the appearance of a very general sense (universe.n.01) which made a nonrelated sense as hair to appear second in the ranking. Also, a very characteristic concept of the  as \textbf{capitalism} appears unrelated, because it is not very close (in the hypernyms/hyponyms taxonomy) to the top senses of this work. ``Materialism ... '' had the same problem but the other way around: \textbf{revolution} was just very close to \textbf{experience}, but had nothing to do with the text in general.
+
+Many of these problems come from the fact that path similarity is not a good measure of semantic similarity. Of course, two senses which have a high path similarity are similar (they are very close in terms of hypernyms/hyponyms), but the other way round is not valid. For instance, meronimy is not taken into account in this metric.
  
 Notice that, in order to use the path similarity, we had to select only noun senses for the top words. This is because verbs, adjectives and nouns are in different taxonomies in Wordnet, and hence are not comparable with this similarity. 
 
@@ -188,7 +190,8 @@ Notice that, in order to use the path similarity, we had to select only noun sen
 
 
 \section{Conclussion \& Future work}
-The original scope of this investigation was the definition of a measure of distance between the works of a whole year but we find a lot of complexities in the definition of that model. While we decide to reduce the scope of this work for mental health, we consider the metric defined in this article as a step into the concretion of the original goal.
+The original scope of this investigation was the definition of a measure of distance between the works of a whole year and a concept; so we could measure whether the literary production of Lenin in some year was close to ``revolution'', ``theory'', etc.  With this purpose, we defined the \textbf{top senses} of a text, and measured the distance between them and other senses in a topological way.
+
 
 \appendix[All tables]
 % \input{top_senses_the_state_and_revolution}
@@ -386,4 +389,3 @@ http://aclweb.org/anthology//J/J06/J06-1003.pdf
 % Spanish Ministry of Science and Technology Grant BFM2002-02042 (to D.C. and
 % J.L.R.) and by National Science Foundation Grand DMS-0245242 (to C.F.).
 % \end{acknowledgments}
-
