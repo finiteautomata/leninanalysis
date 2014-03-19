@@ -153,6 +153,13 @@ Based on this definition, we evaluate the resultant \textit{top senses} of some 
 
 The selected concepts are shown in the table below. We can distinguish three subsets in this selection: concepts related to practical situations like geopolitics and state management (like 'war', 'strategy', 'money'), concepts more related to the theoretical world (like 'philosophy', 'idealism', 'theory') and finally, concepts not related to Lenin's works (like 'sugar', 'car', 'television\_receiver'). The motivation behind the selection of the two first groups is to check some easy hipotheses (such as "State and Revolution" talks a lot about "state" and "revolution", the motivation behind the third group is to check our methods looking for false positives, i.e., a high ranking in the metrics for a concept assumed not related to the works. The distinction between the two first groups and the third in pretty taxative, while the distinction between first and second group is more smooth.
 
+Finally, we define the similarity between a document and a word-sense as follows:
+
+\begin{equation}
+  similarity(w, T) = max(path\_similarity(w, top\_senses_n(T)))
+\end{equation}
+
+
 \input{handpicked_table}
 \section{Results}
 This section is divided in two: first, we present the \textit{top senses} of the documents listed in "Text corpus"; second, we present the similarities between the documents and the word-senses evaluation set.
