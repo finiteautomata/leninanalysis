@@ -125,7 +125,7 @@ Having the \textit{top-words} representation of a document, we were interested i
 
 This functions aren' t defined over words but over synsets. A synset, briefly, is an abstract notion of sense, meaning or concept that is independent from it's linguistic formulation or spelling. Using synsets instead of words, the wordnet thesaurus solves two problems of ambiguity limited to the linguistic domain: polisemy and synonymy. Polisemy occurs when a unique term may refer to more than one concept (for example, bank may refer to a financial institution or to a the land formation. In the other hand, synonymy occurs when different terms refer to the same concept (for example \sq{car} and \sq{automobile} refers, both, to the same concept).
 
-The similarities defined in the nltk-api are the following: Path similarity, Leacock-Chodorow similarity, Resnik similarity, Jiang-Conrath similarity and Lin similarity. \textbf{fill me with shit from the paper}\cite{BUDANITSKY}. In this project, we present the results measured with path similarity because the idea is to present a proof of concept of a representation for documents (and not a 'productive' one). Path similarity was the best in the trade off between the complexity of the measure and the obtained results. This similarity represents the distance between two nodes in Wordnet based on the shortest path that connects the senses in the is-a (hypernym/hypnoym) taxonomy.
+The similarities defined in the nltk-api are the following: Path similarity, Leacock-Chodorow similarity, Resnik similarity, Jiang-Conrath similarity and Lin similarity. \textbf{fill me with shit from the paper}\cite{BUDANITSKY}\cite{BUDANITSKY_2}. In this project, we present the results measured with path similarity because the idea is to present a proof of concept of a representation for documents (and not a 'productive' one). Path similarity was the best in the trade off between the complexity of the measure and the obtained results. This similarity represents the distance between two nodes in Wordnet based on the shortest path that connects the senses in the is-a (hypernym/hypnoym) taxonomy.
 
 %   \item Leacock-Chodorow Similarity: based on the shortest path that connects the senses (as above) and the maximum depth of the taxonomy in which the senses occur. The relationship is given as -log(p/2d) where p is the shortest path length and d the taxonomy depth.
 %   \item Wu-Palmer Similarity: based on the depth of the two senses in the taxonomy and that of their Least Common Subsumer (most specific ancestor node). 
@@ -316,6 +316,9 @@ M. Lesk. Automatic sense disambiguation using machine readable dictionaries: How
 \bibitem{BUDANITSKY}
 Evaluating WordNet-based Measures of Lexical Semantic Relatedness
 http://aclweb.org/anthology//J/J06/J06-1003.pdf
+\bibitem{BUDANITSKY_2}
+Semantic distance in WordNet: An experimental, application-oriented evaluation of five measures
+ftp://learning.cs.utoronto.ca/pub/gh/Budanitsky+Hirst-2001.pdf
 \end{thebibliography}
 \end{article}
 \end{document}
