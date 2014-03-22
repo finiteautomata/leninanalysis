@@ -441,8 +441,8 @@ $^{\expandafter\@fnsymbol\csname affilsymb\the\affilcount\endcsname}$%
 \def\contributor#1{\def\@contributor{#1}}
 \let\@contributor\relax
 
-\contributor{Submitted to Proceedings
-of the National Academy of Sciences of the United States of America}
+%\contributor{Submitted to Proceedings
+%of the National Academy of Sciences of the United States of America}
 
 
 
