@@ -323,28 +323,21 @@ This version is dated \currversion^^J^^J}
 \iftitlepage\global\titlepagefalse%
 \footlinefont
 \ifodd\c@page
-\hbox to \textwidth{\footlinefont \let\it\footlineit
-\theurl\hfill\footlinefont PNAS\hskip6pt  \vrule depth 2pt\hskip6pt 
-{\foliofont\theissuedate}\hskip6pt\vrule\hskip6pt\thevolume\hskip6pt 
-\vrule\hskip6pt\theissuenumber\hskip6pt \vrule\hskip6pt
+\hbox to \textwidth{\footlinefont \let\it\footlineit\hfill
 \the\c@page{\footlineit--}\expandafter\ifx\csname 
 lastpage\endcsname\relax ??\else\lastpage\fi}%
 \else
 \hbox to \textwidth{\footlinefont \let\it\footlineit
 {\foliofont\the\c@page{\footlineit--}\expandafter\ifx\csname 
-lastpage\endcsname\relax ??\else\lastpage\fi}\hskip6pt
-\vrule depth 2pt\hskip6pt PNAS\hskip6pt
-\vrule\hskip6pt{\foliofont\theissuedate}\hskip6pt\vrule\hskip6pt
-\thevolume\hskip6pt\vrule\hskip6pt\theissuenumber\hfill
-\theurl}%
+lastpage\endcsname\relax ??\else\lastpage\fi}\hskip6pt}%
 \fi\else%
+
 \ifodd\c@page
 \hbox to\textwidth{{\let\it\footlineit\footlinefont\thefootlineauthor}\hfill
-\footlinefont PNAS\hskip6pt\vrule depth 2pt\hskip6pt{\foliofont\theissuedate}%
-\hskip6pt\vrule depth2pt\hskip6pt\thevolume\hskip6pt\vrule depth 2pt\hskip6pt\theissuenumber\hskip6pt\vrule\hskip6pt{\foliofont\the\c@page}}%
+{\foliofont\the\c@page}}%
 \else%
 \hbox to\textwidth{\let\it\footlineit\footlinefont{\foliofont \the\c@page}%
-\hskip6pt\vrule depth 2pt height 6pt\hskip6pt\theurl\hfill\thefootlineauthor}\fi\fi}}
+\hskip6pt\hfill\thefootlineauthor}\fi\fi}}
 \let\@evenfoot\@oddfoot
 %
       \let\@mkboth\markboth
@@ -3071,7 +3064,8 @@ tabnote\the\tablenotenum\endcsname
 \volume{Volume}
 \issuenumber{Issue Number}
 %\setcounter{page}{2687}
-\footlineauthor{Footline Author}
+%\footlineauthor{Footline Author}
+\footlineauthor{}
 
 \long\def\@footnotetext#1{\insert\footins{%
     \reset@font\footnotesize
