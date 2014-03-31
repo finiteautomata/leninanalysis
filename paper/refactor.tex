@@ -122,12 +122,6 @@ This functions aren' t defined over words but over synsets. A synset, briefly, i
 
 The similarities defined in the nltk-api are the following: Path similarity, Leacock-Chodorow similarity, Wu-Palmer similarity, Resnik similarity, Jiang-Conrath similarity and Lin similarity. The former three are analytical, this is, their calculus is based only in the semantic relations of the thesaurus, meanwhile, the last three are analytical but also use statistics from a corpus.\cite{BUDANITSKY}\cite{BUDANITSKY_2}. In this project, we present the results measured with path similarity because the idea is to present a proof of concept of a representation for documents (and not a 'productive' one). This similarity represents the distance between two nodes in Wordnet based on the shortest path that connects the senses in the is-a (hypernym/hypnoym) taxonomy.
 
-%   \item Leacock-Chodorow Similarity: based on the shortest path that connects the senses (as above) and the maximum depth of the taxonomy in which the senses occur. The relationship is given as -log(p/2d) where p is the shortest path length and d the taxonomy depth.
-%   \item Wu-Palmer Similarity: based on the depth of the two senses in the taxonomy and that of their Least Common Subsumer (most specific ancestor node). 
-%   \item Resnik Similarity: based on the Information Content (IC) of the Least Common Subsumer. Note that for any similarity measure that uses information content, the result is dependent on the corpus used to generate the information content and the specifics of how the information content was created.
-%   \item Jiang-Conrath Similarity Return a score denoting how similar two word senses are, based on the Information Content (IC) of the Least Common Subsumer and that of the two input Synsets. The relationship is given by the equation 1 / (IC(s1) + IC(s2) - 2 * IC(lcs)).
-%   \item Lin Similarity: Return a score denoting how similar two word senses are, based on the Information Content (IC) of the Least Common Subsumer and that of the two input Synsets. The relationship is given by the equation 2 * IC(lcs) / (IC(s1) + IC(s2)).
-% \end{itemize}
 
 \subsubsection{Word sense disambiguation}
 \input{wsd}
@@ -146,7 +140,7 @@ Given a document $T$ and an arbitrary integer $n$, the \textit{top senses} are d
 
 Based on this definition, we evaluate the resultant \textit{top senses} of some texts and then check the results of the different similarities with well known concepts in the next sections.
 
-The selected concepts are shown in the table below. We can distinguish three subsets in this selection: concepts related to practical situations like geopolitics and state management (like 'war', 'strategy', 'money'), concepts more related to the theoretical world (like 'philosophy', 'idealism', 'theory') and finally, concepts not related to Lenin's works (like 'sugar', 'car', 'television\_receiver'). The motivation behind the selection of the two first groups is to check some easy hipotheses (such as "State and Revolution" talks a lot about "state" and "revolution", the motivation behind the third group is to check our methods looking for false positives, i.e., a high ranking in the metrics for a concept assumed not related to the works. The distinction between the two first groups and the third in pretty taxative, while the distinction between first and second group is more smooth.
+The selected concepts are shown in the table below. We can distinguish three subsets in this selection: concepts related to practical situations like geopolitics and state management (like `war', `strategy', `money'), concepts more related to the theoretical world (like  `philosophy', `idealism', `theory') and finally, concepts not related to Lenin's works (like `sugar', `car', `television\_receiver'). The motivation behind the selection of the two first groups is to check some easy hipotheses (such as ``State and Revolution'' talks a lot about ``state'' and ``revolution'', the motivation behind the third group is to check our methods looking for false positives, i.e., a high ranking in the metrics for a concept assumed not related to the works. The distinction between the two first groups and the third in pretty taxative, while the distinction between first and second group is more smooth.
 
 Finally, we define the similarity between a document and a word-sense as follows:
 
@@ -157,7 +151,7 @@ Finally, we define the similarity between a document and a word-sense as follows
 
 \input{handpicked_table}
 \section{Results}
-This section is divided in two: first, we present the \textit{top senses} of the documents listed in "Text corpus"; second, we present the similarities between the documents and the word-senses evaluation set.
+This section is divided in two: first, we present the \textit{top senses} of the documents listed in ``Text corpus''; second, we present the similarities between the documents and the word-senses evaluation set.
 
 %\subsubsection{Top senses for selected works}
 \input{results}
