@@ -107,12 +107,11 @@ The information value of $w$ in $T$ is
 
 where $f_w$ is the frequency of appearance of $w$ in $T$. This value captures, in some way, whether a word
 has a distribution in text that is not exactly uniform; an order of the word in the text that brings some sense to it. 
-Ordering the words by their information value results in a list of the text's most representative words. In the context of our research, we call the first $n$ words of a text -with $n$ fixed-, ordered by it's information value, the \textit{top words} of the document.
 
-\begin{equation}
-  top\_words_{n}(T) = \{w | max(IV_T(w))\}
-\end{equation}
 
+Ordering the words by their information value results in a list of the text's most representative words. In the context of our research, we call the first $n$ words of a text -with $n$ fixed-, ordered by it's information value, the \textit{top words} of the document. 
+
+That's it, if we have all the words sorted as $w_1, w_2, \ldots , w_M$ such that $ i \leq j \Rightarrow IV_{T}(w_i) >= IV_{T}(w_j)$, then, the $n$ top words are $w_1, w_2, \ldots w_n$
 
 \subsubsection{Wordnet synsets \& similarities}
 
@@ -131,9 +130,9 @@ In a first approach, we pretend to measure the distance between a document (repr
 
 Using the WSD algorithm described in the previous section, we defined the notion of \textit{top senses} of a document as the word-senses resulting from the disambiguation of the \textit{top words} of the documents obtained with Zannete's information value approach.
 
-Given a document $T$ and an arbitrary integer $n$, the \textit{top senses} are defined as follow:
+Given $w_1, \ldots, w_M$, words of $T$ sorted by information value, and suppose that $w_{i_1}, w_{i_2}, \ldots, w_{i_n}$ are the $n$ first words  such that disambiguation for each $w_{i_j}$ is feasible. Then, the top senses for $T$ are
 \begin{equation}
-  top\_senses_{n}(T) = \{s | w \in top\_words_{n}(T) \wedge  s = wsd_T(w)\}
+  WSD(w_1), WSD(w_2), \ldots, WSD(w_n)
 \end{equation}
 
 \subsubsection{Word-senses evaluation set}
