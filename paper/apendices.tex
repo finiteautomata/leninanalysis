@@ -1,0 +1,38 @@
+\appendix[Entropy of a word in a text]
+\label{appendix1}
+Let's recall from \cite{DARWIN} and \cite{ENTROPIC} the concept of information value of a word.
+Let $T$ be a text, which has been split into $P$ pieces $T_1, T_2, \dots, T_P$, $w$ be a word in $T$,
+and $f_i$ the frequency of appearance of $w$ in $T_i$.
+
+For each part $1 \leq i \leq P$, we could define:
+
+\begin{equation}
+  p_i = \frac{f_i}{\Sigma_{j=1}^{P}f_i}
+\end{equation}
+
+This quantity stands for probability of finding $w$ in $T_i$, given that it is present in the text. So, 
+we define the Shannon information entropy of $w$ in $T$ as
+
+\begin{equation}
+  S = -\frac{1}{ln P}\sum_{i=1}^{P}p_i ln p_i
+\end{equation}
+
+
+
+\appendix[Optimal window size selection]
+
+As \cite{DARWIN} mentions, we should consider the window size which maximizes the information value per word, for some sense of it.
+
+Let's suppose we have a document, and a window size $W_S$ for which the information value algorithm returns a list $\{(w_1, v_1), (w_2, v_2), \dots ,(w_n, v_n) \}$ of word-information value pairs, in decreasing order of information value so that $v_1 \geq v_2 \geq \dots \geq v_n$. How would we assign some value to this pair of document-window size so we can choose the optimal window size?
+
+One possibility would be to take the greater information value, in this case $v_1$. This approach, however, gives all the value just to a single word. Another chance would be to take the average of all the information values, but this leads to a lot of noise added because of words without any value.
+
+
+The chosen approach is a tradeoff between both. We take the average not of all the words, but of a percentage of the most significative words. We call this percentage the \emph{sum threshold}. If $n$ is the number of words in the document, and $0 \leq ST \leq 1$ is the sum threshold, we calculate
+
+\begin{equation}
+  \frac{\sum_{i=1}^{[ST n]}v_i}{n} 
+\end{equation}
+
+
+The threshold value we used is $ST=0.001$, so it would consider only the $\frac{n}{1000}$ most significant words. The reason behind this was that it fitted the results from \cite{DARWIN} for the texts The origin of the species, Moby Dick, and  The Analysis of the mind.
