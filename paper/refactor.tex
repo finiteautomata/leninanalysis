@@ -21,6 +21,7 @@
 \usepackage[hmargin=2cm,vmargin=2.5cm]{geometry}
 \usepackage{booktabs}
 \usepackage{colortbl}
+\usepackage{dblfloatfix}
 \newcolumntype{L}[1]{>{\raggedright\let\newline\\\arraybackslash\hspace{0pt}}m{#1}}
 \newcommand{\myrowcolour}{\rowcolor[gray]{0.925}}
   \newcommand{\cheading}[2]{\textbf{#1\hfill #2}}
@@ -149,7 +150,6 @@ Finally, we define the similarity between a document and a word-sense as follows
 
 
 \input{handpicked_table}
-\newpage
 
 \section{Results}
 This section is divided in two: first, we present the \textit{top senses} of the documents listed in ``Text corpus''; second, we present the similarities between the documents and the word-senses evaluation set.
@@ -163,7 +163,6 @@ One strange result was $Hair$ that matched second in similarity score in Imperia
 
 
 %\subsubsection{Similarities with chosen concepts}
-\newpage
 \input{results_sim_tables}
 
 \section{Discussion}
