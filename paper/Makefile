@@ -1,4 +1,4 @@
 all:
 	latex refactor.tex
-	dvipdf refactor.dvi
+	dvipdf refactor.dvi lenin.pdf
 	
