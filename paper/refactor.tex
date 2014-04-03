@@ -69,7 +69,7 @@ In this project we analyzed some Lenin works in order to identify the presence o
 
 \dropcap{I}n this article we propose a simple distance metric between a word-sense and a text document using different well known tools from natural language processing. To achieve this, we extract a hierarchy of the most representative words of a document (\textit{top words}) using the concept of \textit{information value}, a statistical linguistic model based on Shannon's information theory and proposed by Zanette et al. in\cite{DARWIN}. Briefly, information value allows us to represent a document like a ranked set of words. 
 
-But this weighted set of top words has the problem of polysemy, typical in the field of nlp. Polysemy occurs when a term has more than one sense or meaning, for example: the term 'bank' can refer to a financial institution or to a land formation, thus, it is polysemic. In order to resolve this limitation, we implement a basic algorithm of word-sense disambiguation based on wordnet's synsets and we apply it over the top words, using as disambiguation context the whole document. We obtain, then, the \textit{top senses} of a document, this is, a ranked set of wordnet synsets that work like a representation of the given document.
+But this weighted set of top words has the problem of polysemy, typical in the field of nlp. Polysemy occurs when a term has more than one sense or meaning, for example: the term `bank' can refer to a financial institution or to a land formation, thus, it is polysemic. In order to resolve this limitation, we implement a basic algorithm of word-sense disambiguation based on wordnet's synsets and we apply it over the top words, using as disambiguation context the whole document. We obtain, then, the \textit{top senses} of a document, this is, a ranked set of wordnet synsets that work like a representation of the given document.
 
 Finally, we utilize different wordnet predefined metrics of similarity between synsets to define our own similarities between the top-sense representation of a document and any given word-sense (wordnet synset). In order to evaluate the behaviour of this metrics, we test the distances of the top-senses representation of some well known documents with very specific topics against a bounded set of relevant evaluation word-senses. 
 
@@ -137,6 +137,7 @@ Given $w_1, \ldots, w_M$, words of $T$ sorted by information value, and suppose 
 \end{equation}
 
 \subsubsection{Word-senses evaluation set}
+\input{handpicked_table}
 
 Based on this definition, we evaluate the resultant \textit{top senses} of some texts and then check the results of the different similarities with well known concepts in the next sections.
 
@@ -149,7 +150,7 @@ Finally, we define the similarity between a document and a word-sense as follows
 \end{equation}
 
 
-\input{handpicked_table}
+
 
 \section{Results}
 This section is divided in two: first, we present the \textit{top senses} of the documents listed in ``Text corpus''; second, we present the similarities between the documents and the word-senses evaluation set.
