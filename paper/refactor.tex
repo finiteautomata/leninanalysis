@@ -133,7 +133,7 @@ Using the WSD algorithm described in the previous section, we defined the notion
 
 Given $w_1, \ldots, w_M$, words of $T$ sorted by information value, and suppose that $w_{i_1}, w_{i_2}, \ldots, w_{i_n}$ are the $n$ first words  such that disambiguation for each $w_{i_j}$ is feasible. Then, the top senses for $T$ are
 \begin{equation}
-  WSD(w_1), WSD(w_2), \ldots, WSD(w_n)
+  TS(T) = \{ WSD(w_1), WSD(w_2), \ldots, WSD(w_n) \}
 \end{equation}
 
 \subsubsection{Word-senses evaluation set}
@@ -146,7 +146,7 @@ The selected concepts are shown in the table below. We can distinguish three sub
 Finally, we define the similarity between a document and a word-sense as follows:
 
 \begin{equation}
-  similarity(w, T) = max(path\_similarity(w, top\_senses_n(T)))
+  sim(s, T) = max \left\{ path(s,s'), s' \in TS(T) \right\}
 \end{equation}
 
 
