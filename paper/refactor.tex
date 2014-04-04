@@ -157,11 +157,17 @@ This section is divided in two: first, we present the \textit{top senses} of the
 
 \input{results}
 
-In Top Senses table we can observe that some senses like local\_anesthetic was matched on Whats to be done? as first result. \\
-Also in State and revolution Marx was matched with a United States comedian and a similar result we got with Berstein that was matched with a composer, however in the case of Engels it was matched to a socialist who wrote the Communist Manifesto with Karl Marx. \\
-$Similarities$ tables shows that, in most of the works, synsets $lion$, $sugar$, $hair$, $car$ and $television\_receiver$ had a lower similarity in most of the works. \\
-One strange result was $Hair$ that matched second in similarity score in Imperialism, the Highest St....
+First we examined the results after applying the $WSD$ algorithm (Top Senses Table). We observed that most of the senses found by our algorithm were the senses related to the works, except for some of them.\\
 
+On "Whats to be done?" we observed that local\_anesthetic was matched as first result. \\
+For "State and revolution" we noticed that Marx was matched with a United States comedian and Berstein matched with a composer from the States. However in the case of Engels, another pronoun, it was matched to a socialist who wrote the Communist Manifesto with Karl Marx. \\
+
+We then calculated the similarities of our handpicked synsets for each work. Since our results are ordered by the similarity in general we observed that the synsets $lion$, $sugar$, $hair$, $car$ and $television\_receiver$ scored lower in most of the works, with some particular cases. \\
+
+Our results shows that "Imperialism, the Highest Stage of Capitalism" have some synset that scored irregular values. This was the case for $hair$ which matched second in similarity and that $imperialism$ scored very low. The result for $imperialism$ was surprising since it is a word contained in the work title. Also $capitalism$ wasn't at top of the list for this work.\\
+
+As for "Materialism and Empirio-Criticism" we want to point that $philosopy$ is in the top $3$.
+For the synsets $lion$, $sugar$, $hair$, $car$ and $television\_receiver$ they scored low values in  "State and Revolution", "Materialism and Empirio-Criticism", "What Is To Be Done?" and "The Agrarian Programme of Social-Democracy in the First Russian Revolution".
 
 %\subsubsection{Similarities with chosen concepts}
 \input{results_sim_tables}
