@@ -146,6 +146,7 @@ The selected concepts are shown in the table below. We can distinguish three sub
 Finally, we define the similarity between a document and a word-sense as follows:
 
 \begin{equation}
+\label{eq:sim}
   sim(s, T) = max \left\{ path(s,s'), s' \in TS(T) \right\}
 \end{equation}
 
@@ -153,16 +154,23 @@ Finally, we define the similarity between a document and a word-sense as follows
 
 
 \section{Results}
-This section is divided in two: first, we present the \textit{top senses} of the documents listed in ``Text corpus''; second, we present the similarities between the documents and the word-senses evaluation set.
+In this section we present and comment the results divided in two groups of observational data. 
+
+In Table 2, we present the \textit{top senses} of the documents listed in ``Text corpus'', obtained using the procedure we describe in previous sections. Each $top-sense$ is ordered according to the information value score that we obtained previous to apply the $WSD$ algorithm. 
+
+In the group of tables named Table 3, we present the similarities between the documents and the word-senses evaluation set based on the similarity function described in equation~\ref{eq:sim}, in the previous section.\\
 
 \input{results}
 
-First we examined the results after applying the $WSD$ algorithm (Top Senses Table). We observed that most of the senses found by our algorithm were the senses related to the works, except for some of them.\\
 
-On "Whats to be done?" we observed that local\_anesthetic was matched as first result. \\
+
+First we examined the results after applying the $WSD$ algorithm (Top Senses Table). We observed that most of the senses found by our algorithm were the senses related to the works, except for some of them.
+
+On "Whats to be done?" we observed that local\_anesthetic was matched as first result. 
+
 For "State and revolution" we noticed that Marx was matched with a United States comedian and Berstein matched with a composer from the States. However in the case of Engels, another pronoun, it was matched to a socialist who wrote the Communist Manifesto with Karl Marx. \\
 
-We then calculated the similarities of our handpicked synsets for each work. Since our results are ordered by the similarity in general we observed that the synsets $lion$, $sugar$, $hair$, $car$ and $television\_receiver$ scored lower in most of the works, with some particular cases. \\
+We then calculated the similarities of our handpicked synsets for each work. Since our results are ordered by the similarity in general we observed that the synsets $lion$, $sugar$, $hair$, $car$ and $television\_receiver$ scored lower in most of the works, with some particular cases. 
 
 Our results shows that "Imperialism, the Highest Stage of Capitalism" have some synset that scored irregular values. This was the case for $hair$ which matched second in similarity and that $imperialism$ scored very low. The result for $imperialism$ was surprising since it is a word contained in the work title. Also $capitalism$ wasn't at top of the list for this work.\\
 
